@@ -27,9 +27,10 @@ public class MainController implements Initializable {
     @FXML
     TableView studentTableView;
     @FXML
-    Button addStudentBtn, editStudentBtn, deleteStudentBtn;
+    Button addStudentBtn, editStudentBtn, viewStudentBtn, deleteStudentBtn;
     private ObservableList<Student> students = FXCollections.observableArrayList();
     ObjectProperty<Student> currentStudent;
+    ObservableList<ObjectProperty<Student>> selectedStudents;
 
     /**
      * Called to initialize a controller after its root element has been
@@ -45,10 +46,15 @@ public class MainController implements Initializable {
         // Listen for table selection and update CurrentStudent
         studentTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
         {
+            if (oldValue != null) {
+                editStudentBtn.setDisable(false);
+                deleteStudentBtn.setDisable(false);
+            }
             Student student = (Student) newValue;
             this.currentStudent.set(student);
             this.currentStudent.setValue(student);
         });
+
         populateStudents();
     }
 
@@ -72,22 +78,45 @@ public class MainController implements Initializable {
         );
     }
 
+    public void launchStudentViewWindow(Student student, Operation operation) {
+        // Determine title
+        String[] titles = {"Add ", "Edit ", "View ", " Student"};
+        StringBuilder title = new StringBuilder();
+        switch (operation) {
+            case NEW:
+                title.insert(0, titles[0] + titles[3]);
+                break;
+            case EDIT:
+                title.insert(0, titles[1] + titles[3]);
+                break;
+            case VIEW:
+                title.insert(0, titles[2] + titles[3]);
+                break;
+            default:
+                title.insert(0, "Student Viewer");
+        }
+
+        // Launch Student Viewer with given Student and operation
+        Platform.runLater(() -> {
+            StudentViewController studentViewController = new StudentViewController(student, operation);
+            CustomControlLauncher.create()
+                    .setTitle(title.toString())
+                    .setScene(new Scene(studentViewController, 1024, 600))
+                    .launch();
+        });
+    }
+
     public void optionsHandler(ActionEvent event) {
         Object eventSource = event.getSource();
 
-        // Pop an empty StudentView for Student creation
         if (Objects.deepEquals(eventSource, addStudentBtn)) {
-            Platform.runLater(() -> {
-                StudentViewController studentViewController = new StudentViewController(new Student(), Operation.NEW);
-                CustomControlLauncher.create()
-                        .setTitle("Add Student")
-                        .setScene(new Scene(studentViewController, 1024, 600))
-                        .launch();
-            });
+            launchStudentViewWindow(null, Operation.NEW);
         } else if (Objects.deepEquals(eventSource, editStudentBtn)) {
-            // Code to edit student
+            launchStudentViewWindow(null, Operation.EDIT);
+        } else if (Objects.deepEquals(eventSource, viewStudentBtn)) {
+            launchStudentViewWindow(null, Operation.VIEW);
         } else if (Objects.deepEquals(eventSource, deleteStudentBtn)) {
-            // Code to delete student
+            students.remove(currentStudent.get());
         }
     }
 }

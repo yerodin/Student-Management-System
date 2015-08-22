@@ -28,7 +28,7 @@ public class StudentViewController extends TitledPane {
             throw new RuntimeException(exception);
         }
 
-        setStudent(student);
+        Object o = (student != null) ? setStudent(student) : setStudent(new Student());
         setOperation(operation);
     }
 
