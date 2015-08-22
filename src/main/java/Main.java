@@ -1,5 +1,5 @@
-import controller.Controller;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import utility.CustomControlLauncher;
@@ -12,7 +12,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Controller root = new Controller();
-        CustomControlLauncher.create().setTitle("Student Management System").setScene(new Scene(root, 800, 630)).launch();
+        CustomControlLauncher.create().setTitle("Student Management System").setScene(new Scene(FXMLLoader.load(getClass().getResource("fxml/Main.fxml")), 800, 630)).launch();
     }
 }
