@@ -12,6 +12,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        CustomControlLauncher.create().setTitle("Student Management System").setScene(new Scene(FXMLLoader.load(getClass().getResource("fxml/Main.fxml")), 800, 630)).launch();
+        CustomControlLauncher.create().setTitle("Student Management System").setScene(new Scene(FXMLLoader.load(getClass().getResource("/fxml/Main.fxml")), 800, 630)).launch();
     }
 }
