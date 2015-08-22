@@ -1,5 +1,6 @@
 package model;
 
+import enums.Block;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -9,32 +10,21 @@ import javafx.beans.property.StringProperty;
  * StudentManagementSystem -
  **/
 public class FamilyHistory {
-    private IntegerProperty id = new SimpleIntegerProperty(this, "id");
     private StringProperty from = new SimpleStringProperty(this, "from");
     private StringProperty to = new SimpleStringProperty(this, "to");
     private StringProperty relationship = new SimpleStringProperty(this, "relationship");
-    private Student student;
+    private StringProperty block;
+
 
     public FamilyHistory() {
         super();
     }
 
-    public FamilyHistory(String from, String to, String relationship) {
+    public FamilyHistory(String from, String to, String relationship, String block) {
         setFrom(from);
         setTo(to);
         setRelationship(relationship);
-    }
-
-    public int getId() {
-        return id.get();
-    }
-
-    public void setId(int id) {
-        this.id.set(id);
-    }
-
-    public IntegerProperty idProperty() {
-        return id;
+        setBlock(block);
     }
 
     public String getFrom() {
@@ -73,10 +63,38 @@ public class FamilyHistory {
         return relationship;
     }
 
+    public StringProperty getBlock() {
+        return block;
+    }
+
+    public void setBlock(String block) {
+        this.block.set(block);
+    }
+
+    public static FamilyHistory unwrap(String wrapped)
+    {
+        String from = wrapped.substring(1,wrapped.indexOf("}"));
+        wrapped.replace("{","");
+        wrapped.replace("}","");
+        String to = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
+        wrapped.replace("{","");
+        wrapped.replace("}","");
+        String relationship = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
+        wrapped.replace("{","");
+        wrapped.replace("}", "");
+        String block = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
+
+        return new FamilyHistory(from,to,relationship,block);
+    }
+
+    public static String wrap(FamilyHistory familyHistory)
+    {
+        return "{"+familyHistory.getFrom()+"}{"+familyHistory.getTo()+"}{"+familyHistory.getRelationship()+"}{"+familyHistory.getBlock()+"}";
+    }
+
     @Override
     public String toString() {
         return "FamilyHistory{" +
-                "id=" + id +
                 ", from=" + from +
                 ", to=" + to +
                 ", relationship=" + relationship +

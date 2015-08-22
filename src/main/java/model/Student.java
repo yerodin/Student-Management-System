@@ -1,6 +1,7 @@
 package model;
 
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -10,12 +11,12 @@ import java.util.ArrayList;
  */
 public class Student {
     private boolean academicStatus, willParticipate;
-    private ArrayList<Achievement> achievements;
-    private ArrayList<BehaviourHistory> behaviourHistories;
-    private ArrayList<FamilyHistory> familyHistories;
-    private ArrayList<HallHistory> hallHistories;
-    private ArrayList<CommunityGroup> communityGroups;
-    private ArrayList<CoCurricular> coCurriculars;
+    private ObservableList<Achievement> achievements;
+    private ObservableList<BehaviourHistory> behaviourHistories;
+    private ObservableList<FamilyHistory> familyHistories;
+    private ObservableList<HallHistory> hallHistories;
+    private ObservableList<CommunityGroup> communityGroups;
+    private ObservableList<CoCurricular> coCurriculars;
 
 
     private StringProperty cellPhone, dayJoined, dob, block, faculty, fatherFirstName, fatherLastName,fatherPhone, firstName,
@@ -38,51 +39,51 @@ public class Student {
         this.willParticipate = willParticipate;
     }
 
-    public ArrayList<Achievement> getAchievements() {
+    public ObservableList<Achievement> getAchievements() {
         return achievements;
     }
 
-    public void setAchievements(ArrayList<Achievement> achievements) {
+    public void setAchievements(ObservableList<Achievement> achievements) {
         this.achievements = achievements;
     }
 
-    public ArrayList<BehaviourHistory> getBehaviourHistories() {
+    public ObservableList<BehaviourHistory> getBehaviourHistories() {
         return behaviourHistories;
     }
 
-    public void setBehaviourHistories(ArrayList<BehaviourHistory> behaviourHistories) {
+    public void setBehaviourHistories(ObservableList<BehaviourHistory> behaviourHistories) {
         this.behaviourHistories = behaviourHistories;
     }
 
-    public ArrayList<FamilyHistory> getFamilyHistories() {
+    public ObservableList<FamilyHistory> getFamilyHistories() {
         return familyHistories;
     }
 
-    public void setFamilyHistories(ArrayList<FamilyHistory> familyHistories) {
+    public void setFamilyHistories(ObservableList<FamilyHistory> familyHistories) {
         this.familyHistories = familyHistories;
     }
 
-    public ArrayList<HallHistory> getHallHistories() {
+    public ObservableList<HallHistory> getHallHistories() {
         return hallHistories;
     }
 
-    public void setHallHistories(ArrayList<HallHistory> hallHistories) {
+    public void setHallHistories(ObservableList<HallHistory> hallHistories) {
         this.hallHistories = hallHistories;
     }
 
-    public ArrayList<CommunityGroup> getCommunityGroups() {
+    public ObservableList<CommunityGroup> getCommunityGroups() {
         return communityGroups;
     }
 
-    public void setCommunityGroups(ArrayList<CommunityGroup> communityGroups) {
+    public void setCommunityGroups(ObservableList<CommunityGroup> communityGroups) {
         this.communityGroups = communityGroups;
     }
 
-    public ArrayList<CoCurricular> getCoCurriculars() {
+    public ObservableList<CoCurricular> getCoCurriculars() {
         return coCurriculars;
     }
 
-    public void setCoCurriculars(ArrayList<CoCurricular> coCurriculars) {
+    public void setCoCurriculars(ObservableList<CoCurricular> coCurriculars) {
         this.coCurriculars = coCurriculars;
     }
 
