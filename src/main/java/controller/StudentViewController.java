@@ -18,7 +18,7 @@ public class StudentViewController extends TitledPane {
 
     public StudentViewController(Student student, Operation operation) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
-                "fxml/StudentView.fxml"));
+                "/fxml/StudentView.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
