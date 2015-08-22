@@ -1,4 +1,4 @@
-package DBCommunication;
+package utility.DBCommunication;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -39,7 +39,7 @@ public class JSONParser {
         try {
 
             // check for request method
-            if(method == "POST"){
+            if (method == "POST") {
                 // request method is POST
                 // defaultHttpClient
                 HttpClient httpClient = HttpClientBuilder.create().build();
@@ -50,7 +50,7 @@ public class JSONParser {
                 HttpEntity httpEntity = httpResponse.getEntity();
                 is = httpEntity.getContent();
 
-            }else if(method == "GET"){
+            } else if (method == "GET") {
                 // request method is GET
                 HttpClient httpClient = HttpClientBuilder.create().build();
                 String paramString = URLEncodedUtils.format(params, "utf-8");
