@@ -54,7 +54,7 @@ public class CommunityGroup {
     }
 
 
-    public static BehaviourHistory unwrap(String wrapped)
+    public static CommunityGroup unwrap(String wrapped)
     {
         String group = wrapped.substring(1,wrapped.indexOf("}"));
         wrapped.replace("{","");
@@ -63,7 +63,7 @@ public class CommunityGroup {
         wrapped.replace("{","");
         wrapped.replace("}","");
         String responsibility = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
-        return new BehaviourHistory(group,project,responsibility);
+        return new CommunityGroup(group,project,responsibility);
     }
 
     public static String wrap(CommunityGroup communityGroup)

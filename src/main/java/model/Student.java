@@ -1,6 +1,7 @@
 package model;
 
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.lang.reflect.Array;
@@ -385,6 +386,126 @@ public class Student {
 
     public void setCellPhone(String cellPhone) {
         this.cellPhone.set(cellPhone);
+    }
+
+    public String wrapAchievements()
+    {
+        String retString = "";
+        for(Achievement achievement: achievements)
+            retString += Achievement.wrap(achievement)+",";
+        retString.substring(0, retString.length() - 1);
+        return retString;
+    }
+
+    public void unwraoAndSetAchievements(String wrapped)
+    {
+        achievements = FXCollections.observableArrayList();
+        while(wrapped.length() > 1)
+        {
+            Achievement achievement = Achievement.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
+            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            achievements.add(achievement);
+        }
+    }
+
+    public String wrapBehaviourHistories()
+    {
+        String retString = "";
+        for(BehaviourHistory behaviourHistory: behaviourHistories)
+            retString += BehaviourHistory.wrap(behaviourHistory)+",";
+        retString.substring(0, retString.length() - 1);
+        return retString;
+    }
+
+    public void unwraoAndSetFamilyHistories(String wrapped)
+    {
+        behaviourHistories = FXCollections.observableArrayList();
+        while(wrapped.length() > 1)
+        {
+            FamilyHistory familyHistory = FamilyHistory.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
+            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            familyHistories.add(familyHistory);
+        }
+    }
+
+    public String wrapFamilyHistories()
+    {
+        String retString = "";
+        for(FamilyHistory familyHistory: familyHistories)
+            retString += FamilyHistory.wrap(familyHistory)+",";
+        retString.substring(0, retString.length() - 1);
+        return retString;
+    }
+
+    public void unwraoAndSetBehaviourHistories(String wrapped)
+    {
+        behaviourHistories = FXCollections.observableArrayList();
+        while(wrapped.length() > 1)
+        {
+            BehaviourHistory behaviourHistory = BehaviourHistory.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
+            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            behaviourHistories.add(behaviourHistory);
+        }
+    }
+
+    public String wrapHallHistories()
+    {
+        String retString = "";
+        for(HallHistory hallHistory: hallHistories)
+            retString += HallHistory.wrap(hallHistory)+",";
+        retString.substring(0, retString.length() - 1);
+        return retString;
+    }
+
+    public void unwraoAndSetBHallHistories(String wrapped)
+    {
+        hallHistories = FXCollections.observableArrayList();
+        while(wrapped.length() > 1)
+        {
+            HallHistory hallHistory = HallHistory.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
+            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            hallHistories.add(hallHistory);
+        }
+    }
+
+    public String wrapCommunityCommunityGroups()
+    {
+        String retString = "";
+        for(CommunityGroup communityGroup: communityGroups)
+            retString += CommunityGroup.wrap(communityGroup)+",";
+        retString.substring(0, retString.length() - 1);
+        return retString;
+    }
+
+    public void unwraoAndSetCommunityGroups(String wrapped)
+    {
+        communityGroups = FXCollections.observableArrayList();
+        while(wrapped.length() > 1)
+        {
+            CommunityGroup communityGroup = CommunityGroup.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
+            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            communityGroups.add(communityGroup);
+        }
+    }
+
+    public String wrapCoCurriculars()
+    {
+        String retString = "";
+        for(CoCurricular coCurricular: coCurriculars)
+            retString += CoCurricular.wrap(coCurricular)+",";
+        retString.substring(0, retString.length() - 1);
+        return retString;
+    }
+
+    public void unwraoAndSetCoCurriculars(String wrapped)
+    {
+        communityGroups = FXCollections.observableArrayList();
+        while(wrapped.length() > 1)
+        {
+            CoCurricular coCurricular = CoCurricular.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
+            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            coCurriculars.add(coCurricular);
+        }
     }
 
 
