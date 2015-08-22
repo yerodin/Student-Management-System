@@ -1,6 +1,8 @@
 package controller;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,7 +10,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.util.Duration;
+import model.Student;
 import org.controlsfx.control.Notifications;
+import org.fxmisc.easybind.EasyBind;
 
 import java.net.URL;
 import java.util.Objects;
@@ -21,6 +25,7 @@ public class MainController implements Initializable {
     TableView studentTableView;
     @FXML
     Button addStudentBtn, editStudentBtn, deleteStudentBtn;
+    private ObservableList<Student> students = FXCollections.observableArrayList();
 
     /**
      * Called to initialize a controller after its root element has been
@@ -32,22 +37,13 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        EasyBind.listBind(studentTableView.getItems(), students);
 
     }
 
-//    public MainController() {
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
-//                "../view/Main.fxml"));
-//        fxmlLoader.setRoot(this);
-//        fxmlLoader.setController(this);
-//
-//        try {
-//            fxmlLoader.load();
-//        } catch (IOException exception) {
-//            throw new RuntimeException(exception);
-//        }
-//
-//    }
+    public void populateTestStudents() {
+
+    }
 
     private static void notifier(String title, String message) {
         Platform.runLater(() -> Notifications.create()
