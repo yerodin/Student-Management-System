@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+    <MenuBar disable="true">
+        <menus>
+            <Menu mnemonicParsing="false" text="File">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="New" />
+                    <MenuItem mnemonicParsing="false" text="Open…" />
+                    <Menu mnemonicParsing="false" text="Open Recent" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                    <MenuItem mnemonicParsing="false" text="Save" />
+                    <MenuItem mnemonicParsing="false" text="Save As…" />
+                    <MenuItem mnemonicParsing="false" text="Revert" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" text="Preferences…" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" text="Quit" />
+                </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Edit">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="Undo" />
+                    <MenuItem mnemonicParsing="false" text="Redo" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" text="Cut" />
+                    <MenuItem mnemonicParsing="false" text="Copy" />
+                    <MenuItem mnemonicParsing="false" text="Paste" />
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" text="Select All" />
+                    <MenuItem mnemonicParsing="false" text="Unselect All" />
+                </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+                </items>
+            </Menu>
+        </menus>
+    </MenuBar>
+    <ToolBar prefHeight="40.0" prefWidth="1067.0">
+        <items>
+            <TextField fx:id="filterField" prefHeight="26.0" prefWidth="215.0" promptText="Search..." />
+        </items>
+    </ToolBar>
+    <SplitPane dividerPositions="0.8020050125313283" prefHeight="743.0" prefWidth="1067.0">
+        <items>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                <children>
+                    <TableView fx:id="studentTableView" layoutX="87.0" layoutY="29.0" prefHeight="511.0" prefWidth="636.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <columns>
+                            <TableColumn prefWidth="100.0" text="ID Number" />
+                            <TableColumn prefWidth="50.0" text="First Name" />
+                            <TableColumn prefWidth="101.0" text="Middle Name" />
+                            <TableColumn text="Last Name" />
+                            <TableColumn prefWidth="75.0" text="Block" />
+                            <TableColumn prefWidth="75.0" text="Room" />
+                            <TableColumn prefWidth="75.0" text="Faculty" />
+                        </columns>
+                    </TableView>
+                </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="283.0" prefWidth="744.0">
+                <children>
+                    <TitledPane animated="false" collapsible="false" text="Options">
+                        <content>
+                            <AnchorPane prefHeight="511.0" prefWidth="152.0">
+                                <children>
+                                    <VBox alignment="TOP_CENTER" prefHeight="511.0" prefWidth="152.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <children>
+                                            <Button fx:id="addStudentBtn" defaultButton="true" mnemonicParsing="false" onAction="#optionsHandler" prefHeight="26.0" prefWidth="150.0" text="Add Student" />
+                                            <Button fx:id="editStudentBtn" disable="true" mnemonicParsing="false" onAction="#optionsHandler" prefHeight="26.0" prefWidth="134.0" text="Edit Student" />
+                                            <Button fx:id="deleteStudentBtn" disable="true" mnemonicParsing="false" onAction="#optionsHandler" prefHeight="26.0" prefWidth="131.0" text="Delete Student" />
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </AnchorPane>
+                        </content>
+                    </TitledPane>
+                </children>
+            </AnchorPane>
+        </items>
+    </SplitPane>
+</VBox>
