@@ -1,9 +1,13 @@
 package model;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.Image;
 
+import java.awt.image.BufferedImage;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -11,33 +15,134 @@ import java.util.ArrayList;
  * Created by Yerodin on 8/21/2015.
  */
 public class Student {
-    private boolean academicStatus, willParticipate;
+    private BooleanProperty academicStatus, willParticipate, tertiaryLevel, picture;
     private ObservableList<Achievement> achievements;
     private ObservableList<BehaviourHistory> behaviourHistories;
     private ObservableList<FamilyHistory> familyHistories;
     private ObservableList<HallHistory> hallHistories;
     private ObservableList<CommunityGroup> communityGroups;
     private ObservableList<CoCurricular> coCurriculars;
+    private Image image;
 
 
     private StringProperty cellPhone, dayJoined, dob, block, faculty, fatherFirstName, fatherLastName,fatherPhone, firstName,
             homeAddress1,homeAddress2, homeCity, homeProvince,idNumber,lastName,middleName,motherFirstName,
-            motherLastName, motherPhone, nationality, previousSecondary,reasonResiding, residentCountry, room, email;
+            motherLastName, motherPhone, previousSecondary,reasonResiding, room, email;
 
-    public boolean isAcademicStatus() {
+    private IntegerProperty particpationLevel;
+
+    private Country nationality, residentCountry;
+
+    public Student(boolean academicStatus, boolean willParticipate, String achievements, String behaviourHistories, String familyHistories, String hallHistories,
+                   String communityGroups, String coCurriculars, String cellPhone, String dayJoined, String dob, String block, String faculty, String fatherFirstName,
+                   String fatherLastName, String fatherPhone, String firstName, String homeAddress1, String homeAddress2,
+                   String homeCity, String homeProvince, String idNumber, String lastName, String middleName, String motherFirstName,
+                   String motherLastName, String motherPhone, String previousSecondary, String reasonResiding, String room, boolean tertiaryLevel, String email, Country nationality,
+                   int participationLevel, boolean picture, Country residentCountry) {
+        setAcademicStatus(academicStatus);
+        unwraoAndSetAchievements(achievements);
+        unwraoAndSetBehaviourHistories(behaviourHistories);
+        setBlock(block);
+        setCellPhone(cellPhone);
+        unwraoAndSetFamilyHistories(familyHistories);
+        unwraoAndSetCommunityGroups(communityGroups);
+        unwraoAndSetCoCurriculars(coCurriculars);
+        setDayJoined(dayJoined);
+        setDob(dob);
+        setFaculty(faculty);
+        setFatherFirstName(fatherFirstName);
+        setFatherLastName(fatherLastName);
+        setFatherPhone(fatherPhone);
+        setFirstName(firstName);
+        unwraoAndSetBHallHistories(hallHistories);
+        setHomeAddress1(homeAddress1);
+        setHomeAddress2(homeAddress2);
+        setHomeCity(homeCity);
+        setHomeProvince(homeProvince);
+        setIdNumber(idNumber);
+        setLastName(lastName);
+        setMiddleName(middleName);
+        setMotherFirstName(motherFirstName);
+        setMotherLastName(motherLastName);
+        setMotherPhone(motherPhone);
+        this.nationality = nationality;
+        setParticpationLevel(participationLevel);
+        setPicture(picture);
+        setPreviousSecondary(previousSecondary);
+        setReasonResiding(reasonResiding);
+        this.residentCountry = residentCountry;
+        setRoom(room);
+        setTertiaryLevel(tertiaryLevel);
+        setWillParticipate(willParticipate);
+        setEmail(email);
+    }
+
+    public boolean getPicture() {
+        return picture.get();
+    }
+
+    public BooleanProperty pictureProperty() {
+        return picture;
+    }
+
+    public void setPicture(boolean picture) {
+        this.picture.set(picture);
+    }
+
+    public int getParticpationLevel() {
+        return particpationLevel.get();
+    }
+
+    public IntegerProperty particpationLevelProperty() {
+        return particpationLevel;
+    }
+
+    public void setParticpationLevel(int particpationLevel) {
+        this.particpationLevel.set(particpationLevel);
+    }
+
+    public boolean getAcademicStatus() {
+        return academicStatus.get();
+    }
+
+    public BooleanProperty academicStatusProperty() {
         return academicStatus;
     }
 
     public void setAcademicStatus(boolean academicStatus) {
-        this.academicStatus = academicStatus;
+        this.academicStatus.set(academicStatus);
     }
 
-    public boolean isWillParticipate() {
+    public boolean getWillParticipate() {
+        return willParticipate.get();
+    }
+
+    public BooleanProperty willParticipateProperty() {
         return willParticipate;
     }
 
     public void setWillParticipate(boolean willParticipate) {
-        this.willParticipate = willParticipate;
+        this.willParticipate.set(willParticipate);
+    }
+
+    public boolean getTertiaryLevel() {
+        return tertiaryLevel.get();
+    }
+
+    public BooleanProperty tertiaryLevelProperty() {
+        return tertiaryLevel;
+    }
+
+    public void setTertiaryLevel(boolean tertiaryLevel) {
+        this.tertiaryLevel.set(tertiaryLevel);
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public ObservableList<Achievement> getAchievements() {
@@ -112,17 +217,6 @@ public class Student {
         this.room.set(room);
     }
 
-    public String getResidentCountry() {
-        return residentCountry.get();
-    }
-
-    public StringProperty residentCountryProperty() {
-        return residentCountry;
-    }
-
-    public void setResidentCountry(String residentCountry) {
-        this.residentCountry.set(residentCountry);
-    }
 
     public String getReasonResiding() {
         return reasonResiding.get();
@@ -146,18 +240,6 @@ public class Student {
 
     public void setPreviousSecondary(String previousSecondary) {
         this.previousSecondary.set(previousSecondary);
-    }
-
-    public String getNationality() {
-        return nationality.get();
-    }
-
-    public StringProperty nationalityProperty() {
-        return nationality;
-    }
-
-    public void setNationality(String nationality) {
-        this.nationality.set(nationality);
     }
 
     public String getMotherPhone() {
@@ -386,6 +468,22 @@ public class Student {
 
     public void setCellPhone(String cellPhone) {
         this.cellPhone.set(cellPhone);
+    }
+
+    public Country getNationality() {
+        return nationality;
+    }
+
+    public void setNationality(Country nationality) {
+        this.nationality = nationality;
+    }
+
+    public Country getResidentCountry() {
+        return residentCountry;
+    }
+
+    public void setResidentCountry(Country residentCountry) {
+        this.residentCountry = residentCountry;
     }
 
     public String wrapAchievements()
