@@ -7,10 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 
-import java.awt.image.BufferedImage;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 /**
  * Created by Yerodin on 8/21/2015.
  */
@@ -75,6 +71,10 @@ public class Student {
         setTertiaryLevel(tertiaryLevel);
         setWillParticipate(willParticipate);
         setEmail(email);
+    }
+
+    public Student() {
+        super();
     }
 
     public boolean getPicture() {
