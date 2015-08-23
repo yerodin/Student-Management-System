@@ -14,7 +14,7 @@ if(isset($_POST['sid']))
 		isset($_POST['resident_country'])&&  isset($_POST['room'])&&  isset($_POST['tertiary_level'])&&  isset($_POST['will_participate']))
 		{
 			
-			require_once '../db_config.php';
+			require_once 'db_config.php';
 			$db = new PDO("mysql:dbname=test_sms;host=localhost", DB_USER, DB_PASSWORD);
 
 			$stmt = $db->prepare('INSERT INTO test_stdns(academic_status,achievements,behaviour_history, block, cell_phone,chancellorite_history,community_group,co_curricular,'.'

@@ -13,7 +13,7 @@ if(isset($_POST['sid']))
 		isset($_POST['mother_last_name'])&&  isset($_POST['mother_phone'])&&  isset($_POST['nationality'])&&  isset($_POST['image'])&&  isset($_POST['previous_secondary_school'])&&  isset($_POST['reason_residing'])&&  
 		isset($_POST['resident_country'])&&  isset($_POST['room'])&&  isset($_POST['tertiary_level'])&&  isset($_POST['id'])&&  isset($_POST['will_participate']))
 		{
-			require_once '../db_config.php';
+			require_once 'db_config.php';
 			$db = new PDO("mysql:dbname=test_sms;host=localhost", DB_USER, DB_PASSWORD);
 
 			$stmt = $db->prepare('UPDATE test_stdns setacademic_status=:x1,achievements,=:x2behaviour_history=:x3, block=:x4, cell_phone=:x5,chancellorite_history=:x6,community_group=:x7,co_curricular=:x8,'.'

@@ -7,7 +7,7 @@ if(isset($_POST['sid']))
 	if(isset($_SESSION['user']))
 	{
 		
-		require_once '../db_config.php';
+		require_once 'db_config.php';
 		$db = new PDO("mysql:dbname=test_sms;host=localhost", DB_USER, DB_PASSWORD);
 		$statement = $db->prepare("SELECT block_id,block_alias FROM blocks WHERE 1");
 		$statement->execute();
