@@ -1,5 +1,6 @@
 package controller;
 
+import DBCommunication.DatabaseCommunicator;
 import enums.Operation;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -16,6 +17,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.util.Duration;
 import model.Student;
+import model.User;
 import org.controlsfx.control.Notifications;
 import utility.CustomControlLauncher;
 
@@ -27,7 +29,7 @@ public class MainController implements Initializable {
     @FXML
     TextField filterField;
     @FXML
-    TableView studentTableView;
+    TableView<Student> studentTableView = new TableView<Student>();
     @FXML
     Button addStudentBtn, editStudentBtn, viewStudentBtn, deleteStudentBtn;
     private ObservableList<Student> students = FXCollections.observableArrayList();
@@ -52,16 +54,27 @@ public class MainController implements Initializable {
                 editStudentBtn.setDisable(false);
                 deleteStudentBtn.setDisable(false);
             }
-            Student student = (Student) newValue;
+            Student student = newValue;
             this.currentStudent.set(student);
             this.currentStudent.setValue(student);
         });
 
         populateStudents();
+        filterStudentTable();
     }
 
     public void populateStudents() {
+        getNewStudents();
+        studentTableView.getItems().setAll(students);
         // Code to grab students and insert into ObservableList
+    }
+
+    public void getNewStudents() {
+        ObservableList<Student> students = FXCollections.observableArrayList();
+        DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
+        User user = databaseCommunicator.login("asap", "password", 0);
+        Student[] students1 = databaseCommunicator.getNewStudents(user, 1);
+        students.addAll(students1);
     }
 
 
@@ -92,6 +105,7 @@ public class MainController implements Initializable {
                 title.insert(0, titles[1] + titles[3]);
                 break;
             case VIEW:
+
                 title.insert(0, titles[2] + titles[3]);
                 break;
             default:
@@ -114,7 +128,7 @@ public class MainController implements Initializable {
         if (Objects.deepEquals(eventSource, addStudentBtn)) {
             launchStudentViewWindow(null, Operation.NEW);
         } else if (Objects.deepEquals(eventSource, editStudentBtn)) {
-            launchStudentViewWindow(new Student(), Operation.EDIT);
+            launchStudentViewWindow(null, Operation.EDIT);
         } else if (Objects.deepEquals(eventSource, viewStudentBtn)) {
             launchStudentViewWindow(null, Operation.VIEW);
         } else if (Objects.deepEquals(eventSource, deleteStudentBtn)) {
@@ -122,7 +136,7 @@ public class MainController implements Initializable {
         }
     }
 
-    // Quickly search for employees
+    // Quickly search for students
     public void filterStudentTable() {
         // 1. Wrap the ObservableList in a FilteredList (initially display all students).
         FilteredList<Student> filteredData = new FilteredList<>(students, p -> true);
@@ -130,15 +144,13 @@ public class MainController implements Initializable {
         // 2. Set the filter Predicate whenever the filter changes.
         filterField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(student -> {
-                // If filter text is empty, display all persons.
+                // If filter text is empty, display all students.
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
 
                 // Compare every student's property with filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
-
-                Boolean bool = false;
 
                 try {
                     if (student.getFirstName().toLowerCase().contains(lowerCaseFilter)) {
@@ -177,9 +189,9 @@ public class MainController implements Initializable {
                         return true;
                     } else if (student.getHomeProvince().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
-                    } else if (student.getNationality().toLowerCase().contains(lowerCaseFilter)) {
+                    } else if (student.getResidentCountry().getCountry().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
-                    } else if (student.getResidentCountry().toLowerCase().contains(lowerCaseFilter)) {
+                    } else if (student.getNationality().getNationality().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
                     } else if (student.getPreviousSecondary().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
