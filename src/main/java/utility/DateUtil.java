@@ -11,7 +11,6 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 /**
- * Extension Request Form - service
  * Created: May 19, 2015 @ 10:52 AM
  *
  * @author Alex Stewart
