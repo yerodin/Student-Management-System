@@ -5,6 +5,8 @@ import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,9 +29,10 @@ public class MainController implements Initializable {
     @FXML
     TableView studentTableView;
     @FXML
-    Button addStudentBtn, editStudentBtn, deleteStudentBtn;
+    Button addStudentBtn, editStudentBtn, viewStudentBtn, deleteStudentBtn;
     private ObservableList<Student> students = FXCollections.observableArrayList();
     ObjectProperty<Student> currentStudent;
+    ObservableList<ObjectProperty<Student>> selectedStudents;
 
     /**
      * Called to initialize a controller after its root element has been
@@ -45,10 +48,15 @@ public class MainController implements Initializable {
         // Listen for table selection and update CurrentStudent
         studentTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
         {
+            if (oldValue != null) {
+                editStudentBtn.setDisable(false);
+                deleteStudentBtn.setDisable(false);
+            }
             Student student = (Student) newValue;
             this.currentStudent.set(student);
             this.currentStudent.setValue(student);
         });
+
         populateStudents();
     }
 
@@ -72,22 +80,126 @@ public class MainController implements Initializable {
         );
     }
 
+    public void launchStudentViewWindow(Student student, Operation operation) {
+        // Determine title
+        String[] titles = {"Add ", "Edit ", "View ", " Student"};
+        StringBuilder title = new StringBuilder();
+        switch (operation) {
+            case NEW:
+                title.insert(0, titles[0] + titles[3]);
+                break;
+            case EDIT:
+                title.insert(0, titles[1] + titles[3]);
+                break;
+            case VIEW:
+                title.insert(0, titles[2] + titles[3]);
+                break;
+            default:
+                title.insert(0, "Student Viewer");
+        }
+
+        // Launch Student Viewer with given Student and operation
+        Platform.runLater(() -> {
+            StudentViewController studentViewController = new StudentViewController(student, operation);
+            CustomControlLauncher.create()
+                    .setTitle(title.toString())
+                    .setScene(new Scene(studentViewController, 1280, 640))
+                    .launch();
+        });
+    }
+
     public void optionsHandler(ActionEvent event) {
         Object eventSource = event.getSource();
 
-        // Pop an empty StudentView for Student creation
         if (Objects.deepEquals(eventSource, addStudentBtn)) {
-            Platform.runLater(() -> {
-                StudentViewController studentViewController = new StudentViewController(new Student(), Operation.NEW);
-                CustomControlLauncher.create()
-                        .setTitle("Add Student")
-                        .setScene(new Scene(studentViewController, 1024, 600))
-                        .launch();
-            });
+            launchStudentViewWindow(null, Operation.NEW);
         } else if (Objects.deepEquals(eventSource, editStudentBtn)) {
-            // Code to edit student
+            launchStudentViewWindow(new Student(), Operation.EDIT);
+        } else if (Objects.deepEquals(eventSource, viewStudentBtn)) {
+            launchStudentViewWindow(null, Operation.VIEW);
         } else if (Objects.deepEquals(eventSource, deleteStudentBtn)) {
-            // Code to delete student
+            students.remove(currentStudent.get());
         }
+    }
+
+    // Quickly search for employees
+    public void filterStudentTable() {
+        // 1. Wrap the ObservableList in a FilteredList (initially display all students).
+        FilteredList<Student> filteredData = new FilteredList<>(students, p -> true);
+
+        // 2. Set the filter Predicate whenever the filter changes.
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(student -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Compare every student's property with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                Boolean bool = false;
+
+                try {
+                    if (student.getFirstName().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getLastName().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getMiddleName().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (String.valueOf(student.getIdNumber()).toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getEmail().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getBlock().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getFaculty().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getFatherFirstName().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getFatherLastName().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getFatherPhone().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getMotherFirstName().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getMotherLastName().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getMotherPhone().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getCellPhone().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getHomeAddress1().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getHomeAddress2().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getHomeCity().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getHomeProvince().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getNationality().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getResidentCountry().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getPreviousSecondary().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    }
+
+                    return false; // Does not match.
+                } catch (NullPointerException nullP) {
+                    // Do nothing... For now
+                }
+                return false;
+            });
+        });
+
+        // 3. Wrap the FilteredList in a SortedList.
+        SortedList<Student> sortedData = new SortedList<>(filteredData);
+
+        // 4. Bind the SortedList comparator to the TableView comparator.
+        sortedData.comparatorProperty().bind(studentTableView.comparatorProperty());
+
+        // 5. Add sorted (and filtered) data to the table.
+        studentTableView.setItems(sortedData);
     }
 }
