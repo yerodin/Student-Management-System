@@ -89,8 +89,11 @@ public class MainController implements Initializable {
 
     private ObservableList<Student> generateFakeStudents() {
         return FXCollections.observableArrayList(
-                new Student("827632829", "Damion", "Marlon", "Richardson", "Excellence", "12", "FSAT"),
-                new Student("236251971", "Ramone", "Davere", "Wright", "Aye", "8", "Law")
+                new Student("827632829", "Damion", "Marlon", "Richardson", "Excellence", "12", "Sci. Tech"),
+                new Student("236251971", "Ramone", "Davere", "Wright", "Aye", "8", "Law"),
+                new Student("131273681", "Richard", "Ben", "Hickler", "Runci", "11", "Social Sciences"),
+                new Student("974535780", "Easton", "Hamesh", "Ricketts", "Che", "3", "Humanities"),
+                new Student("688325630", "John", "Wilder", "Scott", "Dynamite", "19", "Med")
         );
     }
 
