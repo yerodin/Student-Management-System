@@ -1,6 +1,8 @@
 package model;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
@@ -12,8 +14,9 @@ public class Country {
 
     public Country(int countryID, String country, String nationality)
     {
-        setCountryID(countryID);
-        setCountry(country);
+        this.countryID = new SimpleIntegerProperty(countryID);
+        this.country = new SimpleStringProperty(country);
+        this.nationality = new SimpleStringProperty(nationality);
         setNationality(nationality);
     }
 

@@ -1,8 +1,6 @@
 package model;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
@@ -35,42 +33,42 @@ public class Student {
                    String homeCity, String homeProvince, String idNumber, String lastName, String middleName, String motherFirstName,
                    String motherLastName, String motherPhone, String previousSecondary, String reasonResiding, String room, boolean tertiaryLevel, String email, Country nationality,
                    int participationLevel, boolean picture, Country residentCountry) {
-        setAcademicStatus(academicStatus);
+        this.academicStatus = new SimpleBooleanProperty(academicStatus);
         unwraoAndSetAchievements(achievements);
         unwraoAndSetBehaviourHistories(behaviourHistories);
-        setBlock(block);
-        setCellPhone(cellPhone);
+        this.block = new SimpleStringProperty(block);
+        this.cellPhone = new SimpleStringProperty(cellPhone);
         unwraoAndSetFamilyHistories(familyHistories);
         unwraoAndSetCommunityGroups(communityGroups);
         unwraoAndSetCoCurriculars(coCurriculars);
-        setDayJoined(dayJoined);
-        setDob(dob);
-        setFaculty(faculty);
-        setFatherFirstName(fatherFirstName);
-        setFatherLastName(fatherLastName);
-        setFatherPhone(fatherPhone);
-        setFirstName(firstName);
+        this.dayJoined = new SimpleStringProperty(dayJoined);
+        this.dob = new SimpleStringProperty(dob);
+        this.faculty = new SimpleStringProperty(faculty);
+        this.fatherFirstName = new SimpleStringProperty(fatherFirstName);
+        this.fatherLastName = new SimpleStringProperty(fatherLastName);
+        this.fatherPhone = new SimpleStringProperty(fatherPhone);
+        this.firstName = new SimpleStringProperty(firstName);
         unwraoAndSetBHallHistories(hallHistories);
-        setHomeAddress1(homeAddress1);
-        setHomeAddress2(homeAddress2);
-        setHomeCity(homeCity);
-        setHomeProvince(homeProvince);
-        setIdNumber(idNumber);
-        setLastName(lastName);
-        setMiddleName(middleName);
-        setMotherFirstName(motherFirstName);
-        setMotherLastName(motherLastName);
-        setMotherPhone(motherPhone);
+        this.homeAddress1 = new SimpleStringProperty(homeAddress1);
+        this.homeAddress2 = new SimpleStringProperty(homeAddress2);
+        this.homeCity = new SimpleStringProperty(homeCity);
+        this.homeProvince = new SimpleStringProperty(homeProvince);
+        this.idNumber = new SimpleStringProperty(idNumber);
+        this.lastName = new SimpleStringProperty(lastName);
+        this.middleName = new SimpleStringProperty(middleName);
+        this.motherFirstName = new SimpleStringProperty(motherFirstName);
+        this.motherLastName = new SimpleStringProperty(motherLastName);
+        this.motherPhone = new SimpleStringProperty(motherPhone);
         this.nationality = nationality;
-        setParticpationLevel(participationLevel);
-        setPicture(picture);
-        setPreviousSecondary(previousSecondary);
-        setReasonResiding(reasonResiding);
+        this.particpationLevel = new SimpleIntegerProperty(participationLevel);
+        this.picture = new SimpleBooleanProperty(picture);
+        this.previousSecondary = new SimpleStringProperty(previousSecondary);
+        this.reasonResiding = new SimpleStringProperty(reasonResiding);
         this.residentCountry = residentCountry;
-        setRoom(room);
-        setTertiaryLevel(tertiaryLevel);
-        setWillParticipate(willParticipate);
-        setEmail(email);
+        this.room = new SimpleStringProperty(room);
+        this.tertiaryLevel = new SimpleBooleanProperty(tertiaryLevel);
+        this.willParticipate = new SimpleBooleanProperty(willParticipate);
+        this.email = new SimpleStringProperty(email);
     }
 
     public Student() {
@@ -606,5 +604,46 @@ public class Student {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return "Student{" +
+                "academicStatus=" + academicStatus +
+                ", willParticipate=" + willParticipate +
+                ", tertiaryLevel=" + tertiaryLevel +
+                ", picture=" + picture +
+                ", achievements=" + achievements +
+                ", behaviourHistories=" + behaviourHistories +
+                ", familyHistories=" + familyHistories +
+                ", hallHistories=" + hallHistories +
+                ", communityGroups=" + communityGroups +
+                ", coCurriculars=" + coCurriculars +
+                ", image=" + image +
+                ", cellPhone=" + cellPhone +
+                ", dayJoined=" + dayJoined +
+                ", dob=" + dob +
+                ", block=" + block +
+                ", faculty=" + faculty +
+                ", fatherFirstName=" + fatherFirstName +
+                ", fatherLastName=" + fatherLastName +
+                ", fatherPhone=" + fatherPhone +
+                ", firstName=" + firstName +
+                ", homeAddress1=" + homeAddress1 +
+                ", homeAddress2=" + homeAddress2 +
+                ", homeCity=" + homeCity +
+                ", homeProvince=" + homeProvince +
+                ", idNumber=" + idNumber +
+                ", lastName=" + lastName +
+                ", middleName=" + middleName +
+                ", motherFirstName=" + motherFirstName +
+                ", motherLastName=" + motherLastName +
+                ", motherPhone=" + motherPhone +
+                ", previousSecondary=" + previousSecondary +
+                ", reasonResiding=" + reasonResiding +
+                ", room=" + room +
+                ", email=" + email +
+                ", particpationLevel=" + particpationLevel +
+                ", nationality=" + nationality +
+                ", residentCountry=" + residentCountry +
+                '}';
+    }
 }

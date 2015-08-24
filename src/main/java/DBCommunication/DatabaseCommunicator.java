@@ -18,15 +18,15 @@ public class DatabaseCommunicator {
     public final static int SUCCESS = 1;
     public final static int FAILURE = 0;
     final private String SERVER_IP = "localhost";
-    final private String LOGIN_URL = "http://" + SERVER_IP + "//sms//dataprovider//hcmanager//login.php";
-    final private String BLOCKS_URL = "http://" + SERVER_IP + "//cms//dataprovider//hcmanager//get_blocks.php";
-    final private String FACULTIES_URL = "http://" + SERVER_IP + "//cms//dataprovider//hcmanager//get_faculties.php";
-    final private String ROOMS_URL = "http://" + SERVER_IP + "//cms//dataprovider//hcmanager//get_rooms.php";
-    final private String COUNTRIES_URL = "http://" + SERVER_IP + "//cms//dataprovider//hcmanager//get_countries.php";
-    final private String ADD_STUDENT_URL = "http://" + SERVER_IP + "//cms//dataprovider//hcmanager//add_student.php";
-    final private String EDIT_STUDENT_COUNTRIES_URL = "http://" + SERVER_IP + "//cms//dataprovider//hcmanager//edit_student.php";
-    final private String DELETE_STUDENT_COUNTRIES_URL = "http://" + SERVER_IP + "//cms//dataprovider//hcmanager//delete_student.php";
-    final private String GET_STUDENTS_URL = "http://" + SERVER_IP + "//cms//dataprovider//hcmanager//get_all_students.php";
+    final private String LOGIN_URL = "http://" + SERVER_IP + "//sms//dataprovider//login.php";
+    final private String BLOCKS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_blocks.php";
+    final private String FACULTIES_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_faculties.php";
+    final private String ROOMS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_rooms.php";
+    final private String COUNTRIES_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_countries.php";
+    final private String ADD_STUDENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//add_student.php";
+    final private String EDIT_STUDENT_COUNTRIES_URL = "http://" + SERVER_IP + "//sms//dataprovider//edit_student.php";
+    final private String DELETE_STUDENT_COUNTRIES_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_student.php";
+    final private String GET_STUDENTS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_new_students.php";
 
     private JSONParser jParser;
     private static String[] blocks, faculties, rooms;
@@ -40,6 +40,7 @@ public class DatabaseCommunicator {
     public DatabaseCommunicator() {
 
         jParser = new JSONParser();
+        studentVersion = 0;
     }
 
     public User login(String username, String password, int taskID)
@@ -66,6 +67,8 @@ public class DatabaseCommunicator {
                 fillFaculties(u);
                 fillBlocks(u);
                 fillCountries(u);
+                fillRooms(u);
+                return u;
             }
             else
                 status = "Incorrect username/password combination.";
@@ -82,6 +85,7 @@ public class DatabaseCommunicator {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(BLOCKS_URL, "POST", params);
+        System.out.println(jObj);
         try
         {
             if (jObj.getInt("success") == SUCCESS)
@@ -110,12 +114,14 @@ public class DatabaseCommunicator {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(FACULTIES_URL, "POST", params);
+        System.out.println(jObj);
         try
         {
             if (jObj.getInt("success") == SUCCESS)
             {
                 JSONArray dfaculties = jObj.getJSONArray("data");
                 faculties = new String[dfaculties.length()+1];
+                faculties[0] = "None";
                 for(int i = 0; i < dfaculties.length();++i)
                 {
                     JSONObject faculty= dfaculties.getJSONObject(i);
@@ -227,7 +233,7 @@ public class DatabaseCommunicator {
                 for(int i = 0; i < students.length(); ++i)
                 {
                     JSONObject student = students.getJSONObject(i);
-                    boolean academicStatus = student.getBoolean("academic_status");
+                    boolean academicStatus = student.getInt("academic_status") == 1;
                     String achievements = student.getString("achievements");
                     String behaviour_history = student.getString("achievements");
                     int block = student.getInt("block");
@@ -255,13 +261,13 @@ public class DatabaseCommunicator {
                     String motherPhone = student.getString("mother_phone");
                     int nationality = student.getInt("nationality");
                     int participationLevel = student.getInt("participation_level");
-                    boolean picture = student.getBoolean("picture");
+                    boolean picture = student.getInt("picture") == 1;
                     String previousSecondary = student.getString("previous_secondary_school");
                     String reasonResiding = student.getString("reason_residing");
                     int residentCountry = student.getInt("resident_country");
                     int room = student.getInt("room");
-                    boolean tertiaryLevel = student.getBoolean("tertiary_level");
-                    boolean willParticipate = student.getBoolean("will_participate");
+                    boolean tertiaryLevel = student.getInt("tertiary_level") == 1;
+                    boolean willParticipate = student.getInt("will_participate") == 1;
                     String email = student.getString("email");
 
 
@@ -288,22 +294,22 @@ public class DatabaseCommunicator {
 
     public static String getBlockFromID(int ID)
     {
-        return ((blocks.length >= ID)? blocks[ID-1]:null);
+        return ((blocks.length > ID)? blocks[ID]:null);
     }
 
     public static String getFacultyFromID(int ID)
     {
-        return ((faculties.length >= ID)? faculties[ID-1]:null);
+        return ((faculties.length > ID)? faculties[ID]:null);
     }
 
     public static Country getCountryFromID(int ID)
     {
-        return ((countries.size() >= ID)? countries.get(ID-1):null);
+        return ((countries.size() > ID)? countries.get(ID):null);
     }
 
     public static String getRoomFromID(int ID)
     {
-        return ((rooms.length >= ID)? rooms[ID-1]:null);
+        return ((rooms.length > ID)? rooms[ID]:"");
     }
 
     public int getStatusId()
