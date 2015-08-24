@@ -1,6 +1,13 @@
 package model;
 
+<<<<<<< HEAD
 import javafx.beans.property.*;
+=======
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+>>>>>>> f9553e4f9f368b3e2bfb081c69fc6bdc8aefcbdd
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
@@ -19,9 +26,18 @@ public class Student {
     private Image image;
 
 
-    private StringProperty cellPhone, dayJoined, dob, block, faculty, fatherFirstName, fatherLastName,fatherPhone, firstName,
-            homeAddress1,homeAddress2, homeCity, homeProvince,idNumber,lastName,middleName,motherFirstName,
-            motherLastName, motherPhone, previousSecondary,reasonResiding, room, email;
+    private StringProperty cellPhone, dayJoined, dob, fatherFirstName, fatherLastName, fatherPhone,
+            homeAddress1, homeAddress2, homeCity, homeProvince, motherFirstName,
+            motherLastName, motherPhone, previousSecondary, reasonResiding, email;
+
+    // Proof of concept
+    StringProperty idNumber = new SimpleStringProperty(this, "idNumber");
+    StringProperty firstName = new SimpleStringProperty(this, "firstName");
+    StringProperty middleName = new SimpleStringProperty(this, "middleName");
+    StringProperty lastName = new SimpleStringProperty(this, "lastName");
+    StringProperty block = new SimpleStringProperty(this, "block");
+    StringProperty room = new SimpleStringProperty(this, "room");
+    StringProperty faculty = new SimpleStringProperty(this, "faculty");
 
     private IntegerProperty particpationLevel;
 
@@ -73,6 +89,19 @@ public class Student {
 
     public Student() {
         super();
+    }
+
+    // Constructor for testing purposes only
+    public Student(String idNumber, String firstName, String middleName,
+                   String lastName, String block, String room,
+                   String faculty) {
+        setIdNumber(idNumber);
+        setFirstName(firstName);
+        setMiddleName(middleName);
+        setLastName(lastName);
+        setBlock(block);
+        setRoom(room);
+        setFaculty(faculty);
     }
 
     public boolean getPicture() {

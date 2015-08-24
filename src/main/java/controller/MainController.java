@@ -1,10 +1,11 @@
 package controller;
 
-import DBCommunication.DatabaseCommunicator;
 import enums.Operation;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -15,9 +16,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import model.Student;
-import model.User;
 import org.controlsfx.control.Notifications;
 import utility.CustomControlLauncher;
 
@@ -26,14 +27,17 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
+    final Text[] tablePlaceholders = {
+            new Text("Start by creating a student with the Add Student button to the right."),
+            new Text("No results found.")};
     @FXML
-    TextField filterField;
+    TextField filterField = new TextField();
     @FXML
     TableView<Student> studentTableView = new TableView<Student>();
     @FXML
     Button addStudentBtn, editStudentBtn, viewStudentBtn, deleteStudentBtn;
     private ObservableList<Student> students = FXCollections.observableArrayList();
-    ObjectProperty<Student> currentStudent;
+    ObjectProperty<Student> currentStudent = new SimpleObjectProperty<>();
     ObservableList<ObjectProperty<Student>> selectedStudents;
 
     /**
@@ -46,35 +50,51 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        getNewStudents();
+        Platform.runLater(() -> {
+            addStudentBtn.requestFocus();
+            filterStudentTable();
+        });
 
         // Listen for table selection and update CurrentStudent
         studentTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
         {
-            if (oldValue != null) {
-                editStudentBtn.setDisable(false);
-                deleteStudentBtn.setDisable(false);
+            if (newValue != null) {
+                Platform.runLater(() -> {
+                    editStudentBtn.setDisable(false);
+                    viewStudentBtn.setDisable(false);
+                    deleteStudentBtn.setDisable(false);
+                    this.currentStudent.setValue(newValue);
+                });
             }
-            Student student = newValue;
-            this.currentStudent.set(student);
-            this.currentStudent.setValue(student);
         });
 
-        populateStudents();
-        filterStudentTable();
-    }
-
-    public void populateStudents() {
-        getNewStudents();
-        studentTableView.getItems().setAll(students);
-        // Code to grab students and insert into ObservableList
+        students.addListener((ListChangeListener<Student>) c -> {
+            if (students.isEmpty() || students.size() == 0) {
+                studentTableView.setPlaceholder(tablePlaceholders[0]);
+            }
+        });
     }
 
     public void getNewStudents() {
-        ObservableList<Student> students = FXCollections.observableArrayList();
-        DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
-        User user = databaseCommunicator.login("asap", "password", 0);
-        Student[] students1 = databaseCommunicator.getNewStudents(user, 1);
-        students.addAll(students1);
+//        DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
+//        User user = databaseCommunicator.login("asap", "password", 0);
+//        Student[] students1 = databaseCommunicator.getNewStudents(user, 1);
+        Platform.runLater(() -> {
+            students.addAll(generateFakeStudents());
+            studentTableView.setItems(students);
+        });
+    }
+
+
+    private ObservableList<Student> generateFakeStudents() {
+        return FXCollections.observableArrayList(
+                new Student("827632829", "Damion", "Marlon", "Richardson", "Excellence", "12", "Sci. Tech"),
+                new Student("236251971", "Ramone", "Davere", "Wright", "Aye", "8", "Law"),
+                new Student("131273681", "Richard", "Ben", "Hickler", "Runci", "11", "Social Sciences"),
+                new Student("974535780", "Easton", "Hamesh", "Ricketts", "Che", "3", "Humanities"),
+                new Student("688325630", "John", "Wilder", "Scott", "Dynamite", "19", "Med")
+        );
     }
 
 
@@ -126,13 +146,13 @@ public class MainController implements Initializable {
         Object eventSource = event.getSource();
 
         if (Objects.deepEquals(eventSource, addStudentBtn)) {
-            launchStudentViewWindow(null, Operation.NEW);
+            Platform.runLater(() -> launchStudentViewWindow(null, Operation.NEW));
         } else if (Objects.deepEquals(eventSource, editStudentBtn)) {
-            launchStudentViewWindow(null, Operation.EDIT);
+            Platform.runLater(() -> launchStudentViewWindow(currentStudent.getValue(), Operation.EDIT));
         } else if (Objects.deepEquals(eventSource, viewStudentBtn)) {
-            launchStudentViewWindow(null, Operation.VIEW);
+            Platform.runLater(() -> launchStudentViewWindow(currentStudent.getValue(), Operation.VIEW));
         } else if (Objects.deepEquals(eventSource, deleteStudentBtn)) {
-            students.remove(currentStudent.get());
+            Platform.runLater(() -> students.remove(currentStudent.getValue()));
         }
     }
 
@@ -161,49 +181,53 @@ public class MainController implements Initializable {
                         return true;
                     } else if (String.valueOf(student.getIdNumber()).toLowerCase().contains(lowerCaseFilter)) {
                         return true;
-                    } else if (student.getEmail().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
+//                    } else if (student.getEmail().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
                     } else if (student.getBlock().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
                     } else if (student.getFaculty().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
-                    } else if (student.getFatherFirstName().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getFatherLastName().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getFatherPhone().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getMotherFirstName().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getMotherLastName().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getMotherPhone().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getCellPhone().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getHomeAddress1().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getHomeAddress2().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getHomeCity().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getHomeProvince().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getResidentCountry().getCountry().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getNationality().getNationality().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
-                    } else if (student.getPreviousSecondary().toLowerCase().contains(lowerCaseFilter)) {
-                        return true;
+//                    } else if (student.getFatherFirstName().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getFatherLastName().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getFatherPhone().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getMotherFirstName().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getMotherLastName().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getMotherPhone().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getCellPhone().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getHomeAddress1().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getHomeAddress2().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getHomeCity().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getHomeProvince().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getResidentCountry().getCountry().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getNationality().getNationality().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
+//                    } else if (student.getPreviousSecondary().toLowerCase().contains(lowerCaseFilter)) {
+//                        return true;
                     }
 
+                    studentTableView.setPlaceholder(tablePlaceholders[1]);
                     return false; // Does not match.
                 } catch (NullPointerException nullP) {
                     // Do nothing... For now
                 }
+                studentTableView.setPlaceholder(tablePlaceholders[1]);
                 return false;
             });
         });
+
+//        studentTableView.setPlaceholder(tablePlaceholders[0]);
 
         // 3. Wrap the FilteredList in a SortedList.
         SortedList<Student> sortedData = new SortedList<>(filteredData);
