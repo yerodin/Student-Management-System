@@ -335,6 +335,8 @@ public class DatabaseCommunicator {
         return false;
     }
 
+
+
     public Student[] getNewStudents(User currentUser,int taskID)
     {
         statusId = taskID;

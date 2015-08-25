@@ -9,6 +9,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 
+import java.io.File;
+
 /**
  * Created by Yerodin on 8/21/2015.
  */
@@ -21,7 +23,7 @@ public class Student {
     private ObservableList<CommunityGroup> communityGroups;
     private ObservableList<CoCurricular> coCurriculars;
     private Image image;
-
+    private ObservableList<File> attachedDocuments;
 
     private StringProperty cellPhone, dayJoined, dob, fatherFirstName, fatherLastName, fatherPhone,
             homeAddress1, homeAddress2, homeCity, homeProvince, motherFirstName,
@@ -215,6 +217,14 @@ public class Student {
 
     public void setCoCurriculars(ObservableList<CoCurricular> coCurriculars) {
         this.coCurriculars = coCurriculars;
+    }
+
+    public ObservableList<File> getAttachedDocuments() {
+        return attachedDocuments;
+    }
+
+    public void setAttachedDocuments(ObservableList<File> attachedDocuments) {
+        this.attachedDocuments = attachedDocuments;
     }
 
     public String getEmail() {
