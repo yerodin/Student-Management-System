@@ -10,6 +10,10 @@ public class CommunityGroup {
 
     private StringProperty group, project, responsibility;
 
+    public CommunityGroup() {
+        super();
+    }
+
     public CommunityGroup(String group, String project, String responsibility)
     {
         setGroup(group);

@@ -1,8 +1,5 @@
 package model;
 
-import enums.Block;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -13,7 +10,7 @@ public class FamilyHistory {
     private StringProperty from = new SimpleStringProperty(this, "from");
     private StringProperty to = new SimpleStringProperty(this, "to");
     private StringProperty relationship = new SimpleStringProperty(this, "relationship");
-    private StringProperty block;
+    private StringProperty block = new SimpleStringProperty(this, "block");
 
 
     public FamilyHistory() {
@@ -95,9 +92,10 @@ public class FamilyHistory {
     @Override
     public String toString() {
         return "FamilyHistory{" +
-                ", from=" + from +
-                ", to=" + to +
-                ", relationship=" + relationship +
+                "from=" + from.get() +
+                ", to=" + to.get() +
+                ", relationship=" + relationship.get() +
+                ", block=" + block.get() +
                 '}';
     }
 
@@ -110,7 +108,8 @@ public class FamilyHistory {
 
         if (!getFrom().equals(that.getFrom())) return false;
         if (!getTo().equals(that.getTo())) return false;
-        return getRelationship().equals(that.getRelationship());
+        if (!getRelationship().equals(that.getRelationship())) return false;
+        return getBlock().equals(that.getBlock());
 
     }
 
@@ -119,6 +118,7 @@ public class FamilyHistory {
         int result = getFrom().hashCode();
         result = 31 * result + getTo().hashCode();
         result = 31 * result + getRelationship().hashCode();
+        result = 31 * result + getBlock().hashCode();
         return result;
     }
 }

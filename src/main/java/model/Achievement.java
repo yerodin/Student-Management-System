@@ -6,24 +6,28 @@ import javafx.beans.property.StringProperty;
  * Created by Yerodin on 8/22/2015.
  */
 public class Achievement {
-    private StringProperty achievemnt, area;
+    private StringProperty achievement, area;
 
-    public Achievement(String achievemnt, String area)
+    public Achievement() {
+        super();
+    }
+
+    public Achievement(String achievement, String area)
     {
-        setAchievemnt(achievemnt);
+        setAchievement(achievement);
         setArea(area);
     }
 
-    public String getAchievemnt() {
-        return achievemnt.get();
+    public String getAchievement() {
+        return achievement.get();
     }
 
-    public StringProperty achievemntProperty() {
-        return achievemnt;
+    public StringProperty achievementProperty() {
+        return achievement;
     }
 
-    public void setAchievemnt(String achievemnt) {
-        this.achievemnt.set(achievemnt);
+    public void setAchievement(String achievement) {
+        this.achievement.set(achievement);
     }
 
     public String getArea() {
@@ -40,15 +44,15 @@ public class Achievement {
 
     public static Achievement unwrap(String wrapped)
     {
-        String achievemnt = wrapped.substring(1,wrapped.indexOf("}"));
+        String achievement = wrapped.substring(1, wrapped.indexOf("}"));
         wrapped.replace("{","");
         wrapped.replace("}","");
         String area = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
-        return new Achievement(achievemnt,area);
+        return new Achievement(achievement, area);
     }
 
     public static String wrap(Achievement achievement)
     {
-        return "{"+achievement.getAchievemnt()+"}{"+achievement.getArea()+"}";
+        return "{" + achievement.getAchievement() + "}{" + achievement.getArea() + "}";
     }
 }

@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 
+/*+
 /**
  * Created by Yerodin on 8/21/2015.
  */
@@ -28,6 +29,7 @@ public class Student {
             motherLastName, motherPhone, previousSecondary, reasonResiding, email;
 
     // Proof of concept
+
     StringProperty idNumber = new SimpleStringProperty(this, "idNumber");
     StringProperty firstName = new SimpleStringProperty(this, "firstName");
     StringProperty middleName = new SimpleStringProperty(this, "middleName");
