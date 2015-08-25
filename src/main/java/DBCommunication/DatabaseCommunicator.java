@@ -1,6 +1,7 @@
 package DBCommunication;
 
 import model.Country;
+import model.HallHistory;
 import model.Student;
 import model.User;
 import org.apache.http.NameValuePair;
@@ -9,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,8 +26,8 @@ public class DatabaseCommunicator {
     final private String ROOMS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_rooms.php";
     final private String COUNTRIES_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_countries.php";
     final private String ADD_STUDENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//add_student.php";
-    final private String EDIT_STUDENT_COUNTRIES_URL = "http://" + SERVER_IP + "//sms//dataprovider//edit_student.php";
-    final private String DELETE_STUDENT_COUNTRIES_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_student.php";
+    final private String EDIT_STUDENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//edit_student.php";
+    final private String DELETE_STUDENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_student.php";
     final private String GET_STUDENTS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_new_students.php";
 
     private JSONParser jParser;
@@ -197,19 +199,140 @@ public class DatabaseCommunicator {
     }
 
 
-    public void addStudent(User currentUser, Student student,int taskID)
+    public boolean addStudent(User currentUser, Student student,int taskID)
     {
-
+        statusId = taskID;
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("sid", currentUser.getSID()));
+        params.add(new BasicNameValuePair("academic_status", student.getAcademicStatus()? "1":"0"));
+        params.add(new BasicNameValuePair("achievements", student.wrapAchievements()));
+        params.add(new BasicNameValuePair("behaviour_history", student.wrapBehaviourHistories()));
+        params.add(new BasicNameValuePair("block", String.valueOf(indexOf(student.getBlock(), blocks))));
+        params.add(new BasicNameValuePair("cell_phone", student.getCellPhone()));
+        params.add(new BasicNameValuePair("family_history", student.wrapFamilyHistories()));
+        params.add(new BasicNameValuePair("community_group", student.wrapCommunityCommunityGroups()));
+        params.add(new BasicNameValuePair("co_curricular", student.wrapCoCurriculars()));
+        params.add(new BasicNameValuePair("day_joined", student.getDayJoined()));
+        params.add(new BasicNameValuePair("dob", student.getDob()));
+        params.add(new BasicNameValuePair("faculty", student.getFaculty()));
+        params.add(new BasicNameValuePair("father_first_name", student.getFirstName()));
+        params.add(new BasicNameValuePair("father_last_name", student.getFatherLastName()));
+        params.add(new BasicNameValuePair("father_phone", student.getFatherPhone()));
+        params.add(new BasicNameValuePair("first_name", student.getFirstName()));
+        params.add(new BasicNameValuePair("hall_history", student.wrapHallHistories()));
+        params.add(new BasicNameValuePair("home_address1", student.getHomeAddress1()));
+        params.add(new BasicNameValuePair("home_address2", student.getHomeAddress2()));
+        params.add(new BasicNameValuePair("home_city", student.getHomeCity()));
+        params.add(new BasicNameValuePair("home_province", student.getHomeProvince()));
+        params.add(new BasicNameValuePair("id_number", student.getIdNumber()));
+        params.add(new BasicNameValuePair("last_name", student.getLastName()));
+        params.add(new BasicNameValuePair("middle_name", student.getMiddleName()));
+        params.add(new BasicNameValuePair("mother_first_name", student.getMotherFirstName()));
+        params.add(new BasicNameValuePair("mother_last_name", student.getMotherLastName()));
+        params.add(new BasicNameValuePair("mother_phone", student.getMotherPhone()));
+        params.add(new BasicNameValuePair("nationality", String.valueOf(student.getNationality())));
+        params.add(new BasicNameValuePair("previous_secondary_school", student.getPreviousSecondary()));
+        params.add(new BasicNameValuePair("reason_residing", student.getReasonResiding()));
+        params.add(new BasicNameValuePair("resident_country", String.valueOf(student.getResidentCountry())));
+        params.add(new BasicNameValuePair("room", student.getRoom()));
+        params.add(new BasicNameValuePair("tertiary_level", student.getTertiaryLevel()? "1":"0"));
+        params.add(new BasicNameValuePair("will_participate", (student.getWillParticipate())? "1":"0"));
+        params.add(new BasicNameValuePair("participation_level", String.valueOf(student.getParticpationLevel())));
+        params.add(new BasicNameValuePair("email", student.getEmail()));
+        params.add(new BasicNameValuePair("picture", student.getPicture()? "1":"0"));
+        JSONObject jObj = jParser.makeHttpRequest(ADD_STUDENT_URL, "POST", params);
+        System.out.println(jObj);
+        try
+        {
+            if (jObj.getInt("success") == SUCCESS)
+               return true;
+            else
+                status = "Incorrect username/password combination.";
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            status = "Error, could not connect to server.";
+        }
+        return false;
     }
 
-    public void editStudent(User currentUser, Student studentChanges,int taskID)
+    public boolean editStudent(User currentUser, Student student,int taskID)
     {
-
+        statusId = taskID;
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("sid", currentUser.getSID()));
+        params.add(new BasicNameValuePair("academic_status", student.getAcademicStatus()? "1":"0"));
+        params.add(new BasicNameValuePair("achievements", student.wrapAchievements()));
+        params.add(new BasicNameValuePair("behaviour_history", student.wrapBehaviourHistories()));
+        params.add(new BasicNameValuePair("block", String.valueOf(indexOf(student.getBlock(), blocks))));
+        params.add(new BasicNameValuePair("cell_phone", student.getCellPhone()));
+        params.add(new BasicNameValuePair("family_history", student.wrapFamilyHistories()));
+        params.add(new BasicNameValuePair("community_group", student.wrapCommunityCommunityGroups()));
+        params.add(new BasicNameValuePair("co_curricular", student.wrapCoCurriculars()));
+        params.add(new BasicNameValuePair("day_joined", student.getDayJoined()));
+        params.add(new BasicNameValuePair("dob", student.getDob()));
+        params.add(new BasicNameValuePair("faculty", student.getFaculty()));
+        params.add(new BasicNameValuePair("father_first_name", student.getFirstName()));
+        params.add(new BasicNameValuePair("father_last_name", student.getFatherLastName()));
+        params.add(new BasicNameValuePair("father_phone", student.getFatherPhone()));
+        params.add(new BasicNameValuePair("first_name", student.getFirstName()));
+        params.add(new BasicNameValuePair("hall_history", student.wrapHallHistories()));
+        params.add(new BasicNameValuePair("home_address1", student.getHomeAddress1()));
+        params.add(new BasicNameValuePair("home_address2", student.getHomeAddress2()));
+        params.add(new BasicNameValuePair("home_city", student.getHomeCity()));
+        params.add(new BasicNameValuePair("home_province", student.getHomeProvince()));
+        params.add(new BasicNameValuePair("id_number", student.getIdNumber()));
+        params.add(new BasicNameValuePair("last_name", student.getLastName()));
+        params.add(new BasicNameValuePair("middle_name", student.getMiddleName()));
+        params.add(new BasicNameValuePair("mother_first_name", student.getMotherFirstName()));
+        params.add(new BasicNameValuePair("mother_last_name", student.getMotherLastName()));
+        params.add(new BasicNameValuePair("mother_phone", student.getMotherPhone()));
+        params.add(new BasicNameValuePair("nationality", String.valueOf(student.getNationality().getCountryID())));
+        params.add(new BasicNameValuePair("previous_secondary_school", student.getPreviousSecondary()));
+        params.add(new BasicNameValuePair("reason_residing", student.getReasonResiding()));
+        params.add(new BasicNameValuePair("resident_country", String.valueOf(student.getResidentCountry().getCountryID())));
+        params.add(new BasicNameValuePair("room", student.getRoom()));
+        params.add(new BasicNameValuePair("tertiary_level", student.getTertiaryLevel()? "1":"0"));
+        params.add(new BasicNameValuePair("will_participate", (student.getWillParticipate())? "1":"0"));
+        params.add(new BasicNameValuePair("participation_level", String.valueOf(student.getParticpationLevel())));
+        params.add(new BasicNameValuePair("email", student.getEmail()));
+        params.add(new BasicNameValuePair("picture", student.getPicture()? "1":"0"));
+        JSONObject jObj = jParser.makeHttpRequest(EDIT_STUDENT_URL, "POST", params);
+        System.out.println(jObj);
+        try
+        {
+            if (jObj.getInt("success") == SUCCESS)
+                return true;
+            else
+                status = jObj.getString("data");
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            status = "Error, could not connect to server.";
+        }
+        return false;
     }
 
-    public void deleteStudent(User currentUser, Student studentChanges,int taskID)
+    public boolean deleteStudent(User currentUser, Student studentChanges,int taskID)
     {
-
+        statusId = taskID;
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("sid", currentUser.getSID()));
+        params.add(new BasicNameValuePair("id_number", studentChanges.getIdNumber()));
+        JSONObject jObj = jParser.makeHttpRequest(DELETE_STUDENT_URL, "POST", params);
+        System.out.println(jObj);
+        try
+        {
+            if (jObj.getInt("success") == SUCCESS)
+                return true;
+            else
+                status = jObj.getString("data");
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            status = "Error, could not connect to server.";
+        }
+        return false;
     }
 
     public Student[] getNewStudents(User currentUser,int taskID)
@@ -282,7 +405,7 @@ public class DatabaseCommunicator {
                 return returnArray;
             }
             else
-                status = "Incorrect username/password combination.";
+                status = jObj.getString("data");
         } catch (Exception e)
         {
             e.printStackTrace();
@@ -321,4 +444,11 @@ public class DatabaseCommunicator {
         return status;
     }
 
+    private int indexOf(String s, String[] array)
+    {
+        for(int i = 0; i < array.length; ++i)
+            if(array[i].equals(s))
+                return i;
+        return -1;
+    }
 }
