@@ -1,13 +1,10 @@
 package model;
 
-<<<<<<< HEAD
 import javafx.beans.property.*;
-=======
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
->>>>>>> f9553e4f9f368b3e2bfb081c69fc6bdc8aefcbdd
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;

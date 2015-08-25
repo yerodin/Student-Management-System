@@ -1,5 +1,6 @@
 package controller;
 
+import DBCommunication.DatabaseCommunicator;
 import enums.Operation;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -19,6 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import model.Student;
+import model.User;
 import org.controlsfx.control.Notifications;
 import utility.CustomControlLauncher;
 
@@ -77,11 +79,12 @@ public class MainController implements Initializable {
     }
 
     public void getNewStudents() {
-//        DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
-//        User user = databaseCommunicator.login("asap", "password", 0);
-//        Student[] students1 = databaseCommunicator.getNewStudents(user, 1);
+
         Platform.runLater(() -> {
-            students.addAll(generateFakeStudents());
+            DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
+            User user = databaseCommunicator.login("asap", "password", 0);
+            Student[] students1 = databaseCommunicator.getNewStudents(user, 1);
+            students.addAll(students1);
             studentTableView.setItems(students);
         });
     }
