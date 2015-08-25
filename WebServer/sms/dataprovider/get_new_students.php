@@ -1,4 +1,5 @@
 <?php
+$response = array();
 if(isset($_POST['sid']))
 {
 	session_id($_POST['sid']);
@@ -31,7 +32,7 @@ if(isset($_POST['sid']))
 					foreach($changed as $cchanged)
 					{
 						
-						$statement->bindValue(":cchanged".$i,$cchanged['id_number'],PDO::PARAM_INT);
+						$statement->bindValue(":cchanged".$i,$cchanged['id_changed'],PDO::PARAM_INT);
 						$i = $i+1;
 					}
 					$statement->execute();
@@ -80,5 +81,5 @@ if(isset($_POST['sid']))
 	$response['data'] = "sid";
 }
 	
-
+echo json_encode($response);
 ?>
