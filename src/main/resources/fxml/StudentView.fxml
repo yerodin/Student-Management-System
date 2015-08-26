@@ -574,15 +574,24 @@
                         </GridPane>
                     </content>
                 </ScrollPane>
-                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                      minWidth="-Infinity" prefHeight="30.0" prefWidth="1022.0" spacing="40.0">
+                <StackPane maxHeight="-Infinity" prefHeight="50.0" prefWidth="1022.0">
                     <children>
-                        <Button fx:id="studentSaveBtn" alignment="CENTER" defaultButton="true" mnemonicParsing="false"
-                                onAction="#studentHandler" text="Save Student" HBox.hgrow="ALWAYS"/>
-                        <Button fx:id="closeBtn" alignment="CENTER" mnemonicParsing="false"
-                                onAction="#studentViewHandler" text="Close"/>
+                        <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                              minWidth="-Infinity" prefHeight="51.0" prefWidth="1022.0" spacing="40.0">
+                            <children>
+                                <Button fx:id="windowSaveBtn" alignment="CENTER" defaultButton="true"
+                                        maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false"
+                                        onAction="#windowBtnHandler" prefHeight="40.0" prefWidth="150.0"
+                                        text="Save Student" HBox.hgrow="ALWAYS"/>
+                                <Button fx:id="windowClearBtn" mnemonicParsing="false" onAction="#windowBtnHandler"
+                                        prefHeight="40.0" prefWidth="150.0" text="Clear"/>
+                                <Button fx:id="windowCloseBtn" alignment="CENTER" maxHeight="-Infinity"
+                                        maxWidth="-Infinity" mnemonicParsing="false" onAction="#windowBtnHandler"
+                                        prefHeight="40.0" prefWidth="150.0" text="Close"/>
+                            </children>
+                        </HBox>
                     </children>
-                </HBox>
+                </StackPane>
             </items>
         </SplitPane>
     </content>

@@ -38,9 +38,10 @@ public class MainController implements Initializable {
     TableView<Student> studentTableView = new TableView<Student>();
     @FXML
     Button addStudentBtn, editStudentBtn, viewStudentBtn, deleteStudentBtn;
-    private ObservableList<Student> students = FXCollections.observableArrayList();
+    private ObservableList<Student> students = FXCollections.<Student>observableArrayList();
     ObjectProperty<Student> currentStudent = new SimpleObjectProperty<>();
     ObservableList<ObjectProperty<Student>> selectedStudents;
+    private User user;
     private DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
 
     /**
@@ -53,6 +54,7 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.user = AuthController.user;
         getNewStudents();
         Platform.runLater(() -> {
             addStudentBtn.requestFocus();
@@ -82,8 +84,8 @@ public class MainController implements Initializable {
     public void getNewStudents() {
 
         Platform.runLater(() -> {
-            User user = databaseCommunicator.login("asap", "password", 0);
-            Student[] students1 = databaseCommunicator.getNewStudents(user, 1);
+            User user = databaseCommunicator.login("cavo", "passw0rd", 1);
+            Student[] students1 = databaseCommunicator.getNewStudents(user, 0);
             students.addAll(students1);
             studentTableView.setItems(students);
         });

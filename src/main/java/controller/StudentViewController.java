@@ -20,6 +20,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import model.*;
@@ -517,14 +518,12 @@ public class StudentViewController extends TitledPane {
     }
 
     @FXML
-    public void studentHandler(ActionEvent event) {
+    public void windowBtnHandler(ActionEvent event) {
         Object eventSource = event.getSource();
-
-    }
-
-    @FXML
-    public void studentViewHandler(ActionEvent event) {
-        Object eventSource = event.getSource();
+        if (Objects.deepEquals(eventSource, closeBtn)) {
+            Stage thisStage = (Stage) closeBtn.getScene().getWindow();
+            thisStage.close();
+        }
 
     }
 

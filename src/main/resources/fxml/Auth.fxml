@@ -9,81 +9,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root fx:id="stackPane" type="StackPane" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="stackPane" maxHeight="380.0" maxWidth="400.0" type="StackPane" xmlns="http://javafx.com/javafx/8.0.40"
+         xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="380.0" prefWidth="400.0">
-            <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                    <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="124.0" layoutY="18.0" pickOnBounds="true"
-                                   preserveRatio="true">
-                            <image>
-                                <Image url="@../img/xlarge.jpg"/>
-                            </image>
-                        </ImageView>
-                    </children>
-                </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                    <children>
-                        <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                              AnchorPane.topAnchor="0.0">
-                            <children>
-                                <GridPane prefHeight="185.0" prefWidth="398.0">
-                                    <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                                    </columnConstraints>
-                                    <rowConstraints>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                                    </rowConstraints>
-                                    <children>
-                                        <Label text="Logged in as:" GridPane.halignment="CENTER"
-                                               GridPane.valignment="CENTER">
-                                            <font>
-                                                <Font name="System Bold" size="18.0"/>
-                                            </font>
-                                        </Label>
-                                        <Label text="Test User" GridPane.columnIndex="1" GridPane.halignment="CENTER"
-                                               GridPane.valignment="CENTER">
-                                            <font>
-                                                <Font name="System Bold" size="18.0"/>
-                                            </font>
-                                        </Label>
-                                        <Label text="Status:" GridPane.halignment="CENTER" GridPane.rowIndex="1"
-                                               GridPane.valignment="CENTER">
-                                            <font>
-                                                <Font name="System Bold" size="18.0"/>
-                                            </font>
-                                        </Label>
-                                        <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1"
-                                                   GridPane.halignment="CENTER" GridPane.rowIndex="1"
-                                                   GridPane.valignment="CENTER"/>
-                                        <SplitMenuButton alignment="CENTER" contentDisplay="CENTER"
-                                                         mnemonicParsing="false" prefHeight="28.0" prefWidth="154.0"
-                                                         text="Logout" GridPane.columnIndex="1"
-                                                         GridPane.halignment="CENTER" GridPane.rowIndex="3"
-                                                         GridPane.valignment="CENTER">
-                                            <items>
-                                                <MenuItem mnemonicParsing="false" text="Switch User"/>
-                                            </items>
-                                            <font>
-                                                <Font size="14.0"/>
-                                            </font>
-                                        </SplitMenuButton>
-                                    </children>
-                                </GridPane>
-                            </children>
-                        </VBox>
-                    </children>
-                </AnchorPane>
-            </items>
-        </SplitPane>
-        <SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                   minWidth="-Infinity" orientation="VERTICAL" prefHeight="380.0" prefWidth="400.0"
-                   stylesheets="@../css/style.css">
+        <SplitPane fx:id="beforeLoginPane" dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity"
+                   minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="380.0"
+                   prefWidth="400.0" stylesheets="@../css/style.css">
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="149.0" prefWidth="398.0">
                 <children>
                     <VBox/>
@@ -172,12 +103,12 @@
                                             <Insets left="32.0"/>
                                         </GridPane.margin>
                                     </ButtonBar>
-                                    <Label fx:id="infoTitle" text="Error!" textFill="#d00000"
+                                    <Label fx:id="infoTitle" text="Error!" textFill="#d00000" visible="false"
                                            GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
                                     <Label fx:id="infoMessage" prefHeight="14.0" prefWidth="268.0"
                                            text="Unable to acquire a database connection" textAlignment="CENTER"
-                                           textFill="#d00000" GridPane.columnIndex="1" GridPane.halignment="CENTER"
-                                           GridPane.rowIndex="3"/>
+                                           textFill="#d00000" visible="false" GridPane.columnIndex="1"
+                                           GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
                                 </children>
                             </GridPane>
                             <ProgressBar fx:id="progressBar" maxHeight="-Infinity" maxWidth="-Infinity"
@@ -187,6 +118,78 @@
                     </VBox>
                 </children>
             </AnchorPane>
+        </SplitPane>
+        <SplitPane fx:id="afterLoginPane" dividerPositions="0.5" orientation="VERTICAL" prefHeight="380.0"
+                   prefWidth="400.0" visible="false">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                    <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="124.0" layoutY="18.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <image>
+                                <Image url="@../img/xlarge.jpg"/>
+                            </image>
+                        </ImageView>
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                    <children>
+                        <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="0.0">
+                            <children>
+                                <GridPane prefHeight="185.0" prefWidth="398.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Logged in as:" GridPane.halignment="CENTER"
+                                               GridPane.valignment="CENTER">
+                                            <font>
+                                                <Font name="System Bold" size="18.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="loggedInAs" text="Test User" GridPane.columnIndex="1"
+                                               GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                            <font>
+                                                <Font name="System Bold" size="18.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Status:" GridPane.halignment="CENTER" GridPane.rowIndex="1"
+                                               GridPane.valignment="CENTER">
+                                            <font>
+                                                <Font name="System Bold" size="18.0"/>
+                                            </font>
+                                        </Label>
+                                        <ChoiceBox fx:id="statusChoiceBox" prefWidth="150.0" GridPane.columnIndex="1"
+                                                   GridPane.halignment="CENTER" GridPane.rowIndex="1"
+                                                   GridPane.valignment="CENTER"/>
+                                        <SplitMenuButton fx:id="logout" alignment="CENTER" contentDisplay="CENTER"
+                                                         mnemonicParsing="false" onAction="#sessionEventHandler"
+                                                         prefHeight="28.0" prefWidth="154.0" text="Logout"
+                                                         GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                                                         GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                                            <items>
+                                                <MenuItem fx:id="switchUser" disable="true" mnemonicParsing="false"
+                                                          onAction="#sessionEventHandler" text="Switch User"/>
+                                            </items>
+                                            <font>
+                                                <Font size="14.0"/>
+                                            </font>
+                                        </SplitMenuButton>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </items>
         </SplitPane>
     </children>
 </fx:root>
