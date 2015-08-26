@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import org.controlsfx.control.*?>
-<?import javafx.geometry.*?>
 <?import java.lang.*?>
-<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.*?>
-<?import javafx.scene.text.*?>
 
-<fx:root animated="false" collapsible="false" minWidth="-Infinity" prefHeight="2000.0" prefWidth="1024.0"
+<fx:root animated="false" collapsible="false" minWidth="-Infinity" prefHeight="2500.0" prefWidth="1024.0"
          type="TitledPane" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
     <content>
         <SplitPane dividerPositions="0.5" orientation="VERTICAL">
@@ -82,12 +83,17 @@
                                 <Label text="ID Number:" GridPane.rowIndex="1"/>
                                 <Label text="Current Academic Status:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                                 <Label text="Participation level:" GridPane.columnIndex="2" GridPane.rowIndex="13"/>
-                                <ImageView fitHeight="150.0" fitWidth="180.0" pickOnBounds="true" preserveRatio="true"
-                                           GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                                    <image>
-                                        <Image url="@placeholder.png"/>
-                                    </image>
-                                </ImageView>
+                                <StackPane fx:id="avatarStackPane" GridPane.halignment="CENTER"
+                                           GridPane.valignment="CENTER">
+                                    <children>
+                                        <ImageView fx:id="avatarImageView" fitHeight="150.0" fitWidth="150.0"
+                                                   pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../img/xlarge.jpg"/>
+                                            </image>
+                                        </ImageView>
+                                    </children>
+                                </StackPane>
                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0"
                                       GridPane.columnIndex="1">
                                     <children>
@@ -104,10 +110,26 @@
                                 <TableView fx:id="familyHistoryTableView" prefHeight="200.0" prefWidth="200.0"
                                            GridPane.rowIndex="15">
                                     <columns>
-                                        <TableColumn prefWidth="75.0" text="From"/>
-                                        <TableColumn prefWidth="75.0" text="To"/>
-                                        <TableColumn prefWidth="75.0" text="Block"/>
-                                        <TableColumn prefWidth="75.0" text="Relationship"/>
+                                        <TableColumn prefWidth="75.0" text="From">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="from"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="To">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="to"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="Block">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="block"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="Relationship">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="relationship"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
                                     </columns>
                                 </TableView>
                                 <GridPane fx:id="famHistoryFormGridPane" GridPane.columnIndex="1"
@@ -126,6 +148,7 @@
                                     <children>
                                         <Label text="From:"/>
                                         <Label text="To:" GridPane.rowIndex="1"/>
+
                                         <Label text="Block:" GridPane.rowIndex="2"/>
                                         <Label text="Relationship:" GridPane.rowIndex="3"/>
                                         <SplitMenuButton fx:id="famHistoryClearDeleteSplitMenuBtn"
@@ -134,14 +157,15 @@
                                                          GridPane.halignment="CENTER" GridPane.rowIndex="4"
                                                          GridPane.valignment="CENTER">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" text="Delete"/>
+                                                <MenuItem fx:id="famHistoryDeleteMenuItem" mnemonicParsing="false"
+                                                          onAction="#famHistoryHandler" text="Delete"/>
                                             </items>
                                         </SplitMenuButton>
                                         <Button fx:id="famHistorySaveBtn" defaultButton="true" mnemonicParsing="false"
                                                 onAction="#famHistoryHandler" prefHeight="26.0" prefWidth="81.0"
                                                 text="Save" GridPane.halignment="CENTER" GridPane.rowIndex="4"
                                                 GridPane.valignment="CENTER"/>
-                                        <DatePicker fx:id="famHistoryFromInput" GridPane.columnIndex="1"/>
+                                        <DatePicker fx:id="famHistoryFromDatePicker" GridPane.columnIndex="1"/>
                                         <DatePicker fx:id="famHistoryToDatePicker" GridPane.columnIndex="1"
                                                     GridPane.rowIndex="1"/>
                                         <ChoiceBox fx:id="famHistoryBlockChoiceBox" prefWidth="150.0"
@@ -260,13 +284,21 @@
                                                          GridPane.columnIndex="1" GridPane.halignment="CENTER"
                                                          GridPane.rowIndex="2" GridPane.valignment="CENTER">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" text="Delete"/>
+                                                <MenuItem fx:id="hallHistoryDeleteMenuItem" mnemonicParsing="false"
+                                                          text="Delete"/>
                                             </items>
                                         </SplitMenuButton>
                                         <ChoiceBox fx:id="hallHistoryHallChoiceBox" prefWidth="150.0"
                                                    GridPane.columnIndex="1"/>
-                                        <ChoiceBox fx:id="hallHistoryPeriodChoiceBox" prefWidth="150.0"
-                                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1"
+                                              GridPane.rowIndex="1">
+                                            <children>
+                                                <Label text="From:"/>
+                                                <DatePicker fx:id="hallHistoryPeriodFrom"/>
+                                                <Label text="To:"/>
+                                                <DatePicker fx:id="hallHistoryPeriodTo"/>
+                                            </children>
+                                        </VBox>
                                     </children>
                                 </GridPane>
                                 <Label text="Behaviour History:" GridPane.columnIndex="2" GridPane.rowIndex="18"/>
@@ -281,9 +313,21 @@
                                 <TableView fx:id="bevHistoryTableView" prefHeight="200.0" prefWidth="200.0"
                                            GridPane.columnIndex="2" GridPane.rowIndex="19">
                                     <columns>
-                                        <TableColumn prefWidth="75.0" text="Hall"/>
-                                        <TableColumn prefWidth="88.0" text="Infraction"/>
-                                        <TableColumn prefWidth="62.0" text="Reason"/>
+                                        <TableColumn prefWidth="75.0" text="Hall">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="hall"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="88.0" text="Infraction">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="infraction"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="62.0" text="Reason">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="reason"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
                                         <TableColumn prefWidth="75.0" text="Date"/>
                                     </columns>
                                 </TableView>
@@ -324,7 +368,8 @@
                                                          GridPane.columnIndex="1" GridPane.halignment="CENTER"
                                                          GridPane.rowIndex="4" GridPane.valignment="CENTER">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" text="Delete"/>
+                                                <MenuItem fx:id="bevHistoryDeleteMenuItem" mnemonicParsing="false"
+                                                          text="Delete"/>
                                             </items>
                                         </SplitMenuButton>
                                     </children>
@@ -341,7 +386,7 @@
                                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                                     </columnResizePolicy>
                                 </TableView>
-                                <GridPane GridPane.columnIndex="3" GridPane.rowIndex="15">
+                                <GridPane fx:id="achievementFormGrid" GridPane.columnIndex="3" GridPane.rowIndex="15">
                                     <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0"
                                                            prefWidth="96.0"/>
@@ -372,7 +417,8 @@
                                                          GridPane.halignment="CENTER" GridPane.rowIndex="2"
                                                          GridPane.valignment="CENTER">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" text="Delete"/>
+                                                <MenuItem fx:id="achievementDeleteMenuItem" mnemonicParsing="false"
+                                                          text="Delete"/>
                                             </items>
                                         </SplitMenuButton>
                                     </children>
@@ -384,9 +430,21 @@
                                 <TableView fx:id="commGroupTableView" prefHeight="200.0" prefWidth="200.0"
                                            GridPane.rowIndex="17">
                                     <columns>
-                                        <TableColumn prefWidth="75.0" text="Group"/>
-                                        <TableColumn prefWidth="75.0" text="Project"/>
-                                        <TableColumn prefWidth="75.0" text="Responsibility"/>
+                                        <TableColumn prefWidth="75.0" text="Group">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="group"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="Project">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="project"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="Responsibility">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="responsibility"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
                                     </columns>
                                 </TableView>
                                 <GridPane fx:id="commGroupFormGridPane" alignment="CENTER" GridPane.columnIndex="1"
@@ -409,7 +467,7 @@
                                                   prefWidth="200.0" wrapText="true" GridPane.columnIndex="1"
                                                   GridPane.halignment="CENTER" GridPane.rowIndex="1"
                                                   GridPane.valignment="CENTER"/>
-                                        <Button fx:id="comGroupSaveBtn" alignment="CENTER" contentDisplay="CENTER"
+                                        <Button fx:id="commGroupSaveBtn" alignment="CENTER" contentDisplay="CENTER"
                                                 defaultButton="true" mnemonicParsing="false"
                                                 nodeOrientation="LEFT_TO_RIGHT" onAction="#commGroupHandler"
                                                 prefHeight="26.0" prefWidth="94.0" text="Save" textAlignment="CENTER"
@@ -422,7 +480,8 @@
                                                          GridPane.halignment="CENTER" GridPane.rowIndex="2"
                                                          GridPane.valignment="CENTER">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" text="Delete"/>
+                                                <MenuItem fx:id="commGroupDeleteMenuItem" mnemonicParsing="false"
+                                                          onAction="#commGroupHandler" text="Delete"/>
                                             </items>
                                         </SplitMenuButton>
                                     </children>
@@ -468,7 +527,7 @@
                                 </GridPane>
                                 <TextArea fx:id="reasonResidingTextArea" prefHeight="156.0" prefWidth="232.0"
                                           wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="20"/>
-                                <GridPane GridPane.columnIndex="3" GridPane.rowIndex="20">
+                                <GridPane fx:id="coCurricularFormGrid" GridPane.columnIndex="3" GridPane.rowIndex="20">
                                     <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
@@ -491,7 +550,8 @@
                                                          GridPane.columnIndex="1" GridPane.halignment="CENTER"
                                                          GridPane.rowIndex="2" GridPane.valignment="CENTER">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" text="Delete"/>
+                                                <MenuItem fx:id="coCurricularDeleteMenuItem" mnemonicParsing="false"
+                                                          onAction="#coCurricularHandler" text="Delete"/>
                                             </items>
                                         </SplitMenuButton>
                                         <ChoiceBox fx:id="coCurricularTypeChoiceBox" prefWidth="150.0"

@@ -41,6 +41,7 @@ public class MainController implements Initializable {
     private ObservableList<Student> students = FXCollections.observableArrayList();
     ObjectProperty<Student> currentStudent = new SimpleObjectProperty<>();
     ObservableList<ObjectProperty<Student>> selectedStudents;
+    private DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
 
     /**
      * Called to initialize a controller after its root element has been
@@ -81,7 +82,6 @@ public class MainController implements Initializable {
     public void getNewStudents() {
 
         Platform.runLater(() -> {
-            DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
             User user = databaseCommunicator.login("asap", "password", 0);
             Student[] students1 = databaseCommunicator.getNewStudents(user, 1);
             students.addAll(students1);
@@ -92,11 +92,11 @@ public class MainController implements Initializable {
 
     private ObservableList<Student> generateFakeStudents() {
         return FXCollections.observableArrayList(
-                new Student("827632829", "Damion", "Marlon", "Richardson", "Excellence", "12", "Sci. Tech"),
+                new Student("827632829", "Damion", "Marlon", "Richardson", "Excellence", "12", "Science & Technology"),
                 new Student("236251971", "Ramone", "Davere", "Wright", "Aye", "8", "Law"),
                 new Student("131273681", "Richard", "Ben", "Hickler", "Runci", "11", "Social Sciences"),
-                new Student("974535780", "Easton", "Hamesh", "Ricketts", "Che", "3", "Humanities"),
-                new Student("688325630", "John", "Wilder", "Scott", "Dynamite", "19", "Med")
+                new Student("974535780", "Easton", "Hamesh", "Ricketts", "Che", "3", "Humanities & Education"),
+                new Student("688325630", "John", "Wilder", "Scott", "Dynamite", "19", "Medical Sciences")
         );
     }
 
@@ -137,7 +137,7 @@ public class MainController implements Initializable {
 
         // Launch Student Viewer with given Student and operation
         Platform.runLater(() -> {
-            StudentViewController studentViewController = new StudentViewController(student, operation);
+            StudentViewController studentViewController = new StudentViewController(student, operation, databaseCommunicator);
             CustomControlLauncher.create()
                     .setTitle(title.toString())
                     .setScene(new Scene(studentViewController, 1280, 640))
@@ -184,40 +184,40 @@ public class MainController implements Initializable {
                         return true;
                     } else if (String.valueOf(student.getIdNumber()).toLowerCase().contains(lowerCaseFilter)) {
                         return true;
-//                    } else if (student.getEmail().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
+                    } else if (student.getEmail().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
                     } else if (student.getBlock().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
                     } else if (student.getFaculty().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
-//                    } else if (student.getFatherFirstName().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getFatherLastName().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getFatherPhone().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getMotherFirstName().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getMotherLastName().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getMotherPhone().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getCellPhone().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getHomeAddress1().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getHomeAddress2().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getHomeCity().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getHomeProvince().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getResidentCountry().getCountry().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getNationality().getNationality().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
-//                    } else if (student.getPreviousSecondary().toLowerCase().contains(lowerCaseFilter)) {
-//                        return true;
+                    } else if (student.getFatherFirstName().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getFatherLastName().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getFatherPhone().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getMotherFirstName().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getMotherLastName().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getMotherPhone().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getCellPhone().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getHomeAddress1().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getHomeAddress2().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getHomeCity().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getHomeProvince().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getResidentCountry().getCountry().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getNationality().getNationality().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
+                    } else if (student.getPreviousSecondary().toLowerCase().contains(lowerCaseFilter)) {
+                        return true;
                     }
 
                     studentTableView.setPlaceholder(tablePlaceholders[1]);

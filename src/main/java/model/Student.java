@@ -30,6 +30,7 @@ public class Student {
             motherLastName, motherPhone, previousSecondary, reasonResiding, email;
 
     // Proof of concept
+
     StringProperty idNumber = new SimpleStringProperty(this, "idNumber");
     StringProperty firstName = new SimpleStringProperty(this, "firstName");
     StringProperty middleName = new SimpleStringProperty(this, "middleName");

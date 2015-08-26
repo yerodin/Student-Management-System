@@ -10,6 +10,10 @@ public class BehaviourHistory {
 
     private StringProperty hall, infraction, reason;
 
+    public BehaviourHistory() {
+        super();
+    }
+
     public BehaviourHistory(String hall, String infraction, String reason)
     {
         setHall(hall);

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<VBox prefHeight="640.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1"
+
+<VBox alignment="CENTER" prefHeight="640.0" prefWidth="1280.0" stylesheets="@../css/style.css"
+      xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="controller.MainController">
     <MenuBar disable="true">
         <menus>
@@ -50,7 +53,7 @@
             <TextField fx:id="filterField" prefHeight="26.0" prefWidth="215.0" promptText="Search..." />
         </items>
     </ToolBar>
-    <SplitPane dividerPositions="0.8020050125313283" prefHeight="743.0" prefWidth="1067.0">
+    <SplitPane dividerPositions="0.8035993740219093" prefHeight="743.0" prefWidth="1067.0">
         <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                 <children>
@@ -103,7 +106,7 @@
             </AnchorPane>
             <AnchorPane prefHeight="283.0" prefWidth="744.0">
                 <children>
-                    <TitledPane animated="false" collapsible="false" prefHeight="741.0" prefWidth="198.0" text="Options"
+                    <TitledPane animated="false" collapsible="false" prefHeight="571.0" prefWidth="201.0" text="Options"
                                 AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
                                 AnchorPane.topAnchor="0.0">
                         <content>
@@ -112,28 +115,28 @@
                                     <VBox alignment="TOP_CENTER" prefHeight="511.0" prefWidth="152.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                         <children>
                                             <Button fx:id="addStudentBtn" defaultButton="true" mnemonicParsing="false"
-                                                    onAction="#optionsHandler" prefHeight="50.0" prefWidth="150.0"
+                                                    onAction="#optionsHandler" prefHeight="50.0" prefWidth="185.0"
                                                     text="Add Student">
                                                 <font>
                                                     <Font name="System Bold" size="14.0"/>
                                                 </font>
                                             </Button>
                                             <Button fx:id="editStudentBtn" disable="true" mnemonicParsing="false"
-                                                    onAction="#optionsHandler" prefHeight="50.0" prefWidth="150.0"
+                                                    onAction="#optionsHandler" prefHeight="50.0" prefWidth="185.0"
                                                     text="Edit Student">
                                                 <font>
                                                     <Font name="System Bold" size="14.0"/>
                                                 </font>
                                             </Button>
                                             <Button fx:id="viewStudentBtn" disable="true" mnemonicParsing="false"
-                                                    onAction="#optionsHandler" prefHeight="50.0" prefWidth="150.0"
+                                                    onAction="#optionsHandler" prefHeight="50.0" prefWidth="185.0"
                                                     text="View Student">
                                                 <font>
                                                     <Font name="System Bold" size="14.0"/>
                                                 </font>
                                             </Button>
                                             <Button fx:id="deleteStudentBtn" disable="true" mnemonicParsing="false"
-                                                    onAction="#optionsHandler" prefHeight="50.0" prefWidth="150.0"
+                                                    onAction="#optionsHandler" prefHeight="50.0" prefWidth="185.0"
                                                     text="Delete Student">
                                                 <font>
                                                     <Font name="System Bold" size="14.0"/>

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root fx:id="stackPane" type="StackPane" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="380.0" prefWidth="400.0">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                    <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="124.0" layoutY="18.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <image>
+                                <Image url="@../img/xlarge.jpg"/>
+                            </image>
+                        </ImageView>
+                    </children>
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                    <children>
+                        <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                              AnchorPane.topAnchor="0.0">
+                            <children>
+                                <GridPane prefHeight="185.0" prefWidth="398.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Logged in as:" GridPane.halignment="CENTER"
+                                               GridPane.valignment="CENTER">
+                                            <font>
+                                                <Font name="System Bold" size="18.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Test User" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                                               GridPane.valignment="CENTER">
+                                            <font>
+                                                <Font name="System Bold" size="18.0"/>
+                                            </font>
+                                        </Label>
+                                        <Label text="Status:" GridPane.halignment="CENTER" GridPane.rowIndex="1"
+                                               GridPane.valignment="CENTER">
+                                            <font>
+                                                <Font name="System Bold" size="18.0"/>
+                                            </font>
+                                        </Label>
+                                        <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1"
+                                                   GridPane.halignment="CENTER" GridPane.rowIndex="1"
+                                                   GridPane.valignment="CENTER"/>
+                                        <SplitMenuButton alignment="CENTER" contentDisplay="CENTER"
+                                                         mnemonicParsing="false" prefHeight="28.0" prefWidth="154.0"
+                                                         text="Logout" GridPane.columnIndex="1"
+                                                         GridPane.halignment="CENTER" GridPane.rowIndex="3"
+                                                         GridPane.valignment="CENTER">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="Switch User"/>
+                                            </items>
+                                            <font>
+                                                <Font size="14.0"/>
+                                            </font>
+                                        </SplitMenuButton>
+                                    </children>
+                                </GridPane>
+                            </children>
+                        </VBox>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+        <SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                   minWidth="-Infinity" orientation="VERTICAL" prefHeight="380.0" prefWidth="400.0"
+                   stylesheets="@../css/style.css">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="149.0" prefWidth="398.0">
+                <children>
+                    <VBox/>
+                    <Text fill="#4665e4" fontSmoothingType="LCD" layoutY="179.0" stroke="#5160e1" strokeLineJoin="ROUND"
+                          strokeMiterLimit="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="STUDENT MANAGEMENT SYSTEM"
+                          textAlignment="CENTER" wrappingWidth="398.10986328125">
+                        <font>
+                            <Font name="Liberation Mono Bold" size="26.0"/>
+                        </font>
+                        <effect>
+                            <Lighting diffuseConstant="1.12" specularConstant="0.56" specularExponent="17.14">
+                                <bumpInput>
+                                    <Shadow/>
+                                </bumpInput>
+                                <light>
+                                    <Light.Distant/>
+                                </light>
+                            </Lighting>
+                        </effect>
+                    </Text>
+                </children>
+            </AnchorPane>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                <children>
+                    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                          AnchorPane.topAnchor="0.0">
+                        <children>
+                            <GridPane prefHeight="179.0" prefWidth="398.0">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="193.0" minWidth="10.0"
+                                                       prefWidth="109.0"/>
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="314.0" minWidth="10.0"
+                                                       prefWidth="289.0"/>
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints maxHeight="55.0" minHeight="10.0" prefHeight="46.0"
+                                                    vgrow="SOMETIMES"/>
+                                    <RowConstraints maxHeight="65.0" minHeight="10.0" prefHeight="39.0"
+                                                    vgrow="SOMETIMES"/>
+                                    <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="39.0"
+                                                    vgrow="SOMETIMES"/>
+                                    <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="23.0"
+                                                    vgrow="SOMETIMES"/>
+                                </rowConstraints>
+                                <children>
+                                    <Label alignment="CENTER" prefHeight="16.0" prefWidth="114.0" text="Username:"
+                                           textAlignment="CENTER" GridPane.halignment="LEFT">
+                                        <padding>
+                                            <Insets left="10.0"/>
+                                        </padding>
+                                    </Label>
+                                    <Label prefHeight="16.0" prefWidth="126.0" text="Password:"
+                                           GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                                        <padding>
+                                            <Insets left="28.0"/>
+                                        </padding>
+                                    </Label>
+                                    <TextField fx:id="usernameField" maxWidth="230.0" prefHeight="30.0"
+                                               prefWidth="230.0" promptText="Enter username..." GridPane.columnIndex="1"
+                                               GridPane.halignment="CENTER">
+                                        <tooltip>
+                                            <Tooltip text="Enter username here"/>
+                                        </tooltip>
+                                    </TextField>
+                                    <PasswordField fx:id="passwordField" maxWidth="230.0" prefHeight="30.0"
+                                                   prefWidth="230.0" promptText="Enter password..."
+                                                   GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                                                   GridPane.rowIndex="1">
+                                        <tooltip>
+                                            <Tooltip text="Enter password here"/>
+                                        </tooltip>
+                                    </PasswordField>
+                                    <ButtonBar maxWidth="-Infinity" minWidth="-Infinity" prefHeight="45.0"
+                                               prefWidth="226.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                        <buttons>
+                                            <Button fx:id="loginBtn" defaultButton="true" mnemonicParsing="false"
+                                                    onAction="#loadApp" prefHeight="30.0" prefWidth="150.0"
+                                                    text="Login"/>
+                                            <Button fx:id="closeBtn" mnemonicParsing="false" onAction="#closeApp"
+                                                    prefHeight="30.0" prefWidth="150.0" text="Close"/>
+                                        </buttons>
+                                        <padding>
+                                            <Insets left="-20.0"/>
+                                        </padding>
+                                        <GridPane.margin>
+                                            <Insets left="32.0"/>
+                                        </GridPane.margin>
+                                    </ButtonBar>
+                                    <Label fx:id="infoTitle" text="Error!" textFill="#d00000"
+                                           GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
+                                    <Label fx:id="infoMessage" prefHeight="14.0" prefWidth="268.0"
+                                           text="Unable to acquire a database connection" textAlignment="CENTER"
+                                           textFill="#d00000" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                                           GridPane.rowIndex="3"/>
+                                </children>
+                            </GridPane>
+                            <ProgressBar fx:id="progressBar" maxHeight="-Infinity" maxWidth="-Infinity"
+                                         minHeight="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="20.0"
+                                         prefWidth="398.0" progress="0.0" VBox.vgrow="NEVER"/>
+                        </children>
+                    </VBox>
+                </children>
+            </AnchorPane>
+        </SplitPane>
+    </children>
+</fx:root>

@@ -8,6 +8,10 @@ import javafx.beans.property.StringProperty;
 public class CoCurricular {
     private StringProperty activity, type;
 
+    public CoCurricular() {
+        super();
+    }
+
     public CoCurricular(String activity, String type)
     {
         setActivity(activity);
