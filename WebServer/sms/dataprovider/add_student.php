@@ -6,7 +6,7 @@ if(isset($_POST['sid']))
 	if(isset($_SESSION['user']))
 	{
 		
-		if(isset($_POST['academic_status']) &&  isset($_POST['achievements']) && isset($_POST['behaviour_history']) &&  isset($_POST['block'])&&  isset($_POST['cell_phone']) &&  isset($_POST['chancellorite_history']) &&  
+		if(isset($_POST['academic_status']) &&  isset($_POST['achievements']) && isset($_POST['behaviour_history']) &&  isset($_POST['block'])&&  isset($_POST['cell_phone']) &&  isset($_POST['family_history']) &&  
 		isset($_POST['community_group']) &&  isset($_POST['co_curricular'])&&  isset($_POST['day_joined'])&&  isset($_POST['dob'])&&  isset($_POST['faculty'])&&  isset($_POST['father_first_name'])&&  
 		isset($_POST['father_last_name'])&&  isset($_POST['father_phone'])&&  isset($_POST['first_name'])&&  isset($_POST['hall_history'])&&  isset($_POST['home_address1'])&&  isset($_POST['home_address2'])&&  
 		isset($_POST['home_city'])&&  isset($_POST['home_province'])&&  isset($_POST['id_number'])&&  isset($_POST['last_name'])&&  isset($_POST['middle_name'])&&  isset($_POST['mother_first_name'])&&  
@@ -17,7 +17,7 @@ if(isset($_POST['sid']))
 			require_once 'db_config.php';
 			$db = new PDO("mysql:dbname=test_sms;host=localhost", DB_USER, DB_PASSWORD);
 
-			$stmt = $db->prepare('INSERT INTO test_stdns(academic_status,achievements,behaviour_history, block, cell_phone,chancellorite_history,community_group,co_curricular,'.'
+			$stmt = $db->prepare('INSERT INTO test_stdns(academic_status,achievements,behaviour_history, block, cell_phone,family_history,community_group,co_curricular,'.'
 			day_joined,dob,faculty,father_first_name,father_last_name,father_phone,first_name,hall_history,home_address1,home_address2,home_city,home_province,id_number,last_name,middle_name,mother_first_name,mother_last_name,'.
 			'mother_phone,nationality,previous_secondary_school,reason_residing,resident_country,room,tertiary_level,will_participate,participation_level,email,image) values(:x1,:x2,:x3,:x4,:x5,:x6,:x7,:x8,:x9,:x10,:x11,:x12,:x13,:x14,:x15,:x16,:x17,:x18,:x19,:x20,:x21,:x22,:x23,:x24,:x25,:x26,:x27,:x28,:x29,:x30,:x31,:x32,:x33,:x34,:35)');
 			$stmt->bindValue(":x1",$_POST['academic_status'],PDO::PARAM_INT);
@@ -25,7 +25,7 @@ if(isset($_POST['sid']))
 			$stmt->bindValue(":x3",$_POST['behaviour_history'],PDO::PARAM_STR);
 			$stmt->bindValue(":x4",$_POST['block'],PDO::PARAM_INT);
 			$stmt->bindValue(":x5",$_POST['cell_phone'],PDO::PARAM_STR);
-			$stmt->bindValue(":x6",$_POST['chancellorite_history'],PDO::PARAM_STR);
+			$stmt->bindValue(":x6",$_POST['family_history'],PDO::PARAM_STR);
 			$stmt->bindValue(":x7",$_POST['community_group'],PDO::PARAM_STR);
 			$stmt->bindValue(":x8",$_POST['co_curricular'],PDO::PARAM_STR);
 			$stmt->bindValue(":x9",$_POST['day_joined'],PDO::PARAM_STR);
@@ -57,10 +57,6 @@ if(isset($_POST['sid']))
 			$stmt->bindValue(":x35",$_POST['email'],PDO::PARAM_STR);
 			$stmt->bindValue(":x36",$_POST['picture'],PDO::PARAM_INT);
 			$stmt->execute();
-			
-			foreach($rows as $row)
-				array_push($response['data'],$row)
-			
 			if($stmt->rowCount() > 0)
 			{
 				$response['success'] = 1;	

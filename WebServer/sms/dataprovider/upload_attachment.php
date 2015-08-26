@@ -5,9 +5,9 @@ if(isset($_GET['sid']))
 	session_start();
 	if(isset($_SESSION['user']))
 	{
-		if(isset($_GET['id']))
+		if(isset($_GET['id']) && isset($_GET['name']))
 		{
-			$filename="../images/".$_GET['id']."png";
+			$filename="../attached/".$_GET['id']."/".$_GET['name'];
 			$fileData=file_get_contents('php://input');
 			$fhandle=fopen($filename, 'wb');
 			fwrite($fhandle, $fileData);

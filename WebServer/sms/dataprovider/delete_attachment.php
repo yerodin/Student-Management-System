@@ -1,19 +1,25 @@
 <?php
-if(isset($_GET['sid']))
+if(isset($_POST['sid']))
 {
-	session_id($_GET['sid']);
+	session_id($_POST['sid']);
 	session_start();
 	if(isset($_SESSION['user']))
 	{
-		if(isset($_GET['id']))
+		if(isset($_POST['id']) && isset($_POST['name']))
 		{
-			$filename="../images/".$_GET['id']."png";
+			$filename="../attached/".$_GET['id']."/".$_GET['name'];
 			$fileData=file_get_contents('php://input');
-			$fhandle=fopen($filename, 'wb');
-			fwrite($fhandle, $fileData);
-			fclose($fhandle);
-			$response['success'] = 1;
-			$response['flag']=0;
+			if(unlink($filename))
+			{
+				$response['success'] = 1;
+				$response['flag']=0;
+			}else
+			{
+				$response['success'] = 0;
+				$response['flag']=3;
+				$response['data']="Delete failed.";
+			}
+			
 		}else
 		{
 			$response['success'] = 0;

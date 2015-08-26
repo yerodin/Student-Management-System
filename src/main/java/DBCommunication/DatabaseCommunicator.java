@@ -29,6 +29,11 @@ public class DatabaseCommunicator {
     final private String EDIT_STUDENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//edit_student.php";
     final private String DELETE_STUDENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_student.php";
     final private String GET_STUDENTS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_new_students.php";
+    final private String UPLOAD_STUDENT_IMAGE_URL = "http://" + SERVER_IP + "//sms//dataprovider//upload_student_image.php";
+    final private String DELETE_STUDENT_IMAGE_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_student_image.php";
+    final private String UPLOAD_ATTACHMENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//upload_attachment.php";
+    final private String DELETE_ATTACHMENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_attachment.php";
+    final private String LOGOUT_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_logout.php";
 
     private JSONParser jParser;
     private static String[] blocks, faculties, rooms;
@@ -80,6 +85,29 @@ public class DatabaseCommunicator {
             status = "Error, could not connect to server.";
         }
         return null;
+    }
+
+    public boolean logout(User user, int taskID)
+    {
+        statusId = taskID;
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("sid", user.getSID()));
+        JSONObject jObj = jParser.makeHttpRequest(LOGOUT_URL, "POST", params);
+        System.out.println(jObj);
+        try
+        {
+            if (jObj.getInt("success") == SUCCESS)
+            {
+               return true;
+            }
+            else
+                status = jObj.getString("data");
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            status = "Error, could not connect to server.";
+        }
+        return false;
     }
 
     private void fillBlocks(User currentUser) throws Exception
@@ -320,6 +348,51 @@ public class DatabaseCommunicator {
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         params.add(new BasicNameValuePair("id_number", studentChanges.getIdNumber()));
         JSONObject jObj = jParser.makeHttpRequest(DELETE_STUDENT_URL, "POST", params);
+        System.out.println(jObj);
+        try
+        {
+            if (jObj.getInt("success") == SUCCESS)
+                return true;
+            else
+                status = jObj.getString("data");
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            status = "Error, could not connect to server.";
+        }
+        return false;
+    }
+
+    private boolean deleteSudentImage(User currentUser, Student student, int taskID)
+    {
+        statusId = taskID;
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("sid", currentUser.getSID()));
+        params.add(new BasicNameValuePair("id", student.getIdNumber()));
+        JSONObject jObj = jParser.makeHttpRequest(DELETE_STUDENT_IMAGE_URL, "POST", params);
+        System.out.println(jObj);
+        try
+        {
+            if (jObj.getInt("success") == SUCCESS)
+                return true;
+            else
+                status = jObj.getString("data");
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            status = "Error, could not connect to server.";
+        }
+        return false;
+    }
+
+    private boolean deleteSudentAttachment(User currentUser, Student student,String fileName, int taskID)
+    {
+        statusId = taskID;
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("sid", currentUser.getSID()));
+        params.add(new BasicNameValuePair("id", student.getIdNumber()));
+        params.add(new BasicNameValuePair("name", fileName));
+        JSONObject jObj = jParser.makeHttpRequest(DELETE_ATTACHMENT_URL, "POST", params);
         System.out.println(jObj);
         try
         {

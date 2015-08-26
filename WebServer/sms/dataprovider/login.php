@@ -22,8 +22,19 @@ if(isset($_POST['user']) && isset($_POST['password']))
 			$response['sid'] =$id;
 	}
 	else
+	{
 		$response['success'] = 0;
-	echo json_encode($response);
-	die();
+		$response['flag'] = 3;
+		$response['data'] = "Login Failed.";
+	}
+
+	
+}else{
+	$response['success'] = 0;
+	$response['flag'] = 0;
+	$response['data'] = "user or password";
+	
 }
+echo json_encode($response);
+die();
 ?>
