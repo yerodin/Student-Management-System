@@ -37,7 +37,7 @@ public class DatabaseCommunicator {
     final private String DELETE_STUDENT_IMAGE_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_student_image.php";
     final private String UPLOAD_ATTACHMENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//upload_attachment.php";
     final private String DELETE_ATTACHMENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_attachment.php";
-    final private String LOGOUT_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_logout.php";
+    final private String LOGOUT_URL = "http://" + SERVER_IP + "//sms//dataprovider//logout.php";
 
     private JSONParser jParser;
     private static String[] blocks, faculties, rooms;
