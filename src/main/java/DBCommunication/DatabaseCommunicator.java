@@ -1,7 +1,6 @@
 package DBCommunication;
 
 import model.Country;
-import model.HallHistory;
 import model.Student;
 import model.User;
 import org.apache.http.NameValuePair;
@@ -10,7 +9,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

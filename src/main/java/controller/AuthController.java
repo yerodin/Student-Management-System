@@ -1,7 +1,10 @@
 package controller;
 
 import DBCommunication.DatabaseCommunicator;
+import enums.Status;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
@@ -12,12 +15,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import model.User;
 import org.controlsfx.control.Notifications;
 import utility.CustomControlLauncher;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Created: May 19, 2015 @ 12:08 PM
@@ -28,11 +33,14 @@ public class AuthController extends StackPane {
     public SplitPane afterLoginPane;
     public SplitPane beforeLoginPane;
     public Label loggedInAs;
-    public ChoiceBox statusChoiceBox;
+    public ChoiceBox<String> statusChoiceBox;
     public SplitMenuButton logout;
     public MenuItem switchUser;
     protected static User user;
+    public Circle statusColorCircle;
+    public Button launchSMSBtn;
     DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
+    ObservableList<String> statuses = FXCollections.<String>observableArrayList();
 
     @FXML
     public TextField usernameField;
@@ -66,14 +74,14 @@ public class AuthController extends StackPane {
 
         this.primaryStage = primaryStage;
 
-        logout.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    CustomControlLauncher.create().setTitle("Student Management System").setScene(new Scene(FXMLLoader.load(getClass().getResource("/fxml/Main.fxml")), 1280, 640)).launch();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        statuses.setAll(Status.labels());
+        statusChoiceBox.setItems(statuses);
+
+        statusChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals("Online")) {
+                statusColorCircle.fillProperty().set(Paint.valueOf("#008287"));
+            } else if (newValue.equals("Away")) {
+                statusColorCircle.fillProperty().set(Paint.valueOf("darkslateblue"));
             }
         });
 
@@ -88,42 +96,28 @@ public class AuthController extends StackPane {
             Task<User> task = new Task<User>() {
                 @Override
                 protected User call() throws Exception {
-                    return user = databaseCommunicator.login(usernameField.getText(), passwordField.getText(), 1);
+                    return databaseCommunicator.login(usernameField.getText(), passwordField.getText(), 1);
                 }
             };
             task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                 @Override
                 public void handle(WorkerStateEvent event) {
                     user = task.getValue();
-                    System.out.println(user.getSID());
                     if (user != null) {
-                        infoTitle.setText("Welcome");
-                        infoTitle.setTextFill(Paint.valueOf("GREEN"));
-                        infoMessage.setText("Login successful!");
-                        infoMessage.setTextFill(Paint.valueOf("GREEN"));
-                        infoTitle.setVisible(true);
-                        infoMessage.setVisible(true);
-//                            startUpdateService();
-                        try {
-                            Thread.sleep(1000);
-                        } catch (Exception e) {
-                        }
-                        Platform.runLater(() -> afterLoginPane.setVisible(true));
-                        try {
-                            CustomControlLauncher.create().setTitle("Student Management System").setScene(new Scene(FXMLLoader.load(getClass().getResource("/fxml/Main.fxml")), 1280, 640)).launch();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        Platform.runLater(() -> {
+                            loggedInAs.setText("\t".concat(user.getUsername())
+                                    .concat("\n").concat("(".concat(user.getFirstName())
+                                            .concat(" "))
+                                    .concat(user.getLastName().concat(")")));
+                            statusChoiceBox.getSelectionModel().select(0);
+                            afterLoginPane.setVisible(true);
+                            beforeLoginPane.setVisible(false);
+                            afterLoginPane.requestFocus();
+                        });
                     } else {
                         Platform.runLater(() -> Notifications.create()
-                                .title("Error!").text("Unable to login at this time. Try again later")
+                                .title("Error!").text("Unable to login at this time. Check your credentials and try again later")
                                 .showError());
-                        Platform.runLater(() -> {
-                            infoTitle.setTextFill(Paint.valueOf("RED"));
-                            infoMessage.setTextFill(Paint.valueOf("RED"));
-                            infoTitle.setVisible(true);
-                            infoMessage.setVisible(true);
-                        });
                         if (databaseCommunicator.getStatusId() == 1)
                             infoMessage.setText(databaseCommunicator.getStatus());
                         else
@@ -144,10 +138,36 @@ public class AuthController extends StackPane {
     }
 
     public void sessionEventHandler(ActionEvent event) {
+        Object eventSource = event.getSource();
+        if (Objects.deepEquals(eventSource, logout)) {
+            Task<Boolean> logoutTask = new Task<Boolean>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    return databaseCommunicator.logout(user, 0);
+                }
+            };
+            logoutTask.setOnSucceeded(event1 -> {
+                if (logoutTask.getValue()) {
+                    Stage thisStage = (Stage) closeBtn.getScene().getWindow();
+                    thisStage.close();
+                }
+            });
+            new Thread(logoutTask).start();
+        }
+        if (Objects.deepEquals(eventSource, launchSMSBtn)) {
+            try {
+                CustomControlLauncher.create().setTitle("Student Management System").setScene(new Scene(FXMLLoader.load(getClass().getResource("/fxml/Main.fxml")), 1280, 640)).launch();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
     public void closeApp(ActionEvent event) {
+        if (!user.getStatus().equals("Offline")) {
+            //
+        }
         Stage thisStage = (Stage) closeBtn.getScene().getWindow();
         thisStage.close();
     }

@@ -84,9 +84,9 @@ public class MainController implements Initializable {
     public void getNewStudents() {
 
         Platform.runLater(() -> {
-            User user = databaseCommunicator.login("cavo", "passw0rd", 1);
-            Student[] students1 = databaseCommunicator.getNewStudents(user, 0);
-            students.addAll(students1);
+            User user1 = databaseCommunicator.login("cavo", "passw0rd", 1);
+            Student[] students1 = databaseCommunicator.getNewStudents(user1, 0);
+            students.setAll(students1);
             studentTableView.setItems(students);
         });
     }
