@@ -11,7 +11,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
-
 <fx:root fx:id="mainTitledPane" animated="false" collapsible="false" minWidth="-Infinity" prefHeight="2500.0"
          prefWidth="1024.0" stylesheets="@../css/style.css" type="TitledPane" xmlns="http://javafx.com/javafx/8.0.40"
          xmlns:fx="http://javafx.com/fxml/1">
@@ -80,7 +79,7 @@
                                        GridPane.rowIndex="13"/>
                                 <Label text="ID Number:" GridPane.rowIndex="1" />
                                 <Label text="Current Academic Status:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                                <StackPane fx:id="avatarStackPane" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                                <StackPane fx:id="avatarStackPane" GridPane.halignment="CENTER"
                                            GridPane.valignment="CENTER">
                                     <children>
                                         <ImageView fx:id="avatarImageView" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
@@ -91,13 +90,13 @@
                                     </children>
                                 </StackPane>
                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0"
-                                      GridPane.columnIndex="2">
+                                      GridPane.columnIndex="1">
                                     <children>
                                         <Button fx:id="addEditPhotoBtn" defaultButton="true" mnemonicParsing="false"
-                                                onAction="#photoEventHandler" prefHeight="40.0" prefWidth="180.0"
-                                                text="Add/Update Photo"/>
+                                                onAction="#photoEventHandler" prefHeight="40.0" prefWidth="200.0"
+                                                text="Upload Photo"/>
                                         <Button fx:id="removePhotoBtn" mnemonicParsing="false"
-                                                onAction="#photoEventHandler" prefHeight="40.0" prefWidth="180.0"
+                                                onAction="#photoEventHandler" prefHeight="40.0" prefWidth="200.0"
                                                 text="Remove Photo"/>
                                     </children>
                                 </VBox>
@@ -523,6 +522,29 @@
                                 <Label text="Date Joined:" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
                                 <DatePicker fx:id="dateJoinedDatePicker" prefHeight="32.0" prefWidth="245.0"
                                             GridPane.columnIndex="3" GridPane.rowIndex="6"/>
+                                <TitledPane animated="false" text="Attachments" GridPane.columnIndex="2">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                            <children>
+                                                <ListView fx:id="attachmentsListView" layoutX="12.4" layoutY="11.4"
+                                                          prefHeight="122.0" prefWidth="230.0"
+                                                          AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="2.0"
+                                                          AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="1.0"/>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                                <VBox alignment="CENTER" layoutX="274.0" layoutY="15.0" prefHeight="200.0"
+                                      prefWidth="100.0" spacing="20.0" GridPane.columnIndex="3">
+                                    <children>
+                                        <Button fx:id="uploadAttachBtn" defaultButton="true" mnemonicParsing="false"
+                                                onAction="#attachmentEventHandler" prefHeight="40.0" prefWidth="200.0"
+                                                text="Upload Attachment"/>
+                                        <Button fx:id="removeAttachmentBtn" mnemonicParsing="false"
+                                                onAction="#attachmentEventHandler" prefHeight="40.0" prefWidth="200.0"
+                                                text="Remove Attachment"/>
+                                    </children>
+                                </VBox>
                             </children>
                             <padding>
                                 <Insets bottom="5.0" left="15.0" right="30.0" top="5.0" />

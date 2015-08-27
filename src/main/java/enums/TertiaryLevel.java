@@ -12,7 +12,8 @@ public enum TertiaryLevel {
     BACHELORS("Bachelors"),
     MASTERS("Masters"),
     PHD("PhD"),
-    OTHER("Other");
+    OTHER("Other"),
+    NONE("None");
 
     private String label;
 
