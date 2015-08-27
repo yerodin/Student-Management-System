@@ -151,8 +151,7 @@ public class AuthController extends StackPane {
             };
             logoutTask.setOnSucceeded(event1 -> {
                 if (logoutTask.getValue()) {
-                    Stage thisStage = (Stage) closeBtn.getScene().getWindow();
-                    thisStage.close();
+                    Platform.exit();
                 }
             });
             new Thread(logoutTask).start();
@@ -172,11 +171,7 @@ public class AuthController extends StackPane {
     }
 
     public void closeApp(ActionEvent event) {
-        if (!user.getStatus().equals("Offline")) {
-            //
-        }
-        Stage thisStage = (Stage) closeBtn.getScene().getWindow();
-        thisStage.close();
+        Platform.exit();
     }
 
 }

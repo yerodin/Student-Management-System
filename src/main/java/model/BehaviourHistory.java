@@ -1,5 +1,6 @@
 package model;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
@@ -8,7 +9,9 @@ import javafx.beans.property.StringProperty;
 public class BehaviourHistory {
 
 
-    private StringProperty hall, infraction, reason;
+    private StringProperty hall = new SimpleStringProperty(this, "hall");
+    private StringProperty infraction = new SimpleStringProperty(this, "infraction");
+    private StringProperty reason = new SimpleStringProperty(this, "reason");
 
     public BehaviourHistory() {
         super();
