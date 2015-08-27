@@ -139,7 +139,7 @@ public class MainController implements Initializable {
 
         // Launch Student Viewer with given Student and operation
         Platform.runLater(() -> {
-            StudentViewController studentViewController = new StudentViewController(student, operation, databaseCommunicator);
+            StudentViewController studentViewController = new StudentViewController(student, operation, databaseCommunicator, user);
             CustomControlLauncher.create()
                     .setTitle(title.toString())
                     .setScene(new Scene(studentViewController, 1280, 640))

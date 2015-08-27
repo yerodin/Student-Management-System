@@ -1,10 +1,7 @@
 package controller;
 
 import DBCommunication.DatabaseCommunicator;
-import enums.Block;
-import enums.Faculty;
-import enums.Infraction;
-import enums.Operation;
+import enums.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -130,6 +127,7 @@ public class StudentViewController extends TitledPane {
     protected Student student;
     protected Operation operation;
     LocalDate current_date;
+    protected User user;
     DatabaseCommunicator databaseCommunicator;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -141,7 +139,7 @@ public class StudentViewController extends TitledPane {
     ObservableList<CoCurricular> coCurriculars = FXCollections.<CoCurricular>observableArrayList();
 
     public StudentViewController(Student student, Operation operation,
-                                 DatabaseCommunicator databaseCommunicator) {
+                                 DatabaseCommunicator databaseCommunicator, User user) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
                 "/fxml/StudentView.fxml"));
         fxmlLoader.setRoot(this);
@@ -156,10 +154,14 @@ public class StudentViewController extends TitledPane {
         Object o = (operation == Operation.NEW && student == null) ? setStudent(new Student()) : setStudent(student);
         setOperation(operation);
         this.databaseCommunicator = databaseCommunicator;
+        this.user = AuthController.user;
 
         facultyChoiceBox.setItems(FXCollections.observableArrayList(Faculty.labels()));
         blockChoiceBox.setItems(FXCollections.observableArrayList(Block.labels()));
         famHistoryBlockChoiceBox.setItems(FXCollections.observableArrayList(Block.labels()));
+        bevHistoryHallChoiceBox.setItems(FXCollections.observableArrayList(Hall.labels()));
+        coCurricularTypeChoiceBox.setItems(FXCollections.observableArrayList(CoCurActivityType.labels()));
+        countryChoiceBox.setItems(FXCollections.observableArrayList());
 
         familyHistoryCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals(true)) {
