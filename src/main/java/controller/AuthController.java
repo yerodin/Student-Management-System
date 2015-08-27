@@ -40,7 +40,7 @@ public class AuthController extends StackPane {
     protected static User user;
     public Circle statusColorCircle;
     public Button launchSMSBtn;
-    DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
+    protected static DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
     ObservableList<String> statuses = FXCollections.<String>observableArrayList();
     protected static int sMSSessioncount = 0;
 
@@ -151,7 +151,11 @@ public class AuthController extends StackPane {
             };
             logoutTask.setOnSucceeded(event1 -> {
                 if (logoutTask.getValue()) {
-                    Platform.exit();
+                    loggedInAs.setText("");
+                    statusChoiceBox.getSelectionModel().select(5);
+                    beforeLoginPane.setVisible(true);
+                    afterLoginPane.setVisible(false);
+                    beforeLoginPane.requestFocus();
                 }
             });
             new Thread(logoutTask).start();
