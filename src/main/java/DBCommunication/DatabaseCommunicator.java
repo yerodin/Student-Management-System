@@ -38,9 +38,10 @@ public class DatabaseCommunicator {
     final private String UPLOAD_ATTACHMENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//upload_attachment.php";
     final private String DELETE_ATTACHMENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_attachment.php";
     final private String LOGOUT_URL = "http://" + SERVER_IP + "//sms//dataprovider//logout.php";
+    final private String GET_HALLS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_halls.php";
 
     private JSONParser jParser;
-    private static String[] blocks, faculties, rooms;
+    private static String[] blocks, faculties, rooms, halls;
     private static ArrayList<Country> countries;
 
     private int statusId;
@@ -79,6 +80,7 @@ public class DatabaseCommunicator {
                 fillBlocks(u);
                 fillCountries(u);
                 fillRooms(u);
+                fillHalls(u);
                 return u;
             }
             else
@@ -218,6 +220,34 @@ public class DatabaseCommunicator {
                     JSONObject droom = drooms.getJSONObject(i);
                     int id = droom.getInt("room_id");
                     String number = droom.getString("number");
+                    rooms[id] = number;
+                }
+            }
+            else
+                status = "error";
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            status = "Error, could not connect to server.";
+        }
+    }
+
+    private void fillHalls(User currentUser) throws Exception
+    {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("sid", currentUser.getSID()));
+        JSONObject jObj = jParser.makeHttpRequest(GET_HALLS_URL, "POST", params);
+        try
+        {
+            if (jObj.getInt("success") == SUCCESS)
+            {
+                JSONArray drooms = jObj.getJSONArray("data");
+                rooms = new String[drooms.length()+1];
+                for(int i = 0; i < drooms.length();++i)
+                {
+                    JSONObject droom = drooms.getJSONObject(i);
+                    int id = droom.getInt("id");
+                    String number = droom.getString("name");
                     rooms[id] = number;
                 }
             }
@@ -590,6 +620,11 @@ public class DatabaseCommunicator {
         return ((rooms.length > ID)? rooms[ID]:"");
     }
 
+    public static String getHallFromID(int ID)
+    {
+        return ((halls.length > ID)? halls[ID]:"");
+    }
+
     public int getStatusId()
     {
         return statusId;
@@ -622,4 +657,6 @@ public class DatabaseCommunicator {
     public static String[] getBlocks() {
         return blocks;
     }
+
+    public static String[] getHalls(){return halls;}
 }
