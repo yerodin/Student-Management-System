@@ -54,7 +54,7 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.user = AuthController.user;
+        user = AuthController.user;
         getNewStudents();
         Platform.runLater(() -> {
             addStudentBtn.requestFocus();
@@ -84,7 +84,6 @@ public class MainController implements Initializable {
     public void getNewStudents() {
 
         Platform.runLater(() -> {
-            User user = databaseCommunicator.login("cavo", "passw0rd", 1);
             Student[] students1 = databaseCommunicator.getNewStudents(user, 0);
             students.addAll(students1);
             studentTableView.setItems(students);

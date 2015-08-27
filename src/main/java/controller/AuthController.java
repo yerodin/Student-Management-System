@@ -31,7 +31,7 @@ public class AuthController extends StackPane {
     public ChoiceBox statusChoiceBox;
     public SplitMenuButton logout;
     public MenuItem switchUser;
-    protected static User user;
+    public static User user;
     DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
 
     @FXML
@@ -88,7 +88,7 @@ public class AuthController extends StackPane {
             Task<User> task = new Task<User>() {
                 @Override
                 protected User call() throws Exception {
-                    return user = databaseCommunicator.login(usernameField.getText(), passwordField.getText(), 1);
+                    return  databaseCommunicator.login(usernameField.getText(), passwordField.getText(), 1);
                 }
             };
             task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
