@@ -18,7 +18,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -39,9 +38,7 @@ import java.util.Objects;
  * Student View Controller
  **/
 public class StudentViewController extends TitledPane {
-    public StackPane avatarStackPane;
     public ImageView avatarImageView;
-    public Image avatar;
     public Button addEditPhotoBtn;
     public Button removePhotoBtn;
     public TableView<FamilyHistory> familyHistoryTableView;
@@ -51,7 +48,7 @@ public class StudentViewController extends TitledPane {
     public DatePicker famHistoryFromDatePicker;
     public DatePicker famHistoryToDatePicker;
     public ChoiceBox<String> famHistoryBlockChoiceBox;
-    public ComboBox famHistoryRelationshipComboBox;
+    public ComboBox<String> famHistoryRelationshipComboBox;
     public TextField idInput;
     public TextField firstNameInput;
     public TextField middleNameInput;
@@ -80,7 +77,7 @@ public class StudentViewController extends TitledPane {
     public GridPane tertiaryLvlFieldsGridPane;
     public TextField tertiaryInstNameInput;
     public TextField tertiaryLvlOfInvolvementInput;
-    public ChoiceBox tertiaryYrofGradChoiceBox;
+    public ChoiceBox<String> tertiaryYrofGradChoiceBox;
     public TableView<HallHistory> hallHistoryTableView;
     public GridPane hallHistoryFormGridPane;
     public Button hallHistorySaveBtn;
@@ -91,7 +88,7 @@ public class StudentViewController extends TitledPane {
     public CheckBox bevHistoryCheckBox;
     public TableView<BehaviourHistory> bevHistoryTableView;
     public GridPane bevHistoryFormGridPane;
-    public ChoiceBox bevHistoryHallChoiceBox;
+    public ChoiceBox<String> bevHistoryHallChoiceBox;
     public ComboBox<Infraction> bevHistoryInfracComboBox;
     public TextArea bevHistoryReasonTextArea;
     public DatePicker bevHistoryDatePicker;
@@ -100,7 +97,7 @@ public class StudentViewController extends TitledPane {
     public TextField secondarySchoolInput;
     public TableView<Achievement> achievementsTable;
     public TextField achievementNameInput;
-    public ComboBox achievementAreaComboBox;
+    public ComboBox<String> achievementAreaComboBox;
     public Button achievementSaveBtn;
     public SplitMenuButton achievementClearDeleteSplitMenuBtn;
     public ComboBox<String> commGroupNameComboBox;
@@ -117,9 +114,8 @@ public class StudentViewController extends TitledPane {
     public ChoiceBox<String> coCurricularTypeChoiceBox;
     public TextField coCurricularActivityInput;
     public ComboBox<String> nationalityComboBox;
-    public ComboBox participationLevelComboBox;
-    public ComboBox tertiaryLvlComboBox;
-    public Button studentSaveBtn;
+    public ComboBox<String> participationLevelComboBox;
+    public ComboBox<String> tertiaryLvlComboBox;
     public Button closeBtn;
     public MenuItem famHistoryDeleteMenuItem;
     public MenuItem hallHistoryDeleteMenuItem;
@@ -216,6 +212,21 @@ public class StudentViewController extends TitledPane {
                                 return LocalDate.parse(string, formatter);
                             }
                         }));
+    }
+
+    /**
+     * Notifier to pleasantly update User
+     *
+     * @param title   Title of notification
+     * @param message Message of notification
+     */
+    private static void notifier(String title, String message) {
+        Platform.runLater(() -> Notifications.create()
+                        .title(title)
+                        .text(message)
+                        .hideAfter(new Duration(2000))
+                        .showInformation()
+        );
     }
 
     public Student getStudent() {
@@ -336,6 +347,7 @@ public class StudentViewController extends TitledPane {
                     famHis.setBlock(famHistoryBlockChoiceBox.getSelectionModel().selectedItemProperty().getValue());
                     famHis.setRelationship(famHistoryRelationshipComboBox.getEditor().getText());
                     familyHistories.add(famHis);
+                    student.setFamilyHistories(familyHistories);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -357,21 +369,6 @@ public class StudentViewController extends TitledPane {
 
     }
 
-    /**
-     * Notifier to pleasantly update User
-     *
-     * @param title   Title of notification
-     * @param message Message of notification
-     */
-    private static void notifier(String title, String message) {
-        Platform.runLater(() -> Notifications.create()
-                        .title(title)
-                        .text(message)
-                        .hideAfter(new Duration(2000))
-                        .showInformation()
-        );
-    }
-
     @FXML
     public void commGroupHandler(ActionEvent event) {
         Object eventSource = event.getSource();
@@ -382,6 +379,7 @@ public class StudentViewController extends TitledPane {
                 communityGroup.setProject(commGroupProjectInput.getText());
                 communityGroup.setResponsibility(commGroupResponsibilityTextArea.getText());
                 communityGroups.add(communityGroup);
+                student.setCommunityGroups(communityGroups);
             });
         }
         if (Objects.deepEquals(eventSource, commGroupClearDeleteSplitMenuBtn)) {
@@ -423,6 +421,7 @@ public class StudentViewController extends TitledPane {
                                 hallHistoryPeriodTo.getValue().getYear(), 1, 3)
                 );
                 hallHistories.add(hallHistory);
+                student.setHallHistories(hallHistories);
             });
         }
         if (Objects.deepEquals(eventSource, hallHistoryClearDeleteSplitMenuBtn)) {
@@ -447,7 +446,7 @@ public class StudentViewController extends TitledPane {
         if (Objects.deepEquals(eventSource, bevHistorySaveBtn)) {
             BehaviourHistory behaviourHistory = new BehaviourHistory();
             Platform.runLater(() -> {
-                behaviourHistory.setHall((String) bevHistoryHallChoiceBox.getItems()
+                behaviourHistory.setHall(bevHistoryHallChoiceBox.getItems()
                         .get(bevHistoryHallChoiceBox.getSelectionModel().getSelectedIndex()));
                 behaviourHistory.setInfraction(bevHistoryInfracComboBox.getEditor().getText());
                 behaviourHistories.add(behaviourHistory);
@@ -466,7 +465,7 @@ public class StudentViewController extends TitledPane {
                 }
             });
         }
-
+        student.setBehaviourHistories(behaviourHistories);
     }
 
     @FXML
@@ -476,8 +475,8 @@ public class StudentViewController extends TitledPane {
             Achievement achievement = new Achievement();
             Platform.runLater(() -> {
                 achievement.setAchievement(achievementNameInput.getText());
-                achievement.setArea(((String) achievementAreaComboBox.getSelectionModel().getSelectedItem()));
-                student.setAchievements(FXCollections.observableArrayList(achievement));
+                achievement.setArea(achievementAreaComboBox.getSelectionModel().getSelectedItem());
+                achievements.add(achievement);
             });
         }
         if (Objects.deepEquals(eventSource, achievementClearDeleteSplitMenuBtn)) {
@@ -485,10 +484,9 @@ public class StudentViewController extends TitledPane {
                     .textFields().choiceBoxes());
         }
         if (Objects.deepEquals(eventSource, achievementDeleteMenuItem)) {
-            Platform.runLater(() -> {
-                achievements.remove(achievementsTable.getSelectionModel().getSelectedItem());
-            });
+            Platform.runLater(() -> achievements.remove(achievementsTable.getSelectionModel().getSelectedItem()));
         }
+        student.setAchievements(achievements);
 
     }
 
@@ -501,21 +499,22 @@ public class StudentViewController extends TitledPane {
                 coCurricular.setActivity(coCurricularActivityInput.getText());
                 coCurricular.setType(coCurricularTypeChoiceBox.getItems()
                         .get(coCurricularTypeChoiceBox.getSelectionModel().getSelectedIndex()));
+                coCurriculars.add(coCurricular);
+                student.setCoCurriculars(coCurriculars);
             });
         }
         if (Objects.deepEquals(eventSource, coCurricularClearDeleteBtn)) {
-            Platform.runLater(() -> {
-                new FormEditizer(coCurricularFormGrid, FormEditizer.Action.CLEAR)
-                        .textFields().choiceBoxes();
-            });
+            Platform.runLater(() -> new FormEditizer(coCurricularFormGrid, FormEditizer.Action.CLEAR)
+                    .textFields().choiceBoxes());
         }
         if (Objects.deepEquals(eventSource, coCurricularDeleteMenuItem)) {
-            Platform.runLater(() -> {
-                coCurriculars.remove(coCurricularTableView.getSelectionModel().getSelectedItem());
-            });
+            Platform.runLater(() -> coCurriculars.remove(coCurricularTableView.getSelectionModel().getSelectedItem()));
+
         }
 
     }
+
+//    public void populateStudent()
 
     @FXML
     public void windowBtnHandler(ActionEvent event) {

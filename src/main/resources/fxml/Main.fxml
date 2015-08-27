@@ -6,10 +6,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="640.0" prefWidth="1280.0" stylesheets="@../css/style.css"
-      xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.MainController">
-    <MenuBar disable="true">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="640.0" prefWidth="1280.0" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.40"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+    <MenuBar disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+             prefHeight="30.0" prefWidth="1280.0">
         <menus>
             <Menu mnemonicParsing="false" text="File">
                 <items>
@@ -48,12 +49,14 @@
             </Menu>
         </menus>
     </MenuBar>
-    <ToolBar prefHeight="40.0" prefWidth="1067.0">
+    <ToolBar maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0"
+             prefWidth="1280.0">
         <items>
             <TextField fx:id="filterField" prefHeight="26.0" prefWidth="215.0" promptText="Search..." />
         </items>
     </ToolBar>
-    <SplitPane dividerPositions="0.8035993740219093" prefHeight="743.0" prefWidth="1067.0">
+    <SplitPane dividerPositions="0.8035993740219093" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+               minWidth="-Infinity" prefHeight="573.0" prefWidth="1280.0" VBox.vgrow="NEVER">
         <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                 <children>

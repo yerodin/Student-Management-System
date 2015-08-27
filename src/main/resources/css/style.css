@@ -61,7 +61,6 @@
     Description:
         Light Metro style sheet for use in JavaFX applications
 */
-
 .background {
     -fx-background-color: white;
 }

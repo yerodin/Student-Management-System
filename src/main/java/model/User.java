@@ -6,7 +6,7 @@ package model;
 public class User
 {
     private int id, permission;
-    private String firstName, lastName, username, password, sid;
+    private String firstName, lastName, username, password, sid, status;
 
     public User(int id, String firstName, String lastName, String username, String password, int permission, String sid)
     {
@@ -44,4 +44,8 @@ public class User
     }
 
     public String getSID(){return sid;}
+
+    public String getStatus() {
+        return status;
+    }
 }

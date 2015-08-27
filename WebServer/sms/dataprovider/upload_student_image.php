@@ -7,8 +7,9 @@ if(isset($_GET['sid']))
 	{
 		if(isset($_GET['id']))
 		{
-			$filename="../images/".$_GET['id']."png";
+				
 			$fileData=file_get_contents('php://input');
+			$filename = "../images/".$_GET['id'].".png";
 			$fhandle=fopen($filename, 'wb');
 			fwrite($fhandle, $fileData);
 			fclose($fhandle);

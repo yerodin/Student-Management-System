@@ -1,7 +1,7 @@
 package DBCommunication;
 
+import javafx.embed.swing.SwingFXUtils;
 import model.Country;
-import model.HallHistory;
 import model.Student;
 import model.User;
 import org.apache.http.NameValuePair;
@@ -9,8 +9,12 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -363,7 +367,83 @@ public class DatabaseCommunicator {
         return false;
     }
 
-    private boolean deleteSudentImage(User currentUser, Student student, int taskID)
+    public boolean uploadStudentAttachment(User currentUser, Student student,String name, int taskID)
+    {
+        try {
+            HttpURLConnection httpUrlConnection = (HttpURLConnection)new URL(UPLOAD_ATTACHMENT_URL+"?sid="+currentUser.getSID()+"&id="+student.getIdNumber()+"&name="+name).openConnection();
+            httpUrlConnection.setDoOutput(true);
+
+            httpUrlConnection.setRequestMethod("GET");
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            ImageIO.write(SwingFXUtils.fromFXImage(student.getImage(), null), "png", os);
+            byte[] totalBytes = os.toByteArray();
+            int totalByte = totalBytes.length;
+            InputStream is = new ByteArrayInputStream(os.toByteArray());
+            int byteTrasferred = 0;
+            for (int i = 0; i < totalByte; i++) {
+                os.write(is.read());
+                byteTrasferred = i + 1;
+            }
+
+            os.close();
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(
+                            httpUrlConnection.getInputStream()));
+
+            String s = null;
+            while ((s = in.readLine()) != null) {
+                System.out.println(s);
+            }
+            in.close();
+            is.close();
+            return true;
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+            return false;
+
+        }
+    }
+
+    public boolean uploadStudentImage(User currentUser, Student student, int taskID)
+    {
+        try {
+            HttpURLConnection httpUrlConnection = (HttpURLConnection)new URL(UPLOAD_STUDENT_IMAGE_URL+"?sid="+currentUser.getSID()+"&id="+student.getIdNumber()).openConnection();
+            httpUrlConnection.setDoOutput(true);
+
+                httpUrlConnection.setRequestMethod("GET");
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                ImageIO.write(SwingFXUtils.fromFXImage(student.getImage(), null), "png", os);
+                byte[] totalBytes = os.toByteArray();
+                int totalByte = totalBytes.length;
+                InputStream is = new ByteArrayInputStream(os.toByteArray());
+                int byteTrasferred = 0;
+                for (int i = 0; i < totalByte; i++) {
+                    os.write(is.read());
+                    byteTrasferred = i + 1;
+                }
+
+                os.close();
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(
+                                httpUrlConnection.getInputStream()));
+
+                String s = null;
+                while ((s = in.readLine()) != null) {
+                    System.out.println(s);
+                }
+                in.close();
+                is.close();
+                return true;
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+            return false;
+
+        }
+    }
+
+    public boolean deleteSudentImage(User currentUser, Student student, int taskID)
     {
         statusId = taskID;
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -385,7 +465,7 @@ public class DatabaseCommunicator {
         return false;
     }
 
-    private boolean deleteSudentAttachment(User currentUser, Student student,String fileName, int taskID)
+    public boolean deleteSudentAttachment(User currentUser, Student student,String fileName, int taskID)
     {
         statusId = taskID;
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -525,5 +605,21 @@ public class DatabaseCommunicator {
             if(array[i].equals(s))
                 return i;
         return -1;
+    }
+
+    public static ArrayList<Country> getCountries() {
+        return countries;
+    }
+
+    public static String[] getRooms() {
+        return rooms;
+    }
+
+    public static String[] getFaculties() {
+        return faculties;
+    }
+
+    public static String[] getBlocks() {
+        return blocks;
     }
 }

@@ -13,6 +13,8 @@ else
 	$response['flag']=0;
 	$response['data'] = "sid";
 }
+echo json_encode($response);
+die();
 
   
 ?>
