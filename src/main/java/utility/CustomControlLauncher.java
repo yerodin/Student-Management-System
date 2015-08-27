@@ -1,7 +1,11 @@
 package utility;
 
+import enums.NotifierType;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 
 /**
  * Contract Management System - org.mtp.cms.utilities
@@ -35,6 +39,32 @@ public class CustomControlLauncher {
 
     public void launch() {
         this.stage.show();
+    }
+
+    /**
+     * Notifier to pleasantly update User
+     *
+     * @param title   Title of notification
+     * @param message Message of notification
+     */
+    public static void notifier(String title, String message, NotifierType notifierType) {
+        Platform.runLater(() -> {
+                    Notifications notif = Notifications.create()
+                            .title(title)
+                            .text(message)
+                            .hideAfter(new Duration(3000));
+                    if (notifierType == NotifierType.CONFIRM) {
+                        notif.showConfirm();
+                    } else if (notifierType == NotifierType.ERROR) {
+                        notif.showError();
+                    } else if (notifierType == NotifierType.INFORATION) {
+                        notif.showInformation();
+                    } else if (notifierType == NotifierType.WARNING) {
+                        notif.showWarning();
+                    }
+
+                }
+        );
     }
 
 }

@@ -1,6 +1,7 @@
 package controller;
 
 import DBCommunication.DatabaseCommunicator;
+import enums.NotifierType;
 import enums.Status;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -41,6 +42,7 @@ public class AuthController extends StackPane {
     public Button launchSMSBtn;
     DatabaseCommunicator databaseCommunicator = new DatabaseCommunicator();
     ObservableList<String> statuses = FXCollections.<String>observableArrayList();
+    protected static int sMSSessioncount = 0;
 
     @FXML
     public TextField usernameField;
@@ -58,6 +60,7 @@ public class AuthController extends StackPane {
     public ProgressBar progressBar;
 
     Stage primaryStage;
+    private int counter;
 
     public AuthController(Stage primaryStage) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
@@ -96,7 +99,7 @@ public class AuthController extends StackPane {
             Task<User> task = new Task<User>() {
                 @Override
                 protected User call() throws Exception {
-                    return  databaseCommunicator.login(usernameField.getText(), passwordField.getText(), 1);
+                    return databaseCommunicator.login(usernameField.getText(), passwordField.getText(), 1);
                 }
             };
             task.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
@@ -156,7 +159,11 @@ public class AuthController extends StackPane {
         }
         if (Objects.deepEquals(eventSource, launchSMSBtn)) {
             try {
-                CustomControlLauncher.create().setTitle("Student Management System").setScene(new Scene(FXMLLoader.load(getClass().getResource("/fxml/Main.fxml")), 1280, 640)).launch();
+                if (sMSSessioncount == 0) {
+                    CustomControlLauncher.create().setTitle("Student Management System").setScene(new Scene(FXMLLoader.load(getClass().getResource("/fxml/Main.fxml")), 1280, 640)).launch();
+                } else {
+                    CustomControlLauncher.notifier("Error", "Only one SMS window per session. Please close your current window and try again.", NotifierType.ERROR);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
