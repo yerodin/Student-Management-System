@@ -3,10 +3,14 @@ package controller;
 import DBCommunication.DatabaseCommunicator;
 import enums.*;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -17,10 +21,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import model.*;
 import org.controlsfx.control.Notifications;
+import utility.DateUtil;
 import utility.FormEditizer;
 
 import javax.imageio.ImageIO;
@@ -57,7 +63,7 @@ public class StudentViewController extends TitledPane {
     public TextField address2Input;
     public TextField cityInput;
     public TextField stateProvinceInput;
-    public ChoiceBox countryChoiceBox;
+    public ChoiceBox<Country> countryChoiceBox;
     public ChoiceBox willParticipateChoiceBox;
     public TextField padreFirstNameInput;
     public TextField padreLastNameInput;
@@ -65,7 +71,7 @@ public class StudentViewController extends TitledPane {
     public TextField madreFirstNameInput;
     public TextField madreLastNameInput;
     public TextField madrePhoneNumberInput;
-    public ChoiceBox roomNumberChoiceBox;
+    public ChoiceBox<String> roomNumberChoiceBox;
     public ChoiceBox<String> blockChoiceBox;
     public ChoiceBox<String> academicStatusChoiceBox;
     public ChoiceBox<String> facultyChoiceBox;
@@ -124,6 +130,11 @@ public class StudentViewController extends TitledPane {
     public DatePicker hallHistoryPeriodTo;
     public GridPane achievementFormGrid;
     public GridPane coCurricularFormGrid;
+    public SplitPane mainSplitPane;
+    public Button studentSaveBtn;
+    public Button mainClearBtn;
+    public Button windowCloseBtn;
+    public GridPane mainGridPane;
     protected Student student;
     protected Operation operation;
     LocalDate current_date;
@@ -155,13 +166,79 @@ public class StudentViewController extends TitledPane {
         setOperation(operation);
         this.databaseCommunicator = databaseCommunicator;
         this.user = AuthController.user;
+        AuthController.sMSSessioncount++;
+
+        mainGridPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
+            if (oldScene == null && newScene != null) {
+                // scene is set for the first time. Now its the time to listen stage changes.
+                newScene.windowProperty().addListener((observableWindow, oldWindow, newWindow) -> {
+                    if (oldWindow == null && newWindow != null) {
+                        // stage is set. now is the right time to do whatever we need to the stage in the controller.
+                        ((Stage) newWindow).maximizedProperty().addListener((a, b, c) -> {
+                            if (c) {
+                                // TODO: Something needs to be done when maximized
+                            }
+                        });
+                        newWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                            @Override
+                            public void handle(WindowEvent event) {
+                                ((Stage) newWindow).close();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        idInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.matches("\\d*")) {
+                byte[] bytes = newValue.getBytes();
+                if (bytes.length > 9) {
+                    idInput.setText(oldValue);
+                }
+            } else {
+                idInput.setText(oldValue);
+            }
+        });
+
+        countryChoiceBox.setConverter(new StringConverter<Country>() {
+            @Override
+            public String toString(Country object) {
+                return object.getCountry();
+            }
+
+            @Override
+            public Country fromString(String string) {
+                Country thisCountry = null;
+                for (Country country : DatabaseCommunicator.getCountries()) {
+                    if (country.getCountry().equals(string)) {
+                        thisCountry = new Country(country.getCountryID(), country.getCountry(), country.getNationality());
+                        break;
+                    }
+                }
+                return thisCountry;
+            }
+        });
 
         facultyChoiceBox.setItems(FXCollections.observableArrayList(Faculty.labels()));
         blockChoiceBox.setItems(FXCollections.observableArrayList(Block.labels()));
         famHistoryBlockChoiceBox.setItems(FXCollections.observableArrayList(Block.labels()));
         bevHistoryHallChoiceBox.setItems(FXCollections.observableArrayList(Hall.labels()));
         coCurricularTypeChoiceBox.setItems(FXCollections.observableArrayList(CoCurActivityType.labels()));
-        countryChoiceBox.setItems(FXCollections.observableArrayList());
+        countryChoiceBox.setItems(FXCollections.observableArrayList(DatabaseCommunicator.getCountries()));
+        facultyChoiceBox.setItems(FXCollections.observableArrayList(DatabaseCommunicator.getFaculties()));
+        roomNumberChoiceBox.setItems(FXCollections.observableArrayList(DatabaseCommunicator.getRooms()));
+//        tertiaryYrofGradChoiceBox.setItems(FXCollections.observableArrayList(
+//                genReasonableYearRange().getValue()
+//        ));
+
+
+        countryChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Country>() {
+            @Override
+            public void changed(ObservableValue<? extends Country> observable, Country oldValue, Country newValue) {
+
+            }
+        });
 
         familyHistoryCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals(true)) {
@@ -231,6 +308,26 @@ public class StudentViewController extends TitledPane {
         );
     }
 
+    private Task<String[]> genReasonableYearRange() {
+        Task<String[]> reasonableYears = new Task<String[]>() {
+            @Override
+            protected String[] call() throws Exception {
+                String[] years = new String[100];
+                int thisYear;
+                try {
+                    thisYear = DateUtil.getJamaicaDateTime().getYear();
+                } catch (Exception ex) {
+                    thisYear = 2020;
+                }
+                for (int i = 0; i >= 99; i++) {
+                    years[i] = String.valueOf(thisYear - i);
+                }
+                return years;
+            }
+        };
+        return reasonableYears;
+    }
+
     public Student getStudent() {
         return student;
     }
@@ -274,6 +371,34 @@ public class StudentViewController extends TitledPane {
 //        this.nationalityComboBox.getEditor().textProperty().bindBidirectional(student.getResidentCountry().nationalityProperty());
 //        this.willParticipateChoiceBox.valueProperty().bindBidirectional(student.willParticipateProperty());
 //        this.participationLevelComboBox.getEditor().textProperty().bindBidirectional(student.particpationLevelProperty());
+    }
+
+    // TODO: All choice boxes will get their own listeners on initialization
+    public void grabStudent() {
+        student.setIdNumber(this.idInput.getText());
+        student.setFirstName(this.firstNameInput.getText());
+        student.setMiddleName(this.middleNameInput.getText());
+        student.setLastName(this.lastNameInput.getText());
+        student.setDob(this.dobDatePicker.editorProperty().get().getText());
+        student.setCellPhone(this.cellPhoneInput.getText());
+        student.setEmail(this.emailInput.getText());
+        student.setFatherFirstName(this.padreFirstNameInput.getText());
+        student.setFatherLastName(this.padreLastNameInput.getText());
+        student.setFatherPhone(this.padrePhoneNumberInput.getText());
+        student.setMotherFirstName(this.madreFirstNameInput.getText());
+        student.setMotherLastName(this.madreLastNameInput.getText());
+        student.setMotherPhone(this.madrePhoneNumberInput.getText());
+        student.setFaculty(this.facultyChoiceBox.getValue());
+        student.setAcademicStatus((this.academicStatusChoiceBox.getValue().equals("Full time")));
+        student.setBlock(this.blockChoiceBox.getValue());
+        student.setRoom(this.roomNumberChoiceBox.getValue());
+        student.setHomeAddress1(this.address1Input.getText());
+        student.setHomeAddress2(this.address2Input.getText());
+        student.setHomeCity(this.cityInput.getText());
+        student.setHomeProvince(this.stateProvinceInput.getText());
+        student.setNationality(DatabaseCommunicator.getCountryFromID(this.countryChoiceBox.getValue().getCountryID()));
+        student.setWillParticipate(this.willParticipateChoiceBox.getValue().equals("Yes"));
+        student.setParticpationLevel(0);
     }
 
     @FXML
@@ -521,6 +646,14 @@ public class StudentViewController extends TitledPane {
     @FXML
     public void windowBtnHandler(ActionEvent event) {
         Object eventSource = event.getSource();
+        if (Objects.deepEquals(eventSource, studentSaveBtn)) {
+            databaseCommunicator.addStudent(user, student, 1);
+        }
+        if (Objects.deepEquals(eventSource, mainClearBtn)) {
+            new FormEditizer(mainGridPane, FormEditizer.Action.CLEAR)
+                    .choiceBoxes().comboBoxes().datePickers()
+                    .passwordFields().textAreas().textFields();
+        }
         if (Objects.deepEquals(eventSource, closeBtn)) {
             Stage thisStage = (Stage) closeBtn.getScene().getWindow();
             thisStage.close();

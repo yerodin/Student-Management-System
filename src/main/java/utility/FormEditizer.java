@@ -2,8 +2,10 @@ package utility;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import org.fxmisc.easybind.EasyBind;
 
@@ -23,6 +25,17 @@ public class FormEditizer {
 
     public FormEditizer(Pane pane, Action action) {
         nodes.setAll(pane.getChildren());
+        Task<Void> deepClearingTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                for (Node node : nodes) {
+                    new FormEditizer(((node instanceof Pane) ? (((Pane) node)) : (new Pane())), Action.CLEAR)
+                            .choiceBoxes().comboBoxes().datePickers().passwordFields().textAreas().textFields();
+                }
+                return getValue();
+            }
+        };
+        new Thread(deepClearingTask).start();
         EasyBind.listBind(pane.getChildren(), nodes);
         setPane(pane);
         setAction(action);
@@ -35,6 +48,18 @@ public class FormEditizer {
     public FormEditizer setPane(Pane pane) {
         this.pane = pane;
         return this;
+    }
+
+    public void deepClearing(Pane pane) {
+        try {
+            for (Node node : pane.getChildren()) {
+                if (node instanceof GridPane) {
+                    nodes.addAll(((GridPane) node).getChildren());
+                }
+            }
+        } catch (Exception ex) {
+            // Do something
+        }
     }
 
     public Action getAction() {

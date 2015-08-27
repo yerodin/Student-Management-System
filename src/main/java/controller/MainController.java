@@ -1,6 +1,7 @@
 package controller;
 
 import DBCommunication.DatabaseCommunicator;
+import enums.NotifierType;
 import enums.Operation;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
@@ -10,18 +11,21 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.Student;
 import model.User;
-import org.controlsfx.control.Notifications;
 import utility.CustomControlLauncher;
 
 import java.net.URL;
@@ -32,10 +36,11 @@ public class MainController implements Initializable {
     final Text[] tablePlaceholders = {
             new Text("Start by creating a student with the Add Student button to the right."),
             new Text("No results found.")};
+    public VBox mainVBox;
     @FXML
-    TextField filterField = new TextField();
+    TextField filterField;
     @FXML
-    TableView<Student> studentTableView = new TableView<Student>();
+    TableView<Student> studentTableView;
     @FXML
     Button addStudentBtn, editStudentBtn, viewStudentBtn, deleteStudentBtn;
     private ObservableList<Student> students = FXCollections.<Student>observableArrayList();
@@ -54,11 +59,36 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        AuthController.sMSSessioncount++;
         user = AuthController.user;
         getNewStudents();
         Platform.runLater(() -> {
             addStudentBtn.requestFocus();
             filterStudentTable();
+        });
+
+        mainVBox.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
+            if (oldScene == null && newScene != null) {
+                // scene is set for the first time. Now its the time to listen stage changes.
+                newScene.windowProperty().addListener((observableWindow, oldWindow, newWindow) -> {
+                    if (oldWindow == null && newWindow != null) {
+                        // stage is set. now is the right time to do whatever we need to the stage in the controller.
+                        ((Stage) newWindow).maximizedProperty().addListener((a, b, c) -> {
+                            if (c) {
+                                // TODO: Something needs to be done when maximized
+                            }
+                        });
+                        newWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                            @Override
+                            public void handle(WindowEvent event) {
+                                event.consume();
+                                AuthController.sMSSessioncount--;
+                                ((Stage) newWindow).close();
+                            }
+                        });
+                    }
+                });
+            }
         });
 
         // Listen for table selection and update CurrentStudent
@@ -82,11 +112,20 @@ public class MainController implements Initializable {
     }
 
     public void getNewStudents() {
-
-        Platform.runLater(() -> {
-            Student[] students1 = databaseCommunicator.getNewStudents(user, 0);
-            students.addAll(students1);
-            studentTableView.setItems(students);
+        Task<Student[]> newStudentsTask = new Task<Student[]>() {
+            @Override
+            protected Student[] call() throws Exception {
+                return databaseCommunicator.getNewStudents(user, 0);
+            }
+        };
+        newStudentsTask.setOnSucceeded(event -> {
+            Student[] stds = newStudentsTask.getValue();
+            if (stds != null) {
+                students.addAll(stds);
+                Platform.runLater(() -> studentTableView.setItems(students));
+            } else {
+                CustomControlLauncher.notifier("Error", "There was a problem fetching students from database.", NotifierType.ERROR);
+            }
         });
     }
 
@@ -98,22 +137,6 @@ public class MainController implements Initializable {
                 new Student("131273681", "Richard", "Ben", "Hickler", "Runci", "11", "Social Sciences"),
                 new Student("974535780", "Easton", "Hamesh", "Ricketts", "Che", "3", "Humanities & Education"),
                 new Student("688325630", "John", "Wilder", "Scott", "Dynamite", "19", "Medical Sciences")
-        );
-    }
-
-
-    /**
-     * Notifier to pleasantly update User
-     *
-     * @param title   Title of notification
-     * @param message Message of notification
-     */
-    private static void notifier(String title, String message) {
-        Platform.runLater(() -> Notifications.create()
-                        .title(title)
-                        .text(message)
-                        .hideAfter(new Duration(2000))
-                        .showInformation()
         );
     }
 
