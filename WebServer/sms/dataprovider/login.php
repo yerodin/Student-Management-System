@@ -1,4 +1,5 @@
 <?php
+$response = array();
 session_start();
 $id = session_id();
 if(isset($_POST['user']) && isset($_POST['password']))

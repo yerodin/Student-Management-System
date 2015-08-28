@@ -1,5 +1,7 @@
 package DBCommunication;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import model.Country;
 import model.Student;
@@ -518,6 +520,37 @@ public class DatabaseCommunicator {
         return false;
     }
 
+    private File getStudentAttachment(User currentUser, String studentID, String fileName, int taskID)
+        {
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("sid", currentUser.getSID()));
+            params.add(new BasicNameValuePair("id", studentID));
+            params.add(new BasicNameValuePair("name", fileName));
+            JSONObject jObj = jParser.makeHttpRequest(, "POST", params);
+            System.out.println(jObj);
+            try
+            {
+                if (jObj.getInt("success") == SUCCESS)
+                {
+                    JSONArray bytes = jObj.getJSONArray("data");
+                    byte[] fileBytes = new byte[bytes.length()];
+                    for(int i = 0; i < bytes.length();++i)
+                    {
+                        fileBytes[i] = (byte) bytes.getInt(i);
+                    }
+                    File file = new File();
+                    FileOutputStream fos = new FileOutputStream(file);
+                    fos.write(fileBytes);
+                }
+                else
+                    status = "error";
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+                status = "Error, could not connect to server.";
+            }
+        }
+
 
 
     public Student[] getNewStudents(User currentUser,int taskID)
@@ -577,12 +610,16 @@ public class DatabaseCommunicator {
                     boolean tertiaryLevel = student.getInt("tertiary_level") == 1;
                     boolean willParticipate = student.getInt("will_participate") == 1;
                     String email = student.getString("email");
-
+                    String attachedWrapped = student.getString("attached_files");
+                    ArrayList<String> attachedNames = Student.unwrapAndGetAttachedFilesNames(attachedWrapped);
+                    ObservableList<File> attachedDocuments = FXCollections.observableArrayList();
+                    for(String name:attachedNames)
+                        attachedDocuments.add(getStudentAttachment(currentUser,idNumber,name,taskID));
 
                     returnArray[i]= new Student(academicStatus,willParticipate,achievements,behaviour_history,familyHistory,hallHistory,communityGroup,coCurricular,
                             cellPhone,day_joined,dob,getBlockFromID(block),getFacultyFromID(faculty),fatherFirstName,fatherLastName,fatherPhone,firstName,homeAddress1,
                             homeAddress2,homeCity,homeProvince,idNumber, lastName,middleName,motherFirstName,motherLastName,motherPhone,previousSecondary,reasonResiding,
-                            getRoomFromID(room),tertiaryLevel,email,getCountryFromID(nationality),participationLevel,picture,getCountryFromID(residentCountry));
+                            getRoomFromID(room),tertiaryLevel,email,getCountryFromID(nationality),participationLevel,picture,getCountryFromID(residentCountry),attachedDocuments);
 
                 }
                 studentVersion = jObj.getInt("sversion");

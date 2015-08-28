@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Yerodin on 8/21/2015.
@@ -47,7 +48,7 @@ public class Student {
                    String fatherLastName, String fatherPhone, String firstName, String homeAddress1, String homeAddress2,
                    String homeCity, String homeProvince, String idNumber, String lastName, String middleName, String motherFirstName,
                    String motherLastName, String motherPhone, String previousSecondary, String reasonResiding, String room, boolean tertiaryLevel, String email, Country nationality,
-                   int participationLevel, boolean picture, Country residentCountry) {
+                   int participationLevel, boolean picture, Country residentCountry,ObservableList<File> attachedDocuments) {
         this.academicStatus = new SimpleBooleanProperty(academicStatus);
         unwraoAndSetAchievements(achievements);
         unwraoAndSetBehaviourHistories(behaviourHistories);
@@ -84,6 +85,8 @@ public class Student {
         this.tertiaryLevel = new SimpleBooleanProperty(tertiaryLevel);
         this.willParticipate = new SimpleBooleanProperty(willParticipate);
         this.email = new SimpleStringProperty(email);
+        this.attachedDocuments = FXCollections.observableArrayList();
+        this.attachedDocuments.addAll(attachedDocuments);
     }
 
     public Student() {
@@ -638,6 +641,28 @@ public class Student {
             wrapped = wrapped.substring(wrapped.indexOf("},")+2);
             coCurriculars.add(coCurricular);
         }
+    }
+
+    public String wrapAttachedFiles()
+    {
+        String retString = "";
+        for(File attachedDocument: attachedDocuments)
+            retString += "{"+attachedDocument.getName()+"},";
+        retString = retString.substring(0, retString.length() - 1);
+        return retString;
+    }
+
+    public static ArrayList<String> unwrapAndGetAttachedFilesNames(String wrapped)
+    {
+        ArrayList<String> returnArray = new ArrayList<String>();
+        while(wrapped.length() > 1)
+        {
+            String name =wrapped.substring(0, wrapped.indexOf("},") + 1);
+            name = name.substring(1,name.length()-1);
+            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            returnArray.add(name);
+        }
+        return returnArray;
     }
 
     @Override
