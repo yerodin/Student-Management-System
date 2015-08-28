@@ -1,12 +1,14 @@
 package model;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
  * Created by Yerodin on 8/22/2015.
  */
 public class CoCurricular {
-    private StringProperty activity, type;
+    private StringProperty activity = new SimpleStringProperty(this, "activity");
+    private StringProperty type = new SimpleStringProperty(this, "type");
 
     public CoCurricular() {
         super();

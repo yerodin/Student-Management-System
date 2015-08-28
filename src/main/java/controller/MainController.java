@@ -121,8 +121,16 @@ public class MainController implements Initializable {
         newStudentsTask.setOnSucceeded(event -> {
             Student[] stds = newStudentsTask.getValue();
             if (stds != null) {
-                students.addAll(stds);
-                Platform.runLater(() -> studentTableView.setItems(students));
+//                students.filtered(Predicate.isEqual())
+//                FilteredList<Student> filteredStds = new FilteredList<>(students, p -> true);
+//                filteredStds.setPredicate(new Predicate<Student>() {
+//                    @Override
+//                    public boolean test(Student student) {
+//                        return false;
+//                    }
+//                });
+                ObservableList<Student> students1 = FXCollections.observableArrayList(stds);
+                Platform.runLater(() -> studentTableView.setItems(students1));
             } else {
                 CustomControlLauncher.notifier("Error", "There was a problem fetching students from database.", NotifierType.ERROR);
             }
@@ -161,10 +169,10 @@ public class MainController implements Initializable {
 
         // Launch Student Viewer with given Student and operation
         Platform.runLater(() -> {
-            StudentViewController studentViewController = new StudentViewController(student, operation, databaseCommunicator, user);
+            StudentViewController studentViewController = new StudentViewController(student, operation);
             CustomControlLauncher.create()
                     .setTitle(title.toString())
-                    .setScene(new Scene(studentViewController, 1280, 640))
+                    .setScene(new Scene(studentViewController, 1024, 640))
                     .launch();
         });
     }

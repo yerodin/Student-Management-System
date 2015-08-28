@@ -5,26 +5,24 @@ import javafx.collections.FXCollections;
 import java.util.List;
 
 /**
- * Created by alex on 8/25/15 at 12:33 PM.
+ * Created by alex on 8/27/15 at 7:14 AM.
  */
-public enum TertiaryLevel {
-    DIPLOMA("Diploma"),
-    BACHELORS("Bachelors"),
-    MASTERS("Masters"),
-    PHD("PhD"),
-    OTHER("Other"),
-    NONE("None");
+public enum Relationship {
+    BROTHER("Brother"),
+    FATHER("Father"),
+    UNCLE("Uncle"),
+    GRANDFATHER("Grandfather");
 
     private String label;
 
-    TertiaryLevel(String label) {
+    Relationship(String label) {
         setLabel(label);
     }
 
     public static List<String> labels() {
         List<String> strings = FXCollections.observableArrayList();
-        for (TertiaryLevel tertiaryLevel : TertiaryLevel.values()) {
-            strings.add(tertiaryLevel.getLabel());
+        for (Relationship relationship : Relationship.values()) {
+            strings.add(relationship.getLabel());
         }
         return strings;
     }

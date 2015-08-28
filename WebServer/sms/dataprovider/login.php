@@ -13,12 +13,10 @@ if(isset($_POST['user']) && isset($_POST['password']))
 	$statement->bindValue(":pw",$password,PDO::PARAM_STR);
 	$statement->execute();
 	$rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-	$response = array();
 	if(count($rows) > 0)
 	{
-			$response['success'] = 1;	
-			$response['data']= array();
-			array_push($response['data'],$rows[0]);	
+		$response['success'] = 1;
+		$response['data'] = "Logged in success";
 			$_SESSION['user'] = $username;
 			$response['sid'] =$id;
 	}
@@ -37,5 +35,4 @@ if(isset($_POST['user']) && isset($_POST['password']))
 	
 }
 echo json_encode($response);
-die();
 ?>

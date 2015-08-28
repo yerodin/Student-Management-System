@@ -1,5 +1,6 @@
 package model;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
@@ -8,7 +9,9 @@ import javafx.beans.property.StringProperty;
 public class CommunityGroup {
 
 
-    private StringProperty group, project, responsibility;
+    private StringProperty group = new SimpleStringProperty(this, "group");
+    private StringProperty project = new SimpleStringProperty(this, "project");
+    private StringProperty responsibility = new SimpleStringProperty(this, "responsibility");
 
     public CommunityGroup() {
         super();

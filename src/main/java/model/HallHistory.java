@@ -1,13 +1,15 @@
 package model;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
  * Created by Yerodin on 8/22/2015.
  */
 public class HallHistory {
-    private StringProperty hall;
+    private StringProperty hall = new SimpleStringProperty(this, "hall");
     private Peroid peroid;
+    private StringProperty period = new SimpleStringProperty(this, "period");
 
     public HallHistory() {
         super();
@@ -16,7 +18,8 @@ public class HallHistory {
     public HallHistory(String achievemnt, Peroid peroid)
     {
         setHall(achievemnt);
-        setPeriod(peroid);
+        setPeroid(peroid);
+        setPeriod();
     }
 
     public String getHall() {
@@ -31,12 +34,24 @@ public class HallHistory {
         this.hall.set(hall);
     }
 
-    public Peroid getPeriod() {
+    public Peroid getPeroid() {
         return peroid;
     }
 
-    public void setPeriod(Peroid peroid) {
+    public void setPeroid(Peroid peroid) {
         this.peroid = peroid;
+    }
+
+    public StringProperty periodProperty() {
+        return period;
+    }
+
+    public void setPeriod() {
+        this.period.set(String.valueOf(getPeroid().fromYear).concat("-" + String.valueOf(getPeroid().toYear)));
+    }
+
+    public String getPeriod() {
+        return period.get();
     }
 
     public static HallHistory unwrap(String wrapped)
