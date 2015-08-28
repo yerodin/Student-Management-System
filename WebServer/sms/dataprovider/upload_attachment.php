@@ -1,4 +1,5 @@
 <?php
+$response = array();
 if(isset($_GET['sid']))
 {
 	session_id($_GET['sid']);

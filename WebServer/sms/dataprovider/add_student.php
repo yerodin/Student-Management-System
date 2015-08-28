@@ -1,4 +1,5 @@
 <?php
+$response = array();
 if(isset($_POST['sid']))
 {
 	session_id($_POST['sid']);

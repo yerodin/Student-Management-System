@@ -1,4 +1,5 @@
 <?php
+$response = array();
 if(isset($_POST['sid']))
 {
 	session_id($_POST['sid']);
@@ -6,7 +7,7 @@ if(isset($_POST['sid']))
 	if(isset($_SESSION['user']))
 	{
 		
-		if(isset($_POST['academic_status']) &&  isset($_POST['achievements']) && isset($_POST['behaviour_history']) &&  isset($_POST['block'])&&  isset($_POST['cell_phone']) &&  isset($_POST['chancellorite_history']) &&  
+		if(isset($_POST['academic_status']) &&  isset($_POST['achievements']) && isset($_POST['behaviour_history']) &&  isset($_POST['block'])&&  isset($_POST['cell_phone']) &&  isset($_POST['family_history']) &&  
 		isset($_POST['community_group']) &&  isset($_POST['co_curricular'])&&  isset($_POST['day_joined'])&&  isset($_POST['dob'])&&  isset($_POST['faculty'])&&  isset($_POST['father_first_name'])&&  
 		isset($_POST['father_last_name'])&&  isset($_POST['father_phone'])&&  isset($_POST['first_name'])&&  isset($_POST['hall_history'])&&  isset($_POST['home_address1'])&&  isset($_POST['home_address2'])&&  
 		isset($_POST['home_city'])&&  isset($_POST['home_province'])&&  isset($_POST['id_number'])&&  isset($_POST['last_name'])&&  isset($_POST['middle_name'])&&  isset($_POST['mother_first_name'])&&  
@@ -24,7 +25,7 @@ if(isset($_POST['sid']))
 			$stmt->bindValue(":x3",$_POST['behaviour_history'],PDO::PARAM_STR);
 			$stmt->bindValue(":x4",$_POST['block'],PDO::PARAM_INT);
 			$stmt->bindValue(":x5",$_POST['cell_phone'],PDO::PARAM_STR);
-			$stmt->bindValue(":x6",$_POST['chancellorite_history'],PDO::PARAM_STR);
+			$stmt->bindValue(":x6",$_POST['family_history'],PDO::PARAM_STR);
 			$stmt->bindValue(":x7",$_POST['community_group'],PDO::PARAM_STR);
 			$stmt->bindValue(":x8",$_POST['co_curricular'],PDO::PARAM_STR);
 			$stmt->bindValue(":x9",$_POST['day_joined'],PDO::PARAM_STR);

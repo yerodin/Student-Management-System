@@ -9,8 +9,13 @@ if(isset($_POST['sid']))
 		if(isset($_POST['id']) && isset($_POST['name']))
 		{
 			$filename="../attached/".$_POST['id']."/".$_POST['name'];
-			passthru('cat'.$filename);	
-			$response['success'] = 1;	
+			$handle = fopen($filename, "rb"); 
+			$fsize = filesize($filename); 
+			$contents = fread($handle, $fsize);
+			$byteArray = unpack("C*",$contents); 
+			$response['success'] = 1;
+			$response['data']= array();
+			array_push($response['data'],$byteArray);
 			$response['flag']=0;
 		}else{
 		$response['success'] = 0;
