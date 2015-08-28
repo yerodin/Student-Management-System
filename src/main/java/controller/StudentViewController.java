@@ -143,11 +143,12 @@ public class StudentViewController extends TitledPane {
     public Button uploadAttachBtn;
     public Button removeAttachmentBtn;
     public ListView<File> attachmentsListView;
-    protected Student student;
+    protected Student student = new Student();
     protected Operation operation;
     protected User user;
     LocalDate current_date;
     private DatabaseCommunicator databaseCommunicator;
+    private  MainController mainController;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     ObservableList<File> attachments = FXCollections.observableArrayList();
 
@@ -158,14 +159,14 @@ public class StudentViewController extends TitledPane {
     ObservableList<Achievement> achievements = FXCollections.<Achievement>observableArrayList();
     ObservableList<CoCurricular> coCurriculars = FXCollections.<CoCurricular>observableArrayList();
 
-    public StudentViewController(Student student, Operation operation) {
+    public StudentViewController(Student student, Operation operation, MainController mainController) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
                 "/fxml/StudentView.fxml"));
 //        if (operation == Operation.VIEW) {
 //            fxmlLoader = new FXMLLoader(getClass().getResource(
 //                    "/fxml/StudentViewReadOnly.fxml"));
 //        }
-
+        this.mainController = mainController;
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -367,7 +368,6 @@ public class StudentViewController extends TitledPane {
         hallHistoryHallChoiceBox.setItems(FXCollections.observableArrayList(DatabaseCommunicator.getHalls()));
         coCurricularTypeChoiceBox.setItems(FXCollections.observableArrayList(CoCurActivityType.labels()));
         countryChoiceBox.setItems(FXCollections.observableArrayList(DatabaseCommunicator.getCountries()));
-        facultyChoiceBox.setItems(FXCollections.observableArrayList(DatabaseCommunicator.getFaculties()));
         roomNumberChoiceBox.setItems(FXCollections.observableArrayList(DatabaseCommunicator.getRooms()));
         bevHistoryInfracComboBox.setItems(FXCollections.observableArrayList(Infraction.labels()));
         famHistoryRelationshipComboBox.setItems(FXCollections.observableArrayList(Relationship.labels()));
@@ -414,7 +414,7 @@ public class StudentViewController extends TitledPane {
             nationalityField.setText(newValue.getNationality());
             if (student != null) {
                 student.setResidentCountry(newValue);
-                student.setNationality(DatabaseCommunicator.getCountryFromID(this.countryChoiceBox.getValue().getCountryID()));
+                student.setNationalityCountry(DatabaseCommunicator.getCountryFromID(this.countryChoiceBox.getValue().getCountryID()));
             }
         });
 
@@ -615,10 +615,18 @@ public class StudentViewController extends TitledPane {
         academicStatusChoiceBox.getSelectionModel().select((student.getAcademicStatus()) ? "Full time" : "Part time");
         countryChoiceBox.getSelectionModel().select(student.getResidentCountry());
         roomNumberChoiceBox.getSelectionModel().select(student.getRoom());
+        this.dobDatePicker.setValue(LocalDate.parse(student.getDob(), formatter));
+        this.dateJoinedDatePicker.setValue(LocalDate.parse(student.getDayJoined(), formatter));
+        this.secondarySchoolInput.setText(student.getPreviousSecondary());
+        this.willParticipateChoiceBox.getSelectionModel().select(student.getWillParticipate() ? "Yes" : "No");
+        this.countryChoiceBox.getSelectionModel().select(student.getResidentCountry());
+        this.nationalityField.setText(student.getNationalityCountry().getNationality());
         // TODO: Tertiary level ComboBox needs logic
     }
 
     public void grabStudent() {
+        student = new Student();
+        student.setAcademicStatus(this.academicStatusChoiceBox.getSelectionModel().getSelectedItem().equals(AcademicStatus.FULLTIME.getLabel()));
         student.setIdNumber(this.idInput.getText());
         student.setFirstName(this.firstNameInput.getText());
         student.setMiddleName(this.middleNameInput.getText());
@@ -634,7 +642,15 @@ public class StudentViewController extends TitledPane {
         student.setHomeAddress1(this.address1Input.getText());
         student.setHomeAddress2(this.address2Input.getText());
         student.setHomeCity(this.cityInput.getText());
+        student.setBlock(this.blockChoiceBox.getSelectionModel().getSelectedItem());
+        student.setFaculty(this.facultyChoiceBox.getSelectionModel().getSelectedItem());
+        student.setRoom(this.roomNumberChoiceBox.getSelectionModel().getSelectedItem());
+        if(this.dobDatePicker.getValue() != null)
+         student.setDob(this.dobDatePicker.getValue().format(formatter));
+        if(this.dateJoinedDatePicker.getValue() != null)
+            student.setDayJoined(this.dateJoinedDatePicker.getValue().format(formatter));
         // TODO: Add code to set Tertiary meta info
+        student.setWillParticipate(this.willParticipateChoiceBox.getValue().equals(Decision.YES.getLabel()));
         student.setHomeProvince(this.stateProvinceInput.getText());
         student.setReasonResiding(this.reasonResidingTextArea.getText());
         student.setParticpationLevel(0);
@@ -700,6 +716,7 @@ public class StudentViewController extends TitledPane {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Upload Attachment");
                 File file = fileChooser.showOpenDialog(null);
+                student.getAttachedDocuments().add(file);
                 Task<Boolean> uploadTask = new Task<Boolean>() {
                     @Override
                     protected Boolean call() throws Exception {
@@ -958,22 +975,40 @@ public class StudentViewController extends TitledPane {
         Object eventSource = event.getSource();
         if (Objects.deepEquals(eventSource, studentSaveBtn)) {
             grabStudent();
-            Task<Boolean> saveSudentTask = new Task<Boolean>() {
-                @Override
-                protected Boolean call() throws Exception {
-                    return databaseCommunicator.addStudent(user, student, 1);
-                }
-            };
+            Task<Boolean> saveSudentTask;
+            if(operation.equals(Operation.NEW))
+                 saveSudentTask = new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                        return databaseCommunicator.addStudent(user, student, 1);
+                    }
+                };
+            else
+                saveSudentTask = new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                        return databaseCommunicator.editStudent(user, student, 1);
+                    }
+                };
             saveSudentTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
                 @Override
                 public void handle(WorkerStateEvent event) {
                     if (saveSudentTask.getValue()) {
+                        if(operation.equals(Operation.NEW))
+                            mainController.getNewStudents();
+                        else
                         CustomControlLauncher.notifier("Success", "Student has been saved!", NotifierType.INFORATION);
-                    }
+
+                    }else
+                        CustomControlLauncher.notifier("Error", databaseCommunicator.getStatus(), NotifierType.ERROR);
                 }
             });
 
+            new Thread(saveSudentTask).start();
+
         }
+
+
         if (Objects.deepEquals(eventSource, mainClearBtn)) {
             Platform.runLater(() -> {
                 new FormEditizer(mainGridPane, FormEditizer.Action.CLEAR)

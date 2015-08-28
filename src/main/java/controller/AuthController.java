@@ -18,6 +18,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import model.Student;
 import model.User;
 import org.controlsfx.control.Notifications;
 import utility.CustomControlLauncher;

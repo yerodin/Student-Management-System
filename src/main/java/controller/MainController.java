@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -170,7 +171,7 @@ public class MainController implements Initializable {
 
         // Launch Student Viewer with given Student and operation
         Platform.runLater(() -> {
-            StudentViewController studentViewController = new StudentViewController(student, operation);
+            StudentViewController studentViewController = new StudentViewController(student, operation,this);
             CustomControlLauncher.create()
                     .setTitle(title.toString())
                     .setScene(new Scene(studentViewController, 1024, 640))
@@ -188,7 +189,24 @@ public class MainController implements Initializable {
         } else if (Objects.deepEquals(eventSource, viewStudentBtn)) {
             Platform.runLater(() -> launchStudentViewWindow(currentStudent.getValue(), Operation.VIEW));
         } else if (Objects.deepEquals(eventSource, deleteStudentBtn)) {
-            Platform.runLater(() -> students.remove(currentStudent.getValue()));
+            Task<Boolean> deleteTask = new Task<Boolean>() {
+                @Override
+                protected Boolean call() throws Exception {
+                    return databaseCommunicator.deleteStudent(user, currentStudent.getValue(), 1);
+                }
+            };
+            deleteTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+                @Override
+                public void handle(WorkerStateEvent event) {
+                    if (deleteTask.getValue()) {
+                        Platform.runLater(() -> students.remove(currentStudent.getValue()));
+                        CustomControlLauncher.notifier("Success", "Student has been deleted!", NotifierType.INFORATION);
+                    } else
+                        CustomControlLauncher.notifier("Error Deleting Student", databaseCommunicator.getStatus(), NotifierType.ERROR);
+                }
+            });
+
+            new Thread(deleteTask).start();
         }
     }
 
@@ -247,7 +265,7 @@ public class MainController implements Initializable {
                         return true;
                     } else if (student.getResidentCountry().getCountry().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
-                    } else if (student.getNationality().getNationality().toLowerCase().contains(lowerCaseFilter)) {
+                    } else if (student.getNationalityCountry().getNationality().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
                     } else if (student.getPreviousSecondary().toLowerCase().contains(lowerCaseFilter)) {
                         return true;

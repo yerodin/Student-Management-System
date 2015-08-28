@@ -56,7 +56,7 @@ INSERT INTO `blocks` (`block_id`, `block_name`, `block_alias`, `number_rooms`, `
 CREATE TABLE IF NOT EXISTS `countries` (
   `country_id` int(10) NOT NULL AUTO_INCREMENT,
   `country` varchar(100) NOT NULL,
-  `nationality` varchar(100) NOT NULL,
+  `nationalityCountry` varchar(100) NOT NULL,
   PRIMARY KEY (`country_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=193 ;
 
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS `countries` (
 -- Dumping data for table `countries`
 --
 
-INSERT INTO `countries` (`country_id`, `country`, `nationality`) VALUES
+INSERT INTO `countries` (`country_id`, `country`, `nationalityCountry`) VALUES
 (1, 'Afghanistan', 'Afghan'),
 (2, 'Albania', 'Albanian'),
 (3, 'Algeria', 'Algerian'),
@@ -476,7 +476,7 @@ CREATE TABLE IF NOT EXISTS `test_stdns` (
   `mother_first_name` varchar(100) NOT NULL,
   `mother_last_name` varchar(100) NOT NULL,
   `mother_phone` varchar(100) NOT NULL,
-  `nationality` int(10) NOT NULL,
+  `nationalityCountry` int(10) NOT NULL,
   `participation_level` tinyint(100) NOT NULL,
   `picture` tinyint(1) NOT NULL,
   `previous_secondary_school` varchar(100) NOT NULL,
@@ -494,7 +494,7 @@ CREATE TABLE IF NOT EXISTS `test_stdns` (
 -- Dumping data for table `test_stdns`
 --
 
-INSERT INTO `test_stdns` (`academic_status`, `achievements`, `behaviour_history`, `block`, `cell_phone`, `family_history`, `community_group`, `co_curricular`, `day_joined`, `dob`, `faculty`, `father_first_name`, `father_last_name`, `father_phone`, `first_name`, `hall_history`, `home_address1`, `home_address2`, `home_city`, `home_province`, `id_number`, `last_name`, `middle_name`, `mother_first_name`, `mother_last_name`, `mother_phone`, `nationality`, `participation_level`, `picture`, `previous_secondary_school`, `reason_residing`, `resident_country`, `room`, `tertiary_level`, `will_participate`, `email`, `attached_documents`) VALUES
+INSERT INTO `test_stdns` (`academic_status`, `achievements`, `behaviour_history`, `block`, `cell_phone`, `family_history`, `community_group`, `co_curricular`, `day_joined`, `dob`, `faculty`, `father_first_name`, `father_last_name`, `father_phone`, `first_name`, `hall_history`, `home_address1`, `home_address2`, `home_city`, `home_province`, `id_number`, `last_name`, `middle_name`, `mother_first_name`, `mother_last_name`, `mother_phone`, `nationalityCountry`, `participation_level`, `picture`, `previous_secondary_school`, `reason_residing`, `resident_country`, `room`, `tertiary_level`, `will_participate`, `email`, `attached_documents`) VALUES
 (1, '', '', 1, '', '', '', '', '2015-08-12', '1996-09-15', 4, '', '', '', 'Yerodin', '', '', '0', '', '', '620063216', 'Richards', 'Fitzgerald', '', '', '', 84, 0, 0, 'Munro College', '', 84, 82, 0, 1, 'yero_din@hotmail.com', '');
 
 -- --------------------------------------------------------

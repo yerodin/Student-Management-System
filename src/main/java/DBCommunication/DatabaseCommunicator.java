@@ -12,7 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -131,6 +130,7 @@ public class DatabaseCommunicator {
             {
                 JSONArray dblocks = jObj.getJSONArray("data");
                 blocks = new String[dblocks.length()+1];
+                blocks[0] = "none";
                 for(int i = 0; i < dblocks.length();++i)
                 {
                     JSONObject block= dblocks.getJSONObject(i);
@@ -154,14 +154,13 @@ public class DatabaseCommunicator {
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(FACULTIES_URL, "POST", params);
         System.out.println(jObj);
-        System.out.println(jObj);
         try
         {
             if (jObj.getInt("success") == SUCCESS)
             {
                 JSONArray dfaculties = jObj.getJSONArray("data");
                 faculties = new String[dfaculties.length()+1];
-                faculties[0] = "None";
+                faculties[0] = "none";
                 for(int i = 0; i < dfaculties.length();++i)
                 {
                     JSONObject faculty= dfaculties.getJSONObject(i);
@@ -221,6 +220,7 @@ public class DatabaseCommunicator {
             {
                 JSONArray drooms = jObj.getJSONArray("data");
                 rooms = new String[drooms.length()+1];
+                rooms[0] = "none";
                 for(int i = 0; i < drooms.length();++i)
                 {
                     JSONObject droom = drooms.getJSONObject(i);
@@ -250,6 +250,7 @@ public class DatabaseCommunicator {
             {
                 JSONArray drooms = jObj.getJSONArray("data");
                 halls = new String[drooms.length()+1];
+                halls[0] = "none";
                 for(int i = 0; i < drooms.length();++i)
                 {
                     JSONObject droom = drooms.getJSONObject(i);
@@ -270,10 +271,11 @@ public class DatabaseCommunicator {
 
     public boolean addStudent(User currentUser, Student student,int taskID)
     {
+
         statusId = taskID;
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
-        params.add(new BasicNameValuePair("academic_status", student.getAcademicStatus()? "1":"0"));
+        params.add(new BasicNameValuePair("academic_status", student.getAcademicStatus() ? "1" : "0"));
         params.add(new BasicNameValuePair("achievements", student.wrapAchievements()));
         params.add(new BasicNameValuePair("behaviour_history", student.wrapBehaviourHistories()));
         params.add(new BasicNameValuePair("block", String.valueOf(indexOf(student.getBlock(), blocks))));
@@ -283,8 +285,8 @@ public class DatabaseCommunicator {
         params.add(new BasicNameValuePair("co_curricular", student.wrapCoCurriculars()));
         params.add(new BasicNameValuePair("day_joined", student.getDayJoined()));
         params.add(new BasicNameValuePair("dob", student.getDob()));
-        params.add(new BasicNameValuePair("faculty", student.getFaculty()));
-        params.add(new BasicNameValuePair("father_first_name", student.getFirstName()));
+        params.add(new BasicNameValuePair("faculty", String.valueOf(indexOf(student.getFaculty(), faculties))));
+        params.add(new BasicNameValuePair("father_first_name", student.getFatherFirstName()));
         params.add(new BasicNameValuePair("father_last_name", student.getFatherLastName()));
         params.add(new BasicNameValuePair("father_phone", student.getFatherPhone()));
         params.add(new BasicNameValuePair("first_name", student.getFirstName()));
@@ -299,16 +301,24 @@ public class DatabaseCommunicator {
         params.add(new BasicNameValuePair("mother_first_name", student.getMotherFirstName()));
         params.add(new BasicNameValuePair("mother_last_name", student.getMotherLastName()));
         params.add(new BasicNameValuePair("mother_phone", student.getMotherPhone()));
-        params.add(new BasicNameValuePair("nationality", String.valueOf(student.getNationality())));
+        Country nat = student.getNationalityCountry();
+        int natID = 84;
+        if(nat != null)
+            natID = nat.getCountryID();
+        params.add(new BasicNameValuePair("nationality", String.valueOf(nat)));
         params.add(new BasicNameValuePair("previous_secondary_school", student.getPreviousSecondary()));
         params.add(new BasicNameValuePair("reason_residing", student.getReasonResiding()));
-        params.add(new BasicNameValuePair("resident_country", String.valueOf(student.getResidentCountry())));
-        params.add(new BasicNameValuePair("room", student.getRoom()));
+        Country res = student.getResidentCountry();
+        int resID = 84;
+        if(nat != null)
+            resID = res.getCountryID();
+        params.add(new BasicNameValuePair("resident_country", String.valueOf(resID)));
+        params.add(new BasicNameValuePair("room", String.valueOf(indexOf(student.getRoom(), rooms))));
         params.add(new BasicNameValuePair("tertiary_level", student.getTertiaryLevel()? "1":"0"));
         params.add(new BasicNameValuePair("will_participate", (student.getWillParticipate())? "1":"0"));
         params.add(new BasicNameValuePair("participation_level", String.valueOf(student.getParticpationLevel())));
         params.add(new BasicNameValuePair("email", student.getEmail()));
-        params.add(new BasicNameValuePair("picture", student.getPicture()? "1":"0"));
+        params.add(new BasicNameValuePair("picture", student.getPicture() ? "1" : "0"));
         JSONObject jObj = jParser.makeHttpRequest(ADD_STUDENT_URL, "POST", params);
         System.out.println(jObj);
         try
@@ -330,7 +340,7 @@ public class DatabaseCommunicator {
         statusId = taskID;
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
-        params.add(new BasicNameValuePair("academic_status", student.getAcademicStatus()? "1":"0"));
+        params.add(new BasicNameValuePair("academic_status", student.getAcademicStatus() ? "1" : "0"));
         params.add(new BasicNameValuePair("achievements", student.wrapAchievements()));
         params.add(new BasicNameValuePair("behaviour_history", student.wrapBehaviourHistories()));
         params.add(new BasicNameValuePair("block", String.valueOf(indexOf(student.getBlock(), blocks))));
@@ -340,8 +350,8 @@ public class DatabaseCommunicator {
         params.add(new BasicNameValuePair("co_curricular", student.wrapCoCurriculars()));
         params.add(new BasicNameValuePair("day_joined", student.getDayJoined()));
         params.add(new BasicNameValuePair("dob", student.getDob()));
-        params.add(new BasicNameValuePair("faculty", student.getFaculty()));
-        params.add(new BasicNameValuePair("father_first_name", student.getFirstName()));
+        params.add(new BasicNameValuePair("faculty", String.valueOf(indexOf(student.getFaculty(), faculties))));
+        params.add(new BasicNameValuePair("father_first_name", student.getFatherFirstName()));
         params.add(new BasicNameValuePair("father_last_name", student.getFatherLastName()));
         params.add(new BasicNameValuePair("father_phone", student.getFatherPhone()));
         params.add(new BasicNameValuePair("first_name", student.getFirstName()));
@@ -356,16 +366,24 @@ public class DatabaseCommunicator {
         params.add(new BasicNameValuePair("mother_first_name", student.getMotherFirstName()));
         params.add(new BasicNameValuePair("mother_last_name", student.getMotherLastName()));
         params.add(new BasicNameValuePair("mother_phone", student.getMotherPhone()));
-        params.add(new BasicNameValuePair("nationality", String.valueOf(student.getNationality().getCountryID())));
+        Country nat = student.getNationalityCountry();
+        int natID = 84;
+        if(nat != null)
+            natID = nat.getCountryID();
+        params.add(new BasicNameValuePair("nationality", String.valueOf(nat)));
         params.add(new BasicNameValuePair("previous_secondary_school", student.getPreviousSecondary()));
         params.add(new BasicNameValuePair("reason_residing", student.getReasonResiding()));
-        params.add(new BasicNameValuePair("resident_country", String.valueOf(student.getResidentCountry().getCountryID())));
-        params.add(new BasicNameValuePair("room", student.getRoom()));
+        Country res = student.getResidentCountry();
+        int resID = 84;
+        if(nat != null)
+            resID = res.getCountryID();
+        params.add(new BasicNameValuePair("resident_country", String.valueOf(resID)));
+        params.add(new BasicNameValuePair("room", String.valueOf(indexOf(student.getRoom(), rooms))));
         params.add(new BasicNameValuePair("tertiary_level", student.getTertiaryLevel()? "1":"0"));
         params.add(new BasicNameValuePair("will_participate", (student.getWillParticipate())? "1":"0"));
         params.add(new BasicNameValuePair("participation_level", String.valueOf(student.getParticpationLevel())));
         params.add(new BasicNameValuePair("email", student.getEmail()));
-        params.add(new BasicNameValuePair("picture", student.getPicture()? "1":"0"));
+        params.add(new BasicNameValuePair("picture", student.getPicture() ? "1" : "0"));
         JSONObject jObj = jParser.makeHttpRequest(EDIT_STUDENT_URL, "POST", params);
         System.out.println(jObj);
         try
@@ -412,7 +430,6 @@ public class DatabaseCommunicator {
 
             httpUrlConnection.setRequestMethod("GET");
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            ImageIO.write(SwingFXUtils.fromFXImage(student.getImage(), null), "png", os);
             byte[] totalBytes = os.toByteArray();
             int totalByte = totalBytes.length;
             InputStream is = new ByteArrayInputStream(os.toByteArray());
@@ -576,8 +593,7 @@ public class DatabaseCommunicator {
                 if(jObj.getInt("flag") == 1)
                     return null;
                 JSONArray students = jObj.getJSONArray("data").getJSONArray(0);
-                if(students.length() > 0)
-                    returnArray = new Student[students.length()];
+                returnArray = new Student[students.length()];
                 for(int i = 0; i < students.length(); ++i)
                 {
                     JSONObject student = students.getJSONObject(i);
@@ -646,27 +662,27 @@ public class DatabaseCommunicator {
 
     public static String getBlockFromID(int ID)
     {
-        return ((blocks.length > ID)? blocks[ID]:null);
+        return ((blocks.length > ID && ID != -1)? blocks[ID]:null);
     }
 
     public static String getFacultyFromID(int ID)
     {
-        return ((faculties.length > ID)? faculties[ID]:null);
+        return ((faculties.length > ID && ID != -1)? faculties[ID]:null);
     }
 
     public static Country getCountryFromID(int ID)
     {
-        return ((countries.size() > ID)? countries.get(ID):null);
+        return ((countries.size() > ID && ID != -1)? countries.get(ID):null);
     }
 
     public static String getRoomFromID(int ID)
     {
-        return ((rooms.length > ID)? rooms[ID]:"");
+        return ((rooms.length > ID) && ID != -1? rooms[ID]:"");
     }
 
     public static String getHallFromID(int ID)
     {
-        return ((halls.length > ID)? halls[ID]:"");
+        return ((halls.length > ID && ID != -1)? halls[ID]:"");
     }
 
     public int getStatusId()
@@ -678,11 +694,12 @@ public class DatabaseCommunicator {
         return status;
     }
 
-    private int indexOf(String s, String[] array)
+    private int indexOf(String s, String[] array1)
     {
-        for(int i = 0; i < array.length; ++i)
-            if(array[i].equals(s))
-                return i;
+        if(s != null && array1 != null)
+            for(int i = 0; i < array1.length; ++i)
+                if(array1[i].equals(s))
+                    return i;
         return -1;
     }
 

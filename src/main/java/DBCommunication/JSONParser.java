@@ -78,7 +78,7 @@ public class JSONParser {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        //System.out.println(json);
         // try parse the string to a JSON object
         try {
             jObj = new JSONObject(json);

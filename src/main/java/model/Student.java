@@ -26,7 +26,7 @@ public class Student {
     private ObservableList<File> attachedDocuments;
 
     private StringProperty cellPhone, dayJoined, dob, fatherFirstName, fatherLastName, fatherPhone,
-            homeAddress1, homeAddress2, homeCity, homeProvince, motherFirstName,
+            homeAddress1, homeAddress2, homeCity, homeProvince, motherFirstName, faculty,
             motherLastName, motherPhone, previousSecondary, reasonResiding, email;
 
     // Proof of concept
@@ -37,18 +37,18 @@ public class Student {
     StringProperty lastName = new SimpleStringProperty(this, "lastName");
     StringProperty block = new SimpleStringProperty(this, "block");
     StringProperty room = new SimpleStringProperty(this, "room");
-    StringProperty faculty = new SimpleStringProperty(this, "faculty");
 
     private IntegerProperty particpationLevel;
 
-    private Country nationality, residentCountry;
+    private Country nationalityCountry, residentCountry;
 
     public Student(boolean academicStatus, boolean willParticipate, String achievements, String behaviourHistories, String familyHistories, String hallHistories,
                    String communityGroups, String coCurriculars, String cellPhone, String dayJoined, String dob, String block, String faculty, String fatherFirstName,
                    String fatherLastName, String fatherPhone, String firstName, String homeAddress1, String homeAddress2,
                    String homeCity, String homeProvince, String idNumber, String lastName, String middleName, String motherFirstName,
-                   String motherLastName, String motherPhone, String previousSecondary, String reasonResiding, String room, boolean tertiaryLevel, String email, Country nationality,
+                   String motherLastName, String motherPhone, String previousSecondary, String reasonResiding, String room, boolean tertiaryLevel, String email, Country nationalityCountry,
                    int participationLevel, boolean picture, Country residentCountry,ObservableList<File> attachedDocuments) {
+        this();
         this.academicStatus = new SimpleBooleanProperty(academicStatus);
         unwraoAndSetAchievements(achievements);
         unwraoAndSetBehaviourHistories(behaviourHistories);
@@ -75,7 +75,7 @@ public class Student {
         this.motherFirstName = new SimpleStringProperty(motherFirstName);
         this.motherLastName = new SimpleStringProperty(motherLastName);
         this.motherPhone = new SimpleStringProperty(motherPhone);
-        this.nationality = nationality;
+        this.nationalityCountry = nationalityCountry;
         this.particpationLevel = new SimpleIntegerProperty(participationLevel);
         this.picture = new SimpleBooleanProperty(picture);
         this.previousSecondary = new SimpleStringProperty(previousSecondary);
@@ -90,7 +90,41 @@ public class Student {
     }
 
     public Student() {
-        super();
+        this.academicStatus = new SimpleBooleanProperty();
+        unwraoAndSetAchievements("");
+        unwraoAndSetBehaviourHistories("");
+        this.block = new SimpleStringProperty("");
+        this.cellPhone = new SimpleStringProperty("");
+        unwraoAndSetFamilyHistories("");
+        unwraoAndSetCommunityGroups("");
+        unwraoAndSetCoCurriculars("");
+        this.dayJoined = new SimpleStringProperty("");
+        this.dob = new SimpleStringProperty("");
+        this.faculty = new SimpleStringProperty("none");
+        this.fatherFirstName = new SimpleStringProperty("");
+        this.fatherLastName = new SimpleStringProperty("");
+        this.fatherPhone = new SimpleStringProperty("");
+        this.firstName = new SimpleStringProperty("");
+        unwraoAndSetBHallHistories("");
+        this.homeAddress1 = new SimpleStringProperty("");
+        this.homeAddress2 = new SimpleStringProperty("");
+        this.homeCity = new SimpleStringProperty("");
+        this.homeProvince = new SimpleStringProperty("");
+        this.idNumber = new SimpleStringProperty("");
+        this.lastName = new SimpleStringProperty("");
+        this.middleName = new SimpleStringProperty("");
+        this.motherFirstName = new SimpleStringProperty("");
+        this.motherLastName = new SimpleStringProperty("");
+        this.motherPhone = new SimpleStringProperty("");
+        this.particpationLevel = new SimpleIntegerProperty();
+        this.picture = new SimpleBooleanProperty();
+        this.previousSecondary = new SimpleStringProperty("");
+        this.reasonResiding = new SimpleStringProperty("");
+        this.room = new SimpleStringProperty("");
+        this.tertiaryLevel = new SimpleBooleanProperty();
+        this.willParticipate = new SimpleBooleanProperty();
+        this.email = new SimpleStringProperty("");
+        this.attachedDocuments = FXCollections.observableArrayList();
     }
 
     // Constructor for testing purposes only
@@ -507,12 +541,12 @@ public class Student {
         this.cellPhone.set(cellPhone);
     }
 
-    public Country getNationality() {
-        return nationality;
+    public Country getNationalityCountry() {
+        return nationalityCountry;
     }
 
-    public void setNationality(Country nationality) {
-        this.nationality = nationality;
+    public void setNationalityCountry(Country nationalityCountry) {
+        this.nationalityCountry = nationalityCountry;
     }
 
     public Country getResidentCountry() {
@@ -528,7 +562,8 @@ public class Student {
         String retString = "";
         for(Achievement achievement: achievements)
             retString += Achievement.wrap(achievement)+",";
-        retString.substring(0, retString.length() - 1);
+        if(retString.length() > 1)
+        retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
@@ -548,7 +583,8 @@ public class Student {
         String retString = "";
         for(BehaviourHistory behaviourHistory: behaviourHistories)
             retString += BehaviourHistory.wrap(behaviourHistory)+",";
-        retString.substring(0, retString.length() - 1);
+        if(retString.length() > 1)
+        retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
@@ -568,7 +604,8 @@ public class Student {
         String retString = "";
         for(FamilyHistory familyHistory: familyHistories)
             retString += FamilyHistory.wrap(familyHistory)+",";
-        retString.substring(0, retString.length() - 1);
+        if(retString.length() > 1)
+        retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
@@ -588,7 +625,8 @@ public class Student {
         String retString = "";
         for(HallHistory hallHistory: hallHistories)
             retString += HallHistory.wrap(hallHistory)+",";
-        retString.substring(0, retString.length() - 1);
+        if(retString.length() > 1)
+        retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
@@ -608,7 +646,8 @@ public class Student {
         String retString = "";
         for(CommunityGroup communityGroup: communityGroups)
             retString += CommunityGroup.wrap(communityGroup)+",";
-        retString.substring(0, retString.length() - 1);
+        if(retString.length() > 1)
+        retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
@@ -628,7 +667,8 @@ public class Student {
         String retString = "";
         for(CoCurricular coCurricular: coCurriculars)
             retString += CoCurricular.wrap(coCurricular)+",";
-        retString.substring(0, retString.length() - 1);
+        if(retString.length() > 1)
+        retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
@@ -648,6 +688,7 @@ public class Student {
         String retString = "";
         for(File attachedDocument: attachedDocuments)
             retString += "{"+attachedDocument.getName()+"},";
+        if(retString.length() > 1)
         retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
@@ -703,7 +744,7 @@ public class Student {
                 ", room=" + room +
                 ", email=" + email +
                 ", particpationLevel=" + particpationLevel +
-                ", nationality=" + nationality +
+                ", nationalityCountry=" + nationalityCountry +
                 ", residentCountry=" + residentCountry +
                 '}';
     }

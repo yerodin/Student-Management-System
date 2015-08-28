@@ -55,6 +55,7 @@ public class Achievement {
 
     public static String wrap(Achievement achievement)
     {
+        System.out.println("HERE2");
         return "{" + achievement.getAchievement() + "}{" + achievement.getArea() + "}";
     }
 }
