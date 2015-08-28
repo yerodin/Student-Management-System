@@ -6,91 +6,100 @@ import javafx.beans.property.StringProperty;
 /**
  * StudentManagementSystem -
  **/
-public class FamilyHistory {
-    private StringProperty from = new SimpleStringProperty(this, "from");
-    private StringProperty to = new SimpleStringProperty(this, "to");
-    private StringProperty relationship = new SimpleStringProperty(this, "relationship");
-    private StringProperty block = new SimpleStringProperty(this, "block");
+public class FamilyHistory
+{
+    private StringProperty from, to, relationship, block;
 
 
-    public FamilyHistory() {
-        super();
+    public FamilyHistory()
+    {
+        this("", "", "", "");
     }
 
-    public FamilyHistory(String from, String to, String relationship, String block) {
-        setFrom(from);
-        setTo(to);
-        setRelationship(relationship);
-        setBlock(block);
+    public FamilyHistory(String from, String to, String relationship, String block)
+    {
+        this.from = new SimpleStringProperty(from);
+        this.to = new SimpleStringProperty(to);
+        this.relationship = new SimpleStringProperty(relationship);
+        this.block = new SimpleStringProperty(block);
     }
 
-    public String getFrom() {
+    public String getFrom()
+    {
         return from.get();
     }
 
-    public void setFrom(String from) {
+    public void setFrom(String from)
+    {
         this.from.set(from);
     }
 
-    public StringProperty fromProperty() {
+    public StringProperty fromProperty()
+    {
         return from;
     }
 
-    public String getTo() {
+    public String getTo()
+    {
         return to.get();
     }
 
-    public void setTo(String to) {
+    public void setTo(String to)
+    {
         this.to.set(to);
     }
 
-    public StringProperty toProperty() {
+    public StringProperty toProperty()
+    {
         return to;
     }
 
-    public String getRelationship() {
+    public String getRelationship()
+    {
         return relationship.get();
     }
 
-    public void setRelationship(String relationship) {
+    public void setRelationship(String relationship)
+    {
         this.relationship.set(relationship);
     }
 
-    public StringProperty relationshipProperty() {
+    public StringProperty relationshipProperty()
+    {
         return relationship;
     }
 
-    public StringProperty getBlock() {
+    public StringProperty getBlock()
+    {
         return block;
     }
 
-    public void setBlock(String block) {
+    public void setBlock(String block)
+    {
         this.block.set(block);
     }
 
     public static FamilyHistory unwrap(String wrapped)
     {
-        String from = wrapped.substring(1,wrapped.indexOf("}"));
-        wrapped.replace("{","");
-        wrapped.replace("}","");
-        String to = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
-        wrapped.replace("{","");
-        wrapped.replace("}","");
-        String relationship = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
-        wrapped.replace("{","");
-        wrapped.replace("}", "");
-        String block = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
-
-        return new FamilyHistory(from,to,relationship,block);
+        if (wrapped == null || wrapped.length() < 8) return new FamilyHistory();
+        String from = wrapped.substring(1, wrapped.indexOf("}"));
+        wrapped = wrapped.substring(wrapped.indexOf("}{") + 1);
+        String to = wrapped.substring(1, wrapped.indexOf("}"));
+        wrapped = wrapped.substring(wrapped.indexOf("}{") + 1);
+        String relationship = wrapped.substring(1, wrapped.indexOf("}"));
+        wrapped = wrapped.substring(wrapped.indexOf("}{") + 1);
+        String block = wrapped.substring(1, wrapped.indexOf("}"));
+        return new FamilyHistory(from, to, relationship, block);
     }
 
     public static String wrap(FamilyHistory familyHistory)
     {
-        return "{"+familyHistory.getFrom()+"}{"+familyHistory.getTo()+"}{"+familyHistory.getRelationship()+"}{"+familyHistory.getBlock()+"}";
+        return "{" + familyHistory.getFrom() + "}{" + familyHistory.getTo() + "}{" + familyHistory.getRelationship() + "}{" + familyHistory.getBlock() + "}";
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "FamilyHistory{" +
                 "from=" + from.get() +
                 ", to=" + to.get() +
@@ -100,7 +109,8 @@ public class FamilyHistory {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o)
+    {
         if (this == o) return true;
         if (!(o instanceof FamilyHistory)) return false;
 
@@ -114,7 +124,8 @@ public class FamilyHistory {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         int result = getFrom().hashCode();
         result = 31 * result + getTo().hashCode();
         result = 31 * result + getRelationship().hashCode();

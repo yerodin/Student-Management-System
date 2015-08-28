@@ -46,15 +46,15 @@ public class CoCurricular {
 
     public static CoCurricular unwrap(String wrapped)
     {
-        String activity = wrapped.substring(1,wrapped.indexOf("}"));
-        wrapped.replace("{","");
-        wrapped.replace("}","");
-        String type = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
-        return new CoCurricular(activity,type);
+        if (wrapped == null || wrapped.length() < 4) return new CoCurricular();
+        String activity = wrapped.substring(1, wrapped.indexOf("}"));
+        wrapped = wrapped.substring(wrapped.indexOf("}{") + 1);
+        String type = wrapped.substring(1, wrapped.indexOf("}"));
+        return new CoCurricular(activity, type);
     }
 
     public static String wrap(CoCurricular coCurricular)
     {
-        return "{"+coCurricular.getActivity()+"}{"+coCurricular.getType()+"}";
+        return "{" + coCurricular.getActivity() + "}{" + coCurricular.getType() + "}";
     }
 }

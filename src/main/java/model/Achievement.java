@@ -46,16 +46,16 @@ public class Achievement {
 
     public static Achievement unwrap(String wrapped)
     {
+        if (wrapped == null || wrapped.length() < 4) return new Achievement();
         String achievement = wrapped.substring(1, wrapped.indexOf("}"));
-        wrapped.replace("{","");
-        wrapped.replace("}","");
-        String area = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
+        wrapped = wrapped.substring(wrapped.indexOf("}{") + 1);
+        String area = wrapped.substring(1, wrapped.indexOf("}"));
+
         return new Achievement(achievement, area);
     }
 
     public static String wrap(Achievement achievement)
     {
-        System.out.println("HERE2");
         return "{" + achievement.getAchievement() + "}{" + achievement.getArea() + "}";
     }
 }

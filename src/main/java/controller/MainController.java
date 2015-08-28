@@ -33,10 +33,9 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class MainController implements Initializable {
-    final Text[] tablePlaceholders = {
-            new Text("Start by creating a student with the Add Student button to the right."),
-            new Text("No results found.")};
+public class MainController implements Initializable
+{
+    final Text[] tablePlaceholders = {new Text("Start by creating a student with the Add Student button to the right" + "."), new Text("No results found.")};
     public VBox mainVBox;
     @FXML
     TextField filterField;
@@ -59,7 +58,8 @@ public class MainController implements Initializable {
      * @param resources The resources used to localize the root object, or <tt>null</tt> if
      */
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL location, ResourceBundle resources)
+    {
         AuthController.sMSSessioncount++;
         user = AuthController.user;
         getNewStudents();
@@ -79,9 +79,11 @@ public class MainController implements Initializable {
                                 // TODO: Something needs to be done when maximized
                             }
                         });
-                        newWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                        newWindow.setOnCloseRequest(new EventHandler<WindowEvent>()
+                        {
                             @Override
-                            public void handle(WindowEvent event) {
+                            public void handle(WindowEvent event)
+                            {
                                 event.consume();
                                 AuthController.sMSSessioncount--;
                                 ((Stage) newWindow).close();
@@ -93,8 +95,7 @@ public class MainController implements Initializable {
         });
 
         // Listen for table selection and update CurrentStudent
-        studentTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
-        {
+        studentTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 Platform.runLater(() -> {
                     editStudentBtn.setDisable(false);
@@ -112,27 +113,32 @@ public class MainController implements Initializable {
         });
     }
 
-    public void getNewStudents() {
-        Task<Student[]> newStudentsTask = new Task<Student[]>() {
+    public void getNewStudents()
+    {
+        Task<Student[]> newStudentsTask = new Task<Student[]>()
+        {
             @Override
-            protected Student[] call() throws Exception {
+            protected Student[] call() throws Exception
+            {
                 return databaseCommunicator.getNewStudents(user, 0);
             }
         };
         newStudentsTask.setOnSucceeded(event -> {
             Student[] stds = newStudentsTask.getValue();
-            if (stds != null) {
-//                students.filtered(Predicate.isEqual())
-//                FilteredList<Student> filteredStds = new FilteredList<>(students, p -> true);
-//                filteredStds.setPredicate(new Predicate<Student>() {
-//                    @Override
-//                    public boolean test(Student student) {
-//                        return false;
-//                    }
-//                });
+            if (stds != null)
+            {
+                //                students.filtered(Predicate.isEqual())
+                //                FilteredList<Student> filteredStds = new FilteredList<>(students, p -> true);
+                //                filteredStds.setPredicate(new Predicate<Student>() {
+                //                    @Override
+                //                    public boolean test(Student student) {
+                //                        return false;
+                //                    }
+                //                });
                 ObservableList<Student> students1 = FXCollections.observableArrayList(stds);
                 Platform.runLater(() -> studentTableView.setItems(students1));
-            } else {
+            } else
+            {
                 CustomControlLauncher.notifier("Error", "There was a problem fetching students from database.", NotifierType.ERROR);
             }
         });
@@ -140,17 +146,15 @@ public class MainController implements Initializable {
     }
 
 
-    private ObservableList<Student> generateFakeStudents() {
-        return FXCollections.observableArrayList(
-                new Student("827632829", "Damion", "Marlon", "Richardson", "Excellence", "12", "Science & Technology"),
-                new Student("236251971", "Ramone", "Davere", "Wright", "Aye", "8", "Law"),
-                new Student("131273681", "Richard", "Ben", "Hickler", "Runci", "11", "Social Sciences"),
-                new Student("974535780", "Easton", "Hamesh", "Ricketts", "Che", "3", "Humanities & Education"),
-                new Student("688325630", "John", "Wilder", "Scott", "Dynamite", "19", "Medical Sciences")
-        );
+    private ObservableList<Student> generateFakeStudents()
+    {
+        return FXCollections.observableArrayList(new Student("827632829", "Damion", "Marlon", "Richardson", "Excellence", "12", "Science & Technology"), new Student("236251971", "Ramone", "Davere",
+                "Wright", "Aye", "8", "Law"), new Student("131273681", "Richard", "Ben", "Hickler", "Runci", "11", "Social " + "Sciences"), new Student("974535780", "Easton", "Hamesh", "Ricketts",
+                "Che", "3", "Humanities & " + "Education"), new Student("688325630", "John", "Wilder", "Scott", "Dynamite", "19", "Medical " + "Sciences"));
     }
 
-    public void launchStudentViewWindow(Student student, Operation operation) {
+    public void launchStudentViewWindow(Student student, Operation operation)
+    {
         // Determine title
         String[] titles = {"Add ", "Edit ", "View ", " Student"};
         StringBuilder title = new StringBuilder();
@@ -171,15 +175,13 @@ public class MainController implements Initializable {
 
         // Launch Student Viewer with given Student and operation
         Platform.runLater(() -> {
-            StudentViewController studentViewController = new StudentViewController(student, operation,this);
-            CustomControlLauncher.create()
-                    .setTitle(title.toString())
-                    .setScene(new Scene(studentViewController, 1024, 640))
-                    .launch();
+            StudentViewController studentViewController = new StudentViewController(student, operation, this);
+            CustomControlLauncher.create().setTitle(title.toString()).setScene(new Scene(studentViewController, 1024, 640)).launch();
         });
     }
 
-    public void optionsHandler(ActionEvent event) {
+    public void optionsHandler(ActionEvent event)
+    {
         Object eventSource = event.getSource();
 
         if (Objects.deepEquals(eventSource, addStudentBtn)) {
@@ -189,20 +191,23 @@ public class MainController implements Initializable {
         } else if (Objects.deepEquals(eventSource, viewStudentBtn)) {
             Platform.runLater(() -> launchStudentViewWindow(currentStudent.getValue(), Operation.VIEW));
         } else if (Objects.deepEquals(eventSource, deleteStudentBtn)) {
-            Task<Boolean> deleteTask = new Task<Boolean>() {
+            Task<Boolean> deleteTask = new Task<Boolean>()
+            {
                 @Override
-                protected Boolean call() throws Exception {
+                protected Boolean call() throws Exception
+                {
                     return databaseCommunicator.deleteStudent(user, currentStudent.getValue(), 1);
                 }
             };
-            deleteTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            deleteTask.setOnSucceeded(new EventHandler<WorkerStateEvent>()
+            {
                 @Override
-                public void handle(WorkerStateEvent event) {
+                public void handle(WorkerStateEvent event)
+                {
                     if (deleteTask.getValue()) {
                         Platform.runLater(() -> students.remove(currentStudent.getValue()));
                         CustomControlLauncher.notifier("Success", "Student has been deleted!", NotifierType.INFORATION);
-                    } else
-                        CustomControlLauncher.notifier("Error Deleting Student", databaseCommunicator.getStatus(), NotifierType.ERROR);
+                    } else CustomControlLauncher.notifier("Error Deleting Student", databaseCommunicator.getStatus(), NotifierType.ERROR);
                 }
             });
 
@@ -211,7 +216,8 @@ public class MainController implements Initializable {
     }
 
     // Quickly search for students
-    public void filterStudentTable() {
+    public void filterStudentTable()
+    {
         // 1. Wrap the ObservableList in a FilteredList (initially display all students).
         FilteredList<Student> filteredData = new FilteredList<>(students, p -> true);
 
@@ -265,7 +271,8 @@ public class MainController implements Initializable {
                         return true;
                     } else if (student.getResidentCountry().getCountry().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
-                    } else if (student.getNationalityCountry().getNationality().toLowerCase().contains(lowerCaseFilter)) {
+                    } else if (student.getNationalityCountry().getNationality().toLowerCase().contains(lowerCaseFilter))
+                    {
                         return true;
                     } else if (student.getPreviousSecondary().toLowerCase().contains(lowerCaseFilter)) {
                         return true;
@@ -281,7 +288,7 @@ public class MainController implements Initializable {
             });
         });
 
-//        studentTableView.setPlaceholder(tablePlaceholders[0]);
+        //        studentTableView.setPlaceholder(tablePlaceholders[0]);
 
         // 3. Wrap the FilteredList in a SortedList.
         SortedList<Student> sortedData = new SortedList<>(filteredData);

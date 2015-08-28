@@ -148,7 +148,7 @@ public class StudentViewController extends TitledPane {
     protected User user;
     LocalDate current_date;
     private DatabaseCommunicator databaseCommunicator;
-    private  MainController mainController;
+    private MainController mainController;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     ObservableList<File> attachments = FXCollections.observableArrayList();
 
@@ -387,7 +387,7 @@ public class StudentViewController extends TitledPane {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (student != null) {
-                    student.setTertiaryLevel(!Objects.equals(newValue, "None"));
+                    //                    student.setTertiaryLevel(!Objects.equals(newValue, "None"));
                 }
             }
         });
@@ -529,12 +529,7 @@ public class StudentViewController extends TitledPane {
      * @param message Message of notification
      */
     private static void notifier(String title, String message) {
-        Platform.runLater(() -> Notifications.create()
-                        .title(title)
-                        .text(message)
-                        .hideAfter(new Duration(2000))
-                        .showInformation()
-        );
+        Platform.runLater(() -> Notifications.create().title(title).text(message).hideAfter(new Duration(2000)).showInformation());
     }
 
     private void setGradYears() {
@@ -615,8 +610,7 @@ public class StudentViewController extends TitledPane {
         academicStatusChoiceBox.getSelectionModel().select((student.getAcademicStatus()) ? "Full time" : "Part time");
         countryChoiceBox.getSelectionModel().select(student.getResidentCountry());
         roomNumberChoiceBox.getSelectionModel().select(student.getRoom());
-        this.dobDatePicker.setValue(LocalDate.parse(student.getDob(), formatter));
-        this.dateJoinedDatePicker.setValue(LocalDate.parse(student.getDayJoined(), formatter));
+        //this.dateJoinedDatePicker.setValue(LocalDate.parse(student.getDayJoined(), formatter));
         this.secondarySchoolInput.setText(student.getPreviousSecondary());
         this.willParticipateChoiceBox.getSelectionModel().select(student.getWillParticipate() ? "Yes" : "No");
         this.countryChoiceBox.getSelectionModel().select(student.getResidentCountry());
@@ -645,12 +639,16 @@ public class StudentViewController extends TitledPane {
         student.setBlock(this.blockChoiceBox.getSelectionModel().getSelectedItem());
         student.setFaculty(this.facultyChoiceBox.getSelectionModel().getSelectedItem());
         student.setRoom(this.roomNumberChoiceBox.getSelectionModel().getSelectedItem());
-        if(this.dobDatePicker.getValue() != null)
-         student.setDob(this.dobDatePicker.getValue().format(formatter));
-        if(this.dateJoinedDatePicker.getValue() != null)
+        student.setAchievements(achievements);
+        student.setCoCurriculars(coCurriculars);
+        student.setBehaviourHistories(behaviourHistories);
+        student.setFamilyHistories(familyHistories);
+        student.setCommunityGroups(communityGroups);
+        if (this.dobDatePicker.getValue() != null) student.setDob(this.dobDatePicker.getValue().format(formatter));
+        if (this.dateJoinedDatePicker.getValue() != null)
             student.setDayJoined(this.dateJoinedDatePicker.getValue().format(formatter));
         // TODO: Add code to set Tertiary meta info
-        student.setWillParticipate(this.willParticipateChoiceBox.getValue().equals(Decision.YES.getLabel()));
+        student.setWillParticipate(this.willParticipateChoiceBox.getValue() != null && this.willParticipateChoiceBox.getValue().equals(Decision.YES.getLabel()));
         student.setHomeProvince(this.stateProvinceInput.getText());
         student.setReasonResiding(this.reasonResidingTextArea.getText());
         student.setParticpationLevel(0);
@@ -860,10 +858,7 @@ public class StudentViewController extends TitledPane {
             Platform.runLater(() -> {
                 hallHistory.setHall(hallHistoryHallChoiceBox.getItems()
                         .get(hallHistoryHallChoiceBox.getSelectionModel().getSelectedIndex()));
-                hallHistory.setPeroid(new Peroid(
-                                hallHistoryPeriodFrom.getValue().getYear(),
-                                hallHistoryPeriodTo.getValue().getYear(), 1, 3)
-                );
+                hallHistory.setPeriod(new Period(hallHistoryPeriodFrom.getValue().getYear(), hallHistoryPeriodTo.getValue().getYear(), 1, 3));
                 hallHistories.add(hallHistory);
                 student.setHallHistories(hallHistories);
                 hallHistoryClearDeleteSplitMenuBtn.fire();
@@ -923,7 +918,6 @@ public class StudentViewController extends TitledPane {
                 achievement.setAchievement(achievementNameInput.getText());
                 achievement.setArea(achievementAreaComboBox.getSelectionModel().getSelectedItem());
                 achievements.add(achievement);
-                student.setAchievements(achievements);
                 achievementClearDeleteSplitMenuBtn.fire();
             });
         }
@@ -976,8 +970,8 @@ public class StudentViewController extends TitledPane {
         if (Objects.deepEquals(eventSource, studentSaveBtn)) {
             grabStudent();
             Task<Boolean> saveSudentTask;
-            if(operation.equals(Operation.NEW))
-                 saveSudentTask = new Task<Boolean>() {
+            if (operation.equals(Operation.NEW)) saveSudentTask = new Task<Boolean>()
+            {
                     @Override
                     protected Boolean call() throws Exception {
                         return databaseCommunicator.addStudent(user, student, 1);
@@ -994,12 +988,11 @@ public class StudentViewController extends TitledPane {
                 @Override
                 public void handle(WorkerStateEvent event) {
                     if (saveSudentTask.getValue()) {
-                        if(operation.equals(Operation.NEW))
+                        if (operation.equals(Operation.NEW))
                             mainController.getNewStudents();
-                        else
-                        CustomControlLauncher.notifier("Success", "Student has been saved!", NotifierType.INFORATION);
+                        else CustomControlLauncher.notifier("Success", "Student has been saved!", NotifierType.INFORATION);
 
-                    }else
+                    } else
                         CustomControlLauncher.notifier("Error", databaseCommunicator.getStatus(), NotifierType.ERROR);
                 }
             });

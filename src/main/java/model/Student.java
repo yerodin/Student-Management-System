@@ -8,6 +8,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -15,7 +16,7 @@ import java.util.ArrayList;
  * Created by Yerodin on 8/21/2015.
  */
 public class Student {
-    private BooleanProperty academicStatus, willParticipate, tertiaryLevel, picture;
+    private BooleanProperty academicStatus, willParticipate, picture;
     private ObservableList<Achievement> achievements;
     private ObservableList<BehaviourHistory> behaviourHistories;
     private ObservableList<FamilyHistory> familyHistories;
@@ -41,13 +42,14 @@ public class Student {
     private IntegerProperty particpationLevel;
 
     private Country nationalityCountry, residentCountry;
+    private TertiaryLevel tertiaryLevel;
 
-    public Student(boolean academicStatus, boolean willParticipate, String achievements, String behaviourHistories, String familyHistories, String hallHistories,
-                   String communityGroups, String coCurriculars, String cellPhone, String dayJoined, String dob, String block, String faculty, String fatherFirstName,
-                   String fatherLastName, String fatherPhone, String firstName, String homeAddress1, String homeAddress2,
-                   String homeCity, String homeProvince, String idNumber, String lastName, String middleName, String motherFirstName,
-                   String motherLastName, String motherPhone, String previousSecondary, String reasonResiding, String room, boolean tertiaryLevel, String email, Country nationalityCountry,
-                   int participationLevel, boolean picture, Country residentCountry,ObservableList<File> attachedDocuments) {
+    public Student(boolean academicStatus, boolean willParticipate, String achievements, String behaviourHistories, String familyHistories, String hallHistories, String communityGroups, String
+            coCurriculars, String cellPhone, String dayJoined, String dob, String block, String faculty, String fatherFirstName, String fatherLastName, String fatherPhone, String firstName, String
+            homeAddress1, String homeAddress2, String homeCity, String homeProvince, String idNumber, String lastName, String middleName, String motherFirstName, String motherLastName, String
+            motherPhone, String previousSecondary, String reasonResiding, String room, String tertiaryLevel, String email, Country nationalityCountry, int participationLevel, boolean picture,
+                   Country residentCountry, ObservableList<File> attachedDocuments)
+    {
         this();
         this.academicStatus = new SimpleBooleanProperty(academicStatus);
         unwraoAndSetAchievements(achievements);
@@ -82,7 +84,7 @@ public class Student {
         this.reasonResiding = new SimpleStringProperty(reasonResiding);
         this.residentCountry = residentCountry;
         this.room = new SimpleStringProperty(room);
-        this.tertiaryLevel = new SimpleBooleanProperty(tertiaryLevel);
+        this.tertiaryLevel = TertiaryLevel.unwrap(tertiaryLevel);
         this.willParticipate = new SimpleBooleanProperty(willParticipate);
         this.email = new SimpleStringProperty(email);
         this.attachedDocuments = FXCollections.observableArrayList();
@@ -121,7 +123,7 @@ public class Student {
         this.previousSecondary = new SimpleStringProperty("");
         this.reasonResiding = new SimpleStringProperty("");
         this.room = new SimpleStringProperty("");
-        this.tertiaryLevel = new SimpleBooleanProperty();
+        this.tertiaryLevel = new TertiaryLevel();
         this.willParticipate = new SimpleBooleanProperty();
         this.email = new SimpleStringProperty("");
         this.attachedDocuments = FXCollections.observableArrayList();
@@ -188,16 +190,14 @@ public class Student {
         this.willParticipate.set(willParticipate);
     }
 
-    public boolean getTertiaryLevel() {
-        return tertiaryLevel.get();
-    }
-
-    public BooleanProperty tertiaryLevelProperty() {
+    public TertiaryLevel getTertiaryLevel()
+    {
         return tertiaryLevel;
     }
 
-    public void setTertiaryLevel(boolean tertiaryLevel) {
-        this.tertiaryLevel.set(tertiaryLevel);
+    public void setTertiaryLevel(TertiaryLevel tertiaryLevel)
+    {
+        this.tertiaryLevel = tertiaryLevel;
     }
 
     public Image getImage() {
@@ -560,20 +560,21 @@ public class Student {
     public String wrapAchievements()
     {
         String retString = "";
-        for(Achievement achievement: achievements)
-            retString += Achievement.wrap(achievement)+",";
-        if(retString.length() > 1)
-        retString = retString.substring(0, retString.length() - 1);
+        for (Achievement achievement : achievements)
+            retString += Achievement.wrap(achievement) + ",";
+        if (retString.length() > 1) retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
     public void unwraoAndSetAchievements(String wrapped)
     {
         achievements = FXCollections.observableArrayList();
-        while(wrapped.length() > 1)
+        while (wrapped.length() > 1)
         {
-            Achievement achievement = Achievement.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
-            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            int index = wrapped.indexOf(",");
+            if (index == -1) index = wrapped.length() - 1;
+            Achievement achievement = Achievement.unwrap(wrapped.substring(0, index + 1));
+            wrapped = wrapped.substring(index + 1);
             achievements.add(achievement);
         }
     }
@@ -581,20 +582,21 @@ public class Student {
     public String wrapBehaviourHistories()
     {
         String retString = "";
-        for(BehaviourHistory behaviourHistory: behaviourHistories)
-            retString += BehaviourHistory.wrap(behaviourHistory)+",";
-        if(retString.length() > 1)
-        retString = retString.substring(0, retString.length() - 1);
+        for (BehaviourHistory behaviourHistory : behaviourHistories)
+            retString += BehaviourHistory.wrap(behaviourHistory) + ",";
+        if (retString.length() > 1) retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
     public void unwraoAndSetFamilyHistories(String wrapped)
     {
         familyHistories = FXCollections.observableArrayList();
-        while(wrapped.length() > 1)
+        while (wrapped.length() > 1)
         {
-            FamilyHistory familyHistory = FamilyHistory.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
-            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            int index = wrapped.indexOf(",");
+            if (index == -1) index = wrapped.length() - 1;
+            FamilyHistory familyHistory = FamilyHistory.unwrap(wrapped.substring(0, index + 1));
+            wrapped = wrapped.substring(index + 1);
             familyHistories.add(familyHistory);
         }
     }
@@ -602,20 +604,21 @@ public class Student {
     public String wrapFamilyHistories()
     {
         String retString = "";
-        for(FamilyHistory familyHistory: familyHistories)
-            retString += FamilyHistory.wrap(familyHistory)+",";
-        if(retString.length() > 1)
-        retString = retString.substring(0, retString.length() - 1);
+        for (FamilyHistory familyHistory : familyHistories)
+            retString += FamilyHistory.wrap(familyHistory) + ",";
+        if (retString.length() > 1) retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
     public void unwraoAndSetBehaviourHistories(String wrapped)
     {
         behaviourHistories = FXCollections.observableArrayList();
-        while(wrapped.length() > 1)
+        while (wrapped.length() > 1)
         {
-            BehaviourHistory behaviourHistory = BehaviourHistory.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
-            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            int index = wrapped.indexOf(",");
+            if (index == -1) index = wrapped.length() - 1;
+            BehaviourHistory behaviourHistory = BehaviourHistory.unwrap(wrapped.substring(0, index + 1));
+            wrapped = wrapped.substring(index + 1);
             behaviourHistories.add(behaviourHistory);
         }
     }
@@ -623,20 +626,21 @@ public class Student {
     public String wrapHallHistories()
     {
         String retString = "";
-        for(HallHistory hallHistory: hallHistories)
-            retString += HallHistory.wrap(hallHistory)+",";
-        if(retString.length() > 1)
-        retString = retString.substring(0, retString.length() - 1);
+        for (HallHistory hallHistory : hallHistories)
+            retString += HallHistory.wrap(hallHistory) + ",";
+        if (retString.length() > 1) retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
     public void unwraoAndSetBHallHistories(String wrapped)
     {
         hallHistories = FXCollections.observableArrayList();
-        while(wrapped.length() > 1)
+        while (wrapped.length() > 1)
         {
-            HallHistory hallHistory = HallHistory.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
-            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            int index = wrapped.indexOf(",");
+            if (index == -1) index = wrapped.length() - 1;
+            HallHistory hallHistory = HallHistory.unwrap(wrapped.substring(0, index + 1));
+            wrapped = wrapped.substring(index + 1);
             hallHistories.add(hallHistory);
         }
     }
@@ -644,20 +648,21 @@ public class Student {
     public String wrapCommunityCommunityGroups()
     {
         String retString = "";
-        for(CommunityGroup communityGroup: communityGroups)
-            retString += CommunityGroup.wrap(communityGroup)+",";
-        if(retString.length() > 1)
-        retString = retString.substring(0, retString.length() - 1);
+        for (CommunityGroup communityGroup : communityGroups)
+            retString += CommunityGroup.wrap(communityGroup) + ",";
+        if (retString.length() > 1) retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
     public void unwraoAndSetCommunityGroups(String wrapped)
     {
         communityGroups = FXCollections.observableArrayList();
-        while(wrapped.length() > 1)
+        while (wrapped.length() > 1)
         {
-            CommunityGroup communityGroup = CommunityGroup.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
-            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            int index = wrapped.indexOf(",");
+            if (index == -1) index = wrapped.length() - 1;
+            CommunityGroup communityGroup = CommunityGroup.unwrap(wrapped.substring(0, index + 1));
+            wrapped = wrapped.substring(index + 1);
             communityGroups.add(communityGroup);
         }
     }
@@ -665,20 +670,21 @@ public class Student {
     public String wrapCoCurriculars()
     {
         String retString = "";
-        for(CoCurricular coCurricular: coCurriculars)
-            retString += CoCurricular.wrap(coCurricular)+",";
-        if(retString.length() > 1)
-        retString = retString.substring(0, retString.length() - 1);
+        for (CoCurricular coCurricular : coCurriculars)
+            retString += CoCurricular.wrap(coCurricular) + ",";
+        if (retString.length() > 1) retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
     public void unwraoAndSetCoCurriculars(String wrapped)
     {
         coCurriculars = FXCollections.observableArrayList();
-        while(wrapped.length() > 1)
+        while (wrapped.length() > 1)
         {
-            CoCurricular coCurricular = CoCurricular.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
-            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            int index = wrapped.indexOf(",");
+            if (index == -1) index = wrapped.length() - 1;
+            CoCurricular coCurricular = CoCurricular.unwrap(wrapped.substring(0, index + 1));
+            wrapped = wrapped.substring(index + 1);
             coCurriculars.add(coCurricular);
         }
     }
@@ -686,21 +692,20 @@ public class Student {
     public String wrapAttachedFiles()
     {
         String retString = "";
-        for(File attachedDocument: attachedDocuments)
-            retString += "{"+attachedDocument.getName()+"},";
-        if(retString.length() > 1)
-        retString = retString.substring(0, retString.length() - 1);
+        for (File attachedDocument : attachedDocuments)
+            retString += "{" + attachedDocument.getName() + "},";
+        if (retString.length() > 1) retString = retString.substring(0, retString.length() - 1);
         return retString;
     }
 
     public static ArrayList<String> unwrapAndGetAttachedFilesNames(String wrapped)
     {
         ArrayList<String> returnArray = new ArrayList<String>();
-        while(wrapped.length() > 1)
+        while (wrapped.length() > 1)
         {
-            String name =wrapped.substring(0, wrapped.indexOf("},") + 1);
-            name = name.substring(1,name.length()-1);
-            wrapped = wrapped.substring(wrapped.indexOf("},")+2);
+            String name = wrapped.substring(0, wrapped.indexOf("},") + 1);
+            name = name.substring(1, name.length() - 1);
+            wrapped = wrapped.substring(wrapped.indexOf("},") + 2);
             returnArray.add(name);
         }
         return returnArray;
