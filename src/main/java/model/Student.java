@@ -554,7 +554,7 @@ public class Student {
 
     public void unwraoAndSetFamilyHistories(String wrapped)
     {
-        behaviourHistories = FXCollections.observableArrayList();
+        familyHistories = FXCollections.observableArrayList();
         while(wrapped.length() > 1)
         {
             FamilyHistory familyHistory = FamilyHistory.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));
@@ -634,7 +634,7 @@ public class Student {
 
     public void unwraoAndSetCoCurriculars(String wrapped)
     {
-        communityGroups = FXCollections.observableArrayList();
+        coCurriculars = FXCollections.observableArrayList();
         while(wrapped.length() > 1)
         {
             CoCurricular coCurricular = CoCurricular.unwrap(wrapped.substring(0, wrapped.indexOf("},") + 1));

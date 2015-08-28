@@ -41,6 +41,7 @@ public class DatabaseCommunicator {
     final private String DELETE_ATTACHMENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_attachment.php";
     final private String LOGOUT_URL = "http://" + SERVER_IP + "//sms//dataprovider//logout.php";
     final private String GET_HALLS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_halls.php";
+    final private String GET_ATTACHMENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_student_attachment.php";
 
     private JSONParser jParser;
     private static String[] blocks, faculties, rooms, halls;
@@ -153,6 +154,7 @@ public class DatabaseCommunicator {
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(FACULTIES_URL, "POST", params);
         System.out.println(jObj);
+        System.out.println(jObj);
         try
         {
             if (jObj.getInt("success") == SUCCESS)
@@ -182,6 +184,7 @@ public class DatabaseCommunicator {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(COUNTRIES_URL, "POST", params);
+        System.out.println(jObj);
         try
         {
             if (jObj.getInt("success") == SUCCESS)
@@ -211,6 +214,7 @@ public class DatabaseCommunicator {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(ROOMS_URL, "POST", params);
+        System.out.println(jObj);
         try
         {
             if (jObj.getInt("success") == SUCCESS)
@@ -239,18 +243,19 @@ public class DatabaseCommunicator {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(GET_HALLS_URL, "POST", params);
+        System.out.println(jObj);
         try
         {
             if (jObj.getInt("success") == SUCCESS)
             {
                 JSONArray drooms = jObj.getJSONArray("data");
-                rooms = new String[drooms.length()+1];
+                halls = new String[drooms.length()+1];
                 for(int i = 0; i < drooms.length();++i)
                 {
                     JSONObject droom = drooms.getJSONObject(i);
                     int id = droom.getInt("id");
                     String number = droom.getString("name");
-                    rooms[id] = number;
+                    halls[id] = number;
                 }
             }
             else
@@ -526,7 +531,7 @@ public class DatabaseCommunicator {
             params.add(new BasicNameValuePair("sid", currentUser.getSID()));
             params.add(new BasicNameValuePair("id", studentID));
             params.add(new BasicNameValuePair("name", fileName));
-            JSONObject jObj = jParser.makeHttpRequest(, "POST", params);
+            JSONObject jObj = jParser.makeHttpRequest(GET_ATTACHMENT_URL, "POST", params);
             System.out.println(jObj);
             try
             {
@@ -538,9 +543,10 @@ public class DatabaseCommunicator {
                     {
                         fileBytes[i] = (byte) bytes.getInt(i);
                     }
-                    File file = new File();
-                    FileOutputStream fos = new FileOutputStream(file);
-                    fos.write(fileBytes);
+//                    File file = new File();
+//                    FileOutputStream fos = new FileOutputStream(file);
+//                    fos.write(fileBytes);
+                return null;
                 }
                 else
                     status = "error";
@@ -549,6 +555,7 @@ public class DatabaseCommunicator {
                 e.printStackTrace();
                 status = "Error, could not connect to server.";
             }
+            return null;
         }
 
 
@@ -610,7 +617,7 @@ public class DatabaseCommunicator {
                     boolean tertiaryLevel = student.getInt("tertiary_level") == 1;
                     boolean willParticipate = student.getInt("will_participate") == 1;
                     String email = student.getString("email");
-                    String attachedWrapped = student.getString("attached_files");
+                    String attachedWrapped = student.getString("attached_documents");
                     ArrayList<String> attachedNames = Student.unwrapAndGetAttachedFilesNames(attachedWrapped);
                     ObservableList<File> attachedDocuments = FXCollections.observableArrayList();
                     for(String name:attachedNames)

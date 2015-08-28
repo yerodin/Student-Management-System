@@ -2,6 +2,7 @@ package controller;
 
 import DBCommunication.DatabaseCommunicator;
 import enums.*;
+import enums.TertiaryLevel;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

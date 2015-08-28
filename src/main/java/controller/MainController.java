@@ -135,6 +135,7 @@ public class MainController implements Initializable {
                 CustomControlLauncher.notifier("Error", "There was a problem fetching students from database.", NotifierType.ERROR);
             }
         });
+        new Thread(newStudentsTask).start();
     }
 
 
