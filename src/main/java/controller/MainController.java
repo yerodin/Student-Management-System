@@ -122,16 +122,12 @@ public class MainController implements Initializable {
         newStudentsTask.setOnSucceeded(event -> {
             Student[] stds = newStudentsTask.getValue();
             if (stds != null) {
-//                students.filtered(Predicate.isEqual())
-//                FilteredList<Student> filteredStds = new FilteredList<>(students, p -> true);
-//                filteredStds.setPredicate(new Predicate<Student>() {
-//                    @Override
-//                    public boolean test(Student student) {
-//                        return false;
-//                    }
-//                });
-                ObservableList<Student> students1 = FXCollections.observableArrayList(stds);
-                Platform.runLater(() -> studentTableView.setItems(students1));
+                ObservableList<Student> studentList = FXCollections.observableArrayList(stds);
+                FilteredList<Student> studentFilteredList = new FilteredList<>(
+                        studentList, student -> !students.contains(student)
+                );
+                students.addAll(studentFilteredList);
+                Platform.runLater(() -> studentTableView.setItems(students));
             } else {
                 CustomControlLauncher.notifier("Error", "There was a problem fetching students from database.", NotifierType.ERROR);
             }
