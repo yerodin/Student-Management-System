@@ -7,19 +7,17 @@ import javafx.beans.property.StringProperty;
  * Created by Yerodin on 8/22/2015.
  */
 public class HallHistory {
-    private StringProperty hall = new SimpleStringProperty(this, "hall");
-    private Peroid peroid;
-    private StringProperty period = new SimpleStringProperty(this, "period");
+    private StringProperty hall;
+    private Period period;
 
     public HallHistory() {
-        super();
+        this("", null);
     }
 
-    public HallHistory(String achievemnt, Peroid peroid)
+    public HallHistory(String hall, Period period)
     {
-        setHall(achievemnt);
-        setPeroid(peroid);
-        setPeriod();
+        this.hall = new SimpleStringProperty(hall);
+        setPeriod(period);
     }
 
     public String getHall() {
@@ -34,33 +32,24 @@ public class HallHistory {
         this.hall.set(hall);
     }
 
-    public Peroid getPeroid() {
-        return peroid;
-    }
-
-    public void setPeroid(Peroid peroid) {
-        this.peroid = peroid;
-    }
-
-    public StringProperty periodProperty() {
+    public Period getPeriod()
+    {
         return period;
     }
 
-    public void setPeriod() {
-        this.period.set(String.valueOf(getPeroid().fromYear).concat("-" + String.valueOf(getPeroid().toYear)));
+    public void setPeriod(Period period)
+    {
+        this.period = period;
     }
 
-    public String getPeriod() {
-        return period.get();
-    }
 
     public static HallHistory unwrap(String wrapped)
     {
-        String achievemnt = wrapped.substring(1,wrapped.indexOf("}"));
-        wrapped.replace("{","");
-        wrapped.replace("}","");
-        String periodStr = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
-        return new HallHistory(achievemnt, Peroid.parse(periodStr));
+        if (wrapped == null || wrapped.length() < 4) return new HallHistory();
+        String achievemnt = wrapped.substring(1, wrapped.indexOf("}"));
+        wrapped = wrapped.substring(wrapped.indexOf("}{") + 1);
+        String periodStr = wrapped.substring(1, wrapped.indexOf("}"));
+        return new HallHistory(achievemnt, Period.parse(periodStr));
     }
 
     public static String wrap(HallHistory hallHistory)

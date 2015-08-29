@@ -63,18 +63,17 @@ public class BehaviourHistory {
 
     public static BehaviourHistory unwrap(String wrapped)
     {
-        String hall = wrapped.substring(1,wrapped.indexOf("}"));
-        wrapped.replace("{","");
-        wrapped.replace("}","");
-        String infraction = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
-        wrapped.replace("{","");
-        wrapped.replace("}","");
-        String reason = wrapped.substring(wrapped.indexOf("}")+1,wrapped.indexOf("}"));
-        return new BehaviourHistory(hall,infraction,reason);
+        if (wrapped == null || wrapped.length() < 6) return new BehaviourHistory();
+        String hall = wrapped.substring(1, wrapped.indexOf("}"));
+        wrapped = wrapped.substring(wrapped.indexOf("}{") + 1);
+        String infraction = wrapped.substring(1, wrapped.indexOf("}"));
+        wrapped = wrapped.substring(wrapped.indexOf("}{") + 1);
+        String reason = wrapped.substring(1, wrapped.indexOf("}"));
+        return new BehaviourHistory(hall, infraction, reason);
     }
 
     public static String wrap(BehaviourHistory behaviourHistory)
     {
-        return "{"+behaviourHistory.getHall()+"}{"+behaviourHistory.getInfraction()+"}{"+behaviourHistory.getReason()+"}";
+        return "{" + behaviourHistory.getHall() + "}{" + behaviourHistory.getInfraction() + "}{" + behaviourHistory.getReason() + "}";
     }
 }

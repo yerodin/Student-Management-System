@@ -43,7 +43,10 @@ public class User
         return password;
     }
 
-    public String getSID(){return sid;}
+    public String getSID()
+    {
+        return sid;
+    }
 
     public String getStatus() {
         return status;
