@@ -175,7 +175,7 @@ public class MainController implements Initializable {
             CustomControlLauncher.create()
                     .setTitle(title.toString())
                     .setScene(new Scene(studentViewController, 1024, 640))
-                    .launch();
+                    .setResizable(false).launch();
         });
     }
 

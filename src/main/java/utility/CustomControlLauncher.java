@@ -8,7 +8,6 @@ import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 
 /**
- * Contract Management System - org.mtp.cms.utilities
  * Created: May 18, 2015 @ 11:33 AM
  *
  * @author Alex Stewart
@@ -34,6 +33,16 @@ public class CustomControlLauncher {
     public CustomControlLauncher setScene(Scene scene) {
         this.scene = scene;
         this.stage.setScene(scene);
+        return this;
+    }
+
+    public CustomControlLauncher setStage(Stage stage) {
+        this.stage = stage;
+        return this;
+    }
+
+    public CustomControlLauncher setResizable(Boolean resizable) {
+        this.stage.setResizable(resizable);
         return this;
     }
 

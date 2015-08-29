@@ -148,7 +148,7 @@ public class StudentViewController extends TitledPane {
     protected User user;
     LocalDate current_date;
     private DatabaseCommunicator databaseCommunicator;
-    private  MainController mainController;
+    private MainController mainController;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     ObservableList<File> attachments = FXCollections.observableArrayList();
 
@@ -615,12 +615,12 @@ public class StudentViewController extends TitledPane {
         academicStatusChoiceBox.getSelectionModel().select((student.getAcademicStatus()) ? "Full time" : "Part time");
         countryChoiceBox.getSelectionModel().select(student.getResidentCountry());
         roomNumberChoiceBox.getSelectionModel().select(student.getRoom());
-        this.dobDatePicker.setValue(LocalDate.parse(student.getDob(), formatter));
-        this.dateJoinedDatePicker.setValue(LocalDate.parse(student.getDayJoined(), formatter));
-        this.secondarySchoolInput.setText(student.getPreviousSecondary());
-        this.willParticipateChoiceBox.getSelectionModel().select(student.getWillParticipate() ? "Yes" : "No");
-        this.countryChoiceBox.getSelectionModel().select(student.getResidentCountry());
-        this.nationalityField.setText(student.getNationalityCountry().getNationality());
+        dobDatePicker.setValue(LocalDate.parse(student.getDob(), formatter));
+        dateJoinedDatePicker.setValue(LocalDate.parse(student.getDayJoined(), formatter));
+        secondarySchoolInput.setText(student.getPreviousSecondary());
+        willParticipateChoiceBox.getSelectionModel().select(student.getWillParticipate() ? "Yes" : "No");
+        countryChoiceBox.getSelectionModel().select(student.getResidentCountry());
+        nationalityField.setText(student.getNationalityCountry().getNationality());
         // TODO: Tertiary level ComboBox needs logic
     }
 
@@ -645,9 +645,9 @@ public class StudentViewController extends TitledPane {
         student.setBlock(this.blockChoiceBox.getSelectionModel().getSelectedItem());
         student.setFaculty(this.facultyChoiceBox.getSelectionModel().getSelectedItem());
         student.setRoom(this.roomNumberChoiceBox.getSelectionModel().getSelectedItem());
-        if(this.dobDatePicker.getValue() != null)
-         student.setDob(this.dobDatePicker.getValue().format(formatter));
-        if(this.dateJoinedDatePicker.getValue() != null)
+        if (this.dobDatePicker.getValue() != null)
+            student.setDob(this.dobDatePicker.getValue().format(formatter));
+        if (this.dateJoinedDatePicker.getValue() != null)
             student.setDayJoined(this.dateJoinedDatePicker.getValue().format(formatter));
         // TODO: Add code to set Tertiary meta info
         student.setWillParticipate(this.willParticipateChoiceBox.getValue().equals(Decision.YES.getLabel()));
@@ -671,40 +671,55 @@ public class StudentViewController extends TitledPane {
                         new FileChooser.ExtensionFilter("BMP files (*.bmp)", "*.bmp");
                 fileChooser.getExtensionFilters().addAll(jpgFilter, pngFilter, bmpFilter);
                 File file = fileChooser.showOpenDialog(null);
-                try {
-                    BufferedImage bufferedImage = ImageIO.read(file);
-                    Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-                    avatarImageView.setImage(image);
-                    getStudent().setImage(image);
+                if (file.exists() && ((file.length() / 1024) / 1024) < 10) {
                     Task<Boolean> uploadTask = new Task<Boolean>() {
                         @Override
                         protected Boolean call() throws Exception {
                             return databaseCommunicator.uploadStudentImage(user, student, 1);
                         }
                     };
-                    uploadTask.setOnSucceeded(event1 -> student.setPicture(uploadTask.getValue()));
+                    uploadTask.setOnSucceeded(event1 -> {
+                        if (uploadTask.getValue()) {
+                            BufferedImage bufferedImage = null;
+                            try {
+                                bufferedImage = ImageIO.read(file);
+                                Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+                                avatarImageView.setImage(image);
+                                student.setImage(image);
+                                student.setPicture(uploadTask.getValue());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            CustomControlLauncher.notifier("Error", "There was an problem uploading photo. Please try again.", NotifierType.ERROR);
+                        }
+                    });
                     new Thread(uploadTask).start();
-                } catch (IOException ex) {
-                    throw new RuntimeException("Error setting image");
+                } else {
+                    CustomControlLauncher.notifier("Error", "Photo should be 10 MB or less in size.", NotifierType.ERROR);
                 }
             });
-        } else {
+        }
+        if (Objects.deepEquals(eventSource, removePhotoBtn)) {
             Platform.runLater(() -> {
-                try {
-                    Task<Boolean> deleteImageTask = new Task<Boolean>() {
-                        @Override
-                        protected Boolean call() throws Exception {
-                            return databaseCommunicator.deleteSudentImage(user, student, 1);
+                Task<Boolean> deleteImageTask = new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                        return databaseCommunicator.deleteSudentImage(user, student, 1);
+                    }
+                };
+                deleteImageTask.setOnSucceeded(event1 -> {
+                    if (deleteImageTask.getValue()) {
+                        try {
+                            avatarImageView.setImage(SwingFXUtils.toFXImage(ImageIO.read(new File("resources/img/xlarge.jpg")), null));
+                            student.setImage(null);
+                            student.setPicture(deleteImageTask.getValue());
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    };
-                    deleteImageTask.setOnSucceeded(event1 -> student.setPicture(deleteImageTask.getValue()));
-                    new Thread(deleteImageTask).start();
-                    avatarImageView.setImage(SwingFXUtils.toFXImage(ImageIO.read(new File("resources/img/xlarge.jpg")), null));
-                    getStudent().setImage(null);
-                    getStudent().setPicture(false);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    }
+                });
+                new Thread(deleteImageTask).start();
             });
         }
     }
@@ -976,8 +991,8 @@ public class StudentViewController extends TitledPane {
         if (Objects.deepEquals(eventSource, studentSaveBtn)) {
             grabStudent();
             Task<Boolean> saveSudentTask;
-            if(operation.equals(Operation.NEW))
-                 saveSudentTask = new Task<Boolean>() {
+            if (operation.equals(Operation.NEW))
+                saveSudentTask = new Task<Boolean>() {
                     @Override
                     protected Boolean call() throws Exception {
                         return databaseCommunicator.addStudent(user, student, 1);
@@ -990,18 +1005,15 @@ public class StudentViewController extends TitledPane {
                         return databaseCommunicator.editStudent(user, student, 1);
                     }
                 };
-            saveSudentTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                @Override
-                public void handle(WorkerStateEvent event) {
-                    if (saveSudentTask.getValue()) {
-                        if(operation.equals(Operation.NEW))
-                            mainController.getNewStudents();
-                        else
+            saveSudentTask.setOnSucceeded(event1 -> {
+                if (saveSudentTask.getValue()) {
+                    if (operation.equals(Operation.NEW))
+                        mainController.getNewStudents();
+                    else
                         CustomControlLauncher.notifier("Success", "Student has been saved!", NotifierType.INFORATION);
 
-                    }else
-                        CustomControlLauncher.notifier("Error", databaseCommunicator.getStatus(), NotifierType.ERROR);
-                }
+                } else
+                    CustomControlLauncher.notifier("Error", databaseCommunicator.getStatus(), NotifierType.ERROR);
             });
 
             new Thread(saveSudentTask).start();
