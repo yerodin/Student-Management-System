@@ -8,7 +8,10 @@ import javafx.beans.property.StringProperty;
  **/
 public class FamilyHistory
 {
-    private StringProperty from, to, relationship, block;
+    private StringProperty from = new SimpleStringProperty(this, "from"),
+            to = new SimpleStringProperty(this, "to"),
+            relationship = new SimpleStringProperty(this, "relationship"),
+            block = new SimpleStringProperty(this, "block");
 
 
     public FamilyHistory()
@@ -18,10 +21,10 @@ public class FamilyHistory
 
     public FamilyHistory(String from, String to, String relationship, String block)
     {
-        this.from = new SimpleStringProperty(from);
-        this.to = new SimpleStringProperty(to);
-        this.relationship = new SimpleStringProperty(relationship);
-        this.block = new SimpleStringProperty(block);
+        setFrom(from);
+        setTo(to);
+        setRelationship(relationship);
+        setBlock(block);
     }
 
     public String getFrom()

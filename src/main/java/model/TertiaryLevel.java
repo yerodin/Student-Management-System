@@ -8,14 +8,17 @@ import javafx.beans.property.StringProperty;
  */
 public class TertiaryLevel
 {
-    private StringProperty tertiaryLevel, institutionName, gradYear, involvment;
+    private StringProperty tertiaryLevel = new SimpleStringProperty(this, "tertiaryLevel"),
+            institutionName = new SimpleStringProperty(this, "institutionName"),
+            gradYear = new SimpleStringProperty(this, "gradYear"),
+            involvement = new SimpleStringProperty(this, "involvement");
 
-    public TertiaryLevel(String tertiaryLevel, String institutionName, String gradYear, String involment)
+    public TertiaryLevel(String tertiaryLevel, String institutionName, String gradYear, String involvement)
     {
-        this.tertiaryLevel = new SimpleStringProperty(tertiaryLevel);
-        this.institutionName = new SimpleStringProperty(institutionName);
-        this.gradYear = new SimpleStringProperty(gradYear);
-        this.involvment = new SimpleStringProperty(involment);
+        setTertiaryLevel(tertiaryLevel);
+        setInstitutionName(institutionName);
+        setGradYear(gradYear);
+        setInvolvement(involvement);
     }
 
     public TertiaryLevel()
@@ -68,19 +71,19 @@ public class TertiaryLevel
         this.gradYear.set(gradYear);
     }
 
-    public String getInvolvment()
+    public String getInvolvement()
     {
-        return involvment.get();
+        return involvement.get();
     }
 
-    public StringProperty involvmentProperty()
+    public StringProperty involvementProperty()
     {
-        return involvment;
+        return involvement;
     }
 
-    public void setInvolvment(String involvment)
+    public void setInvolvement(String involvement)
     {
-        this.involvment.set(involvment);
+        this.involvement.set(involvement);
     }
 
 
@@ -94,12 +97,12 @@ public class TertiaryLevel
         wrapped = wrapped.substring(wrapped.indexOf("}{") + 1);
         String gradYear = wrapped.substring(1, wrapped.indexOf("}"));
         wrapped = wrapped.substring(wrapped.indexOf("}{") + 1);
-        String involvment = wrapped.substring(1, wrapped.indexOf("}"));
-        return new TertiaryLevel(tertiaryLevel, institutionName, gradYear, involvment);
+        String involvement = wrapped.substring(1, wrapped.indexOf("}"));
+        return new TertiaryLevel(tertiaryLevel, institutionName, gradYear, involvement);
     }
 
     public static String wrap(TertiaryLevel tertiaryLevel)
     {
-        return "{" + tertiaryLevel.getTertiaryLevel() + "}{" + tertiaryLevel.getInstitutionName() + "}{" + tertiaryLevel.getGradYear() + "}{" + tertiaryLevel.getInvolvment() + "}";
+        return "{" + tertiaryLevel.getTertiaryLevel() + "}{" + tertiaryLevel.getInstitutionName() + "}{" + tertiaryLevel.getGradYear() + "}{" + tertiaryLevel.getInvolvement() + "}";
     }
 }

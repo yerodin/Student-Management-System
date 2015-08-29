@@ -10,9 +10,9 @@ public class CommunityGroup
 {
 
 
-    private StringProperty group = new SimpleStringProperty(this, "group");
-    private StringProperty project = new SimpleStringProperty(this, "project");
-    private StringProperty responsibility = new SimpleStringProperty(this, "responsibility");
+    private StringProperty group = new SimpleStringProperty(this, "group"),
+            project = new SimpleStringProperty(this, "project"),
+            responsibility = new SimpleStringProperty(this, "responsibility");
 
     public CommunityGroup()
     {

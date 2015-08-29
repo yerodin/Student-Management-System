@@ -7,8 +7,8 @@ import javafx.beans.property.StringProperty;
  * Created by Yerodin on 8/22/2015.
  */
 public class Achievement {
-    private StringProperty achievement = new SimpleStringProperty(this, "achievement");
-    private StringProperty area = new SimpleStringProperty(this, "area");
+    private StringProperty achievement = new SimpleStringProperty(this, "achievement"),
+            area = new SimpleStringProperty(this, "area");
 
     public Achievement() {
         super();

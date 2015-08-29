@@ -16,117 +16,104 @@ import java.util.ArrayList;
  * Created by Yerodin on 8/21/2015.
  */
 public class Student {
-    private BooleanProperty academicStatus, willParticipate, picture;
-    private ObservableList<Achievement> achievements;
-    private ObservableList<BehaviourHistory> behaviourHistories;
-    private ObservableList<FamilyHistory> familyHistories;
-    private ObservableList<HallHistory> hallHistories;
-    private ObservableList<CommunityGroup> communityGroups;
-    private ObservableList<CoCurricular> coCurriculars;
+    // Strings
+    private StringProperty cellPhone = new SimpleStringProperty(this, "cellPhone"),
+            dayJoined = new SimpleStringProperty(this, "dayJoined"),
+            dob = new SimpleStringProperty(this, "dob"),
+            fatherFirstName = new SimpleStringProperty(this, "fatherFirstName"),
+            fatherLastName = new SimpleStringProperty(this, "fatherLastName"),
+            fatherPhone = new SimpleStringProperty(this, "fatherPhone"),
+            homeAddress1 = new SimpleStringProperty(this, "homeAddress1"),
+            homeAddress2 = new SimpleStringProperty(this, "homeAddress2"),
+            homeCity = new SimpleStringProperty(this, "homeCity"),
+            homeProvince = new SimpleStringProperty(this, "homeProvince"),
+            motherFirstName = new SimpleStringProperty(this, "motherFirstName"),
+            faculty = new SimpleStringProperty(this, "faculty"),
+            motherLastName = new SimpleStringProperty(this, "motherLastName"),
+            motherPhone = new SimpleStringProperty(this, "motherPhone"),
+            previousSecondary = new SimpleStringProperty(this, "previousSecondary"),
+            reasonResiding = new SimpleStringProperty(this, "reasonResiding"),
+            email = new SimpleStringProperty(this, "email"),
+            idNumber = new SimpleStringProperty(this, "idNumber"),
+            firstName = new SimpleStringProperty(this, "firstName"),
+            middleName = new SimpleStringProperty(this, "middleName"),
+            lastName = new SimpleStringProperty(this, "lastName"),
+            block = new SimpleStringProperty(this, "block"),
+            room = new SimpleStringProperty(this, "room");
+
+    // Integers
+    private IntegerProperty particpationLevel = new SimpleIntegerProperty(this, "particpationLevel");
+
+    // Bools
+    private BooleanProperty academicStatus = new SimpleBooleanProperty(this, "academicStatus"),
+            willParticipate = new SimpleBooleanProperty(this, "willParticipate"),
+            picture = new SimpleBooleanProperty(this, "picture");
+
+    // Lists/Sets
+    private ObservableList<Achievement> achievements = FXCollections.<Achievement>observableArrayList();
+    private ObservableList<BehaviourHistory> behaviourHistories = FXCollections.<BehaviourHistory>observableArrayList();
+    private ObservableList<FamilyHistory> familyHistories = FXCollections.<FamilyHistory>observableArrayList();
+    private ObservableList<HallHistory> hallHistories = FXCollections.<HallHistory>observableArrayList();
+    private ObservableList<CommunityGroup> communityGroups = FXCollections.<CommunityGroup>observableArrayList();
+    private ObservableList<CoCurricular> coCurriculars = FXCollections.<CoCurricular>observableArrayList();
+    private ObservableList<File> attachedDocuments = FXCollections.<File>observableArrayList();
+
+    // Misc.
     private Image image;
-    private ObservableList<File> attachedDocuments;
-
-    private StringProperty cellPhone, dayJoined, dob, fatherFirstName, fatherLastName, fatherPhone,
-            homeAddress1, homeAddress2, homeCity, homeProvince, motherFirstName, faculty,
-            motherLastName, motherPhone, previousSecondary, reasonResiding, email;
-
-    // Proof of concept
-
-    StringProperty idNumber = new SimpleStringProperty(this, "idNumber");
-    StringProperty firstName = new SimpleStringProperty(this, "firstName");
-    StringProperty middleName = new SimpleStringProperty(this, "middleName");
-    StringProperty lastName = new SimpleStringProperty(this, "lastName");
-    StringProperty block = new SimpleStringProperty(this, "block");
-    StringProperty room = new SimpleStringProperty(this, "room");
-
-    private IntegerProperty particpationLevel;
-
     private Country nationalityCountry, residentCountry;
     private TertiaryLevel tertiaryLevel;
 
-    public Student(boolean academicStatus, boolean willParticipate, String achievements, String behaviourHistories, String familyHistories, String hallHistories, String communityGroups, String
-            coCurriculars, String cellPhone, String dayJoined, String dob, String block, String faculty, String fatherFirstName, String fatherLastName, String fatherPhone, String firstName, String
-            homeAddress1, String homeAddress2, String homeCity, String homeProvince, String idNumber, String lastName, String middleName, String motherFirstName, String motherLastName, String
-            motherPhone, String previousSecondary, String reasonResiding, String room, String tertiaryLevel, String email, Country nationalityCountry, int participationLevel, boolean picture,
-                   Country residentCountry, ObservableList<File> attachedDocuments)
+    public Student(boolean academicStatus, boolean willParticipate, String achievements, String behaviourHistories,
+                   String familyHistories, String hallHistories, String communityGroups, String coCurriculars,
+                   String cellPhone, String dayJoined, String dob, String block, String faculty, String fatherFirstName,
+                   String fatherLastName, String fatherPhone, String firstName, String homeAddress1, String homeAddress2,
+                   String homeCity, String homeProvince, String idNumber, String lastName, String middleName,
+                   String motherFirstName, String motherLastName, String motherPhone, String previousSecondary,
+                   String reasonResiding, String room, TertiaryLevel tertiaryLevel, String email, Country nationalityCountry,
+                   int participationLevel, boolean picture, Country residentCountry, ObservableList<File> attachedDocuments)
     {
         this();
-        this.academicStatus = new SimpleBooleanProperty(academicStatus);
+        setAcademicStatus(academicStatus);
+        setWillParticipate(willParticipate);
         unwraoAndSetAchievements(achievements);
         unwraoAndSetBehaviourHistories(behaviourHistories);
-        this.block = new SimpleStringProperty(block);
-        this.cellPhone = new SimpleStringProperty(cellPhone);
         unwraoAndSetFamilyHistories(familyHistories);
+        unwraoAndSetBHallHistories(hallHistories);
         unwraoAndSetCommunityGroups(communityGroups);
         unwraoAndSetCoCurriculars(coCurriculars);
-        this.dayJoined = new SimpleStringProperty(dayJoined);
-        this.dob = new SimpleStringProperty(dob);
-        this.faculty = new SimpleStringProperty(faculty);
-        this.fatherFirstName = new SimpleStringProperty(fatherFirstName);
-        this.fatherLastName = new SimpleStringProperty(fatherLastName);
-        this.fatherPhone = new SimpleStringProperty(fatherPhone);
-        this.firstName = new SimpleStringProperty(firstName);
-        unwraoAndSetBHallHistories(hallHistories);
-        this.homeAddress1 = new SimpleStringProperty(homeAddress1);
-        this.homeAddress2 = new SimpleStringProperty(homeAddress2);
-        this.homeCity = new SimpleStringProperty(homeCity);
-        this.homeProvince = new SimpleStringProperty(homeProvince);
-        this.idNumber = new SimpleStringProperty(idNumber);
-        this.lastName = new SimpleStringProperty(lastName);
-        this.middleName = new SimpleStringProperty(middleName);
-        this.motherFirstName = new SimpleStringProperty(motherFirstName);
-        this.motherLastName = new SimpleStringProperty(motherLastName);
-        this.motherPhone = new SimpleStringProperty(motherPhone);
-        this.nationalityCountry = nationalityCountry;
-        this.particpationLevel = new SimpleIntegerProperty(participationLevel);
-        this.picture = new SimpleBooleanProperty(picture);
-        this.previousSecondary = new SimpleStringProperty(previousSecondary);
-        this.reasonResiding = new SimpleStringProperty(reasonResiding);
-        this.residentCountry = residentCountry;
-        this.room = new SimpleStringProperty(room);
-        this.tertiaryLevel = TertiaryLevel.unwrap(tertiaryLevel);
-        this.willParticipate = new SimpleBooleanProperty(willParticipate);
-        this.email = new SimpleStringProperty(email);
-        this.attachedDocuments = FXCollections.observableArrayList();
-        this.attachedDocuments.addAll(attachedDocuments);
+        setCellPhone(cellPhone);
+        setDayJoined(dayJoined);
+        setDob(dob);
+        setBlock(block);
+        setFaculty(faculty);
+        setFatherFirstName(fatherFirstName);
+        setFatherLastName(fatherLastName);
+        setFatherPhone(fatherPhone);
+        setFirstName(firstName);
+        setHomeAddress1(homeAddress1);
+        setHomeAddress2(homeAddress2);
+        setHomeCity(homeCity);
+        setHomeProvince(homeProvince);
+        setIdNumber(idNumber);
+        setLastName(lastName);
+        setMiddleName(middleName);
+        setMotherFirstName(motherFirstName);
+        setMotherLastName(motherLastName);
+        setMotherPhone(motherPhone);
+        setPreviousSecondary(previousSecondary);
+        setReasonResiding(reasonResiding);
+        setRoom(room);
+        setTertiaryLevel(tertiaryLevel);
+        setEmail(email);
+        setNationalityCountry(nationalityCountry);
+        setParticpationLevel(participationLevel);
+        setPicture(picture);
+        setResidentCountry(residentCountry);
+        setAttachedDocuments(attachedDocuments);
     }
 
     public Student() {
-        this.academicStatus = new SimpleBooleanProperty();
-        unwraoAndSetAchievements("");
-        unwraoAndSetBehaviourHistories("");
-        this.block = new SimpleStringProperty("");
-        this.cellPhone = new SimpleStringProperty("");
-        unwraoAndSetFamilyHistories("");
-        unwraoAndSetCommunityGroups("");
-        unwraoAndSetCoCurriculars("");
-        this.dayJoined = new SimpleStringProperty("");
-        this.dob = new SimpleStringProperty("");
-        this.faculty = new SimpleStringProperty("none");
-        this.fatherFirstName = new SimpleStringProperty("");
-        this.fatherLastName = new SimpleStringProperty("");
-        this.fatherPhone = new SimpleStringProperty("");
-        this.firstName = new SimpleStringProperty("");
-        unwraoAndSetBHallHistories("");
-        this.homeAddress1 = new SimpleStringProperty("");
-        this.homeAddress2 = new SimpleStringProperty("");
-        this.homeCity = new SimpleStringProperty("");
-        this.homeProvince = new SimpleStringProperty("");
-        this.idNumber = new SimpleStringProperty("");
-        this.lastName = new SimpleStringProperty("");
-        this.middleName = new SimpleStringProperty("");
-        this.motherFirstName = new SimpleStringProperty("");
-        this.motherLastName = new SimpleStringProperty("");
-        this.motherPhone = new SimpleStringProperty("");
-        this.particpationLevel = new SimpleIntegerProperty();
-        this.picture = new SimpleBooleanProperty();
-        this.previousSecondary = new SimpleStringProperty("");
-        this.reasonResiding = new SimpleStringProperty("");
-        this.room = new SimpleStringProperty("");
-        this.tertiaryLevel = new TertiaryLevel();
-        this.willParticipate = new SimpleBooleanProperty();
-        this.email = new SimpleStringProperty("");
-        this.attachedDocuments = FXCollections.observableArrayList();
+        super();
     }
 
     // Constructor for testing purposes only

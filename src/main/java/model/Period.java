@@ -30,7 +30,6 @@ public class Period
     public static Period parse(String coded)
     {
         Period period = new Period();
-
         period.fromYear = Integer.valueOf(coded.substring(0, 4));
         period.toYear = Integer.valueOf(coded.substring(4, 8));
         period.fromSemester = Integer.valueOf(coded.substring(8, 9));

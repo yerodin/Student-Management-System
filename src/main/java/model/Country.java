@@ -9,14 +9,14 @@ import javafx.beans.property.StringProperty;
  * Created by Yerodin on 8/22/2015.
  */
 public class Country {
-    private IntegerProperty countryID;
-    private StringProperty country, nationality;
+    private IntegerProperty countryID = new SimpleIntegerProperty(this, "countryID");
+    private StringProperty country = new SimpleStringProperty(this, "country"),
+            nationality = new SimpleStringProperty(this, "nationality");
 
     public Country(int countryID, String country, String nationality)
     {
-        this.countryID = new SimpleIntegerProperty(countryID);
-        this.country = new SimpleStringProperty(country);
-        this.nationality = new SimpleStringProperty(nationality);
+        setCountryID(countryID);
+        setCountry(country);
         setNationality(nationality);
     }
 

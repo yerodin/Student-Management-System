@@ -7,7 +7,7 @@ import javafx.beans.property.StringProperty;
  * Created by Yerodin on 8/22/2015.
  */
 public class HallHistory {
-    private StringProperty hall;
+    private StringProperty hall = new SimpleStringProperty(this, "hall");
     private Period period;
 
     public HallHistory() {
@@ -16,7 +16,7 @@ public class HallHistory {
 
     public HallHistory(String hall, Period period)
     {
-        this.hall = new SimpleStringProperty(hall);
+        setHall(hall);
         setPeriod(period);
     }
 

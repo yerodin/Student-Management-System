@@ -9,9 +9,9 @@ import javafx.beans.property.StringProperty;
 public class BehaviourHistory {
 
 
-    private StringProperty hall = new SimpleStringProperty(this, "hall");
-    private StringProperty infraction = new SimpleStringProperty(this, "infraction");
-    private StringProperty reason = new SimpleStringProperty(this, "reason");
+    private StringProperty hall = new SimpleStringProperty(this, "hall"),
+            infraction = new SimpleStringProperty(this, "infraction"),
+            reason = new SimpleStringProperty(this, "reason");
 
     public BehaviourHistory() {
         super();
