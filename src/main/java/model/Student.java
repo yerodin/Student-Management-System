@@ -69,7 +69,7 @@ public class Student {
                    String fatherLastName, String fatherPhone, String firstName, String homeAddress1, String homeAddress2,
                    String homeCity, String homeProvince, String idNumber, String lastName, String middleName,
                    String motherFirstName, String motherLastName, String motherPhone, String previousSecondary,
-                   String reasonResiding, String room, TertiaryLevel tertiaryLevel, String email, Country nationalityCountry,
+                   String reasonResiding, String room, String tertiaryLevel, String email, Country nationalityCountry,
                    int participationLevel, boolean picture, Country residentCountry, ObservableList<File> attachedDocuments)
     {
         this();
@@ -103,7 +103,7 @@ public class Student {
         setPreviousSecondary(previousSecondary);
         setReasonResiding(reasonResiding);
         setRoom(room);
-        setTertiaryLevel(tertiaryLevel);
+        setTertiaryLevel(TertiaryLevel.unwrap(tertiaryLevel));
         setEmail(email);
         setNationalityCountry(nationalityCountry);
         setParticpationLevel(participationLevel);

@@ -387,7 +387,7 @@ public class StudentViewController extends TitledPane {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (student != null) {
-                    student.setTertiaryLevel(!Objects.equals(newValue, "None"));
+//                    student.setTertiaryLevel(!Objects.equals(newValue, "None"));
                 }
             }
         });
@@ -875,7 +875,7 @@ public class StudentViewController extends TitledPane {
             Platform.runLater(() -> {
                 hallHistory.setHall(hallHistoryHallChoiceBox.getItems()
                         .get(hallHistoryHallChoiceBox.getSelectionModel().getSelectedIndex()));
-                hallHistory.setPeroid(new Peroid(
+                hallHistory.setPeriod(new Period(
                                 hallHistoryPeriodFrom.getValue().getYear(),
                                 hallHistoryPeriodTo.getValue().getYear(), 1, 3)
                 );
