@@ -146,6 +146,7 @@ public class StudentViewController extends TitledPane {
     protected Student student = new Student();
     protected Operation operation;
     protected User user;
+    private Stage stage;
     LocalDate current_date;
     private DatabaseCommunicator databaseCommunicator;
     private MainController mainController;
@@ -176,6 +177,25 @@ public class StudentViewController extends TitledPane {
             throw new RuntimeException(exception);
         }
 
+        mainTitledPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
+            if (oldScene == null && newScene != null) {
+                // scene is set for the first time. Now its the time to listen stage changes.
+                newScene.windowProperty().addListener((observableWindow, oldWindow, newWindow) -> {
+                    if (oldWindow == null && newWindow != null) {
+                        this.stage = ((Stage) newWindow);
+                        // stage is set. now is the right time to do whatever we need to the stage in the controller.
+                        ((Stage) newWindow).maximizedProperty().addListener((a, b, c) -> {
+                            if (c) {
+                                // TODO: Something needs to be done when maximized
+                            }
+                        });
+                        newWindow.setOnCloseRequest(event -> ((Stage) newWindow).close());
+                    }
+                });
+            }
+        });
+
+
         if (operation == Operation.NEW && student == null) {
             setStudent(new Student());
         }
@@ -204,23 +224,6 @@ public class StudentViewController extends TitledPane {
 //        };
 //        updatedDate.setPeriod(Duration.seconds(5));
 //        updatedDate.start();
-
-        mainTitledPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
-            if (oldScene == null && newScene != null) {
-                // scene is set for the first time. Now its the time to listen stage changes.
-                newScene.windowProperty().addListener((observableWindow, oldWindow, newWindow) -> {
-                    if (oldWindow == null && newWindow != null) {
-                        // stage is set. now is the right time to do whatever we need to the stage in the controller.
-                        ((Stage) newWindow).maximizedProperty().addListener((a, b, c) -> {
-                            if (c) {
-                                // TODO: Something needs to be done when maximized
-                            }
-                        });
-                        newWindow.setOnCloseRequest(event -> ((Stage) newWindow).close());
-                    }
-                });
-            }
-        });
 
         idInput.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.matches("\\d*")) {
@@ -1038,8 +1041,7 @@ public class StudentViewController extends TitledPane {
 
         }
         if (Objects.deepEquals(eventSource, closeBtn)) {
-            Stage thisStage = (Stage) closeBtn.getScene().getWindow();
-            thisStage.close();
+            stage.close();
         }
 
     }
