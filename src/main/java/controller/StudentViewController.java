@@ -620,7 +620,7 @@ public class StudentViewController extends TitledPane {
         secondarySchoolInput.setText(student.getPreviousSecondary());
         willParticipateChoiceBox.getSelectionModel().select(student.getWillParticipate() ? "Yes" : "No");
         countryChoiceBox.getSelectionModel().select(student.getResidentCountry());
-        nationalityField.setText(student.getNationalityCountry().getNationality());
+//        nationalityField.setText(student.getNationalityCountry().getNationality());
         // TODO: Tertiary level ComboBox needs logic
     }
 

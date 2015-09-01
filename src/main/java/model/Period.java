@@ -1,8 +1,5 @@
 package model;
 
-/**
- * Created by alex on 8/25/15 at 11:11 AM.
- */
 public class Period
 {
 

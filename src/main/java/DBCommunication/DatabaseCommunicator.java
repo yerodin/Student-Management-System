@@ -662,7 +662,7 @@ public class DatabaseCommunicator
 
     public static Country getCountryFromID(int ID)
     {
-        return ((countries.size() > ID && ID != -1) ? countries.get(ID) : null);
+        return ((countries.size() > ID -1 && ID-1 != -1) ? countries.get(ID-1) : null);
     }
 
     public static String getRoomFromID(int ID)
