@@ -1,5 +1,6 @@
 package DBCommunication;
 
+import enums.TertiaryLevel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -21,7 +22,8 @@ import java.util.List;
 /**
  * Created by Yerodin on 8/21/2015.
  */
-public class DatabaseCommunicator {
+public class DatabaseCommunicator
+{
     public final static int SUCCESS = 1;
     public final static int FAILURE = 0;
     final private String SERVER_IP = "localhost";
@@ -34,8 +36,10 @@ public class DatabaseCommunicator {
     final private String EDIT_STUDENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//edit_student.php";
     final private String DELETE_STUDENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_student.php";
     final private String GET_STUDENTS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_new_students.php";
-    final private String UPLOAD_STUDENT_IMAGE_URL = "http://" + SERVER_IP + "//sms//dataprovider//upload_student_image.php";
-    final private String DELETE_STUDENT_IMAGE_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_student_image.php";
+    final private String UPLOAD_STUDENT_IMAGE_URL = "http://" + SERVER_IP +
+            "//sms//dataprovider//upload_student_image.php";
+    final private String DELETE_STUDENT_IMAGE_URL = "http://" + SERVER_IP +
+            "//sms//dataprovider//delete_student_image.php";
     final private String UPLOAD_ATTACHMENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//upload_attachment.php";
     final private String DELETE_ATTACHMENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//delete_attachment.php";
     final private String LOGOUT_URL = "http://" + SERVER_IP + "//sms//dataprovider//logout.php";
@@ -43,15 +47,16 @@ public class DatabaseCommunicator {
     final private String GET_ATTACHMENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_student_attachment.php";
 
     private JSONParser jParser;
-    private static String[] blocks, faculties, rooms, halls;
-    private static ArrayList<Country> countries;
+    private String[] blocks, faculties, rooms, halls;
+    private ArrayList<Country> countries;
 
     private int statusId;
     private String status;
 
     private int studentVersion;
 
-    public DatabaseCommunicator() {
+    public DatabaseCommunicator()
+    {
 
         jParser = new JSONParser();
         studentVersion = 0;
@@ -84,9 +89,9 @@ public class DatabaseCommunicator {
                 fillRooms(u);
                 fillHalls(u);
                 return u;
-            } else
-                status = "Incorrect username/password combination.";
-        } catch (Exception e)
+            } else status = "Incorrect username/password combination.";
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -106,9 +111,9 @@ public class DatabaseCommunicator {
             if (jObj.getInt("success") == SUCCESS)
             {
                 return true;
-            } else
-                status = jObj.getString("data");
-        } catch (Exception e)
+            } else status = jObj.getString("data");
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -136,9 +141,9 @@ public class DatabaseCommunicator {
                     String alias = block.getString("block_alias");
                     blocks[id] = alias;
                 }
-            } else
-                status = "error";
-        } catch (Exception e)
+            } else status = "error";
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -165,9 +170,9 @@ public class DatabaseCommunicator {
                     String alias = faculty.getString("name");
                     faculties[id] = alias;
                 }
-            } else
-                status = "error";
-        } catch (Exception e)
+            } else status = "error";
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -194,9 +199,9 @@ public class DatabaseCommunicator {
                     String nationality = dcountry.getString("nationality");
                     countries.add(new Country(id, country, nationality));
                 }
-            } else
-                status = "error";
-        } catch (Exception e)
+            } else status = "error";
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -223,9 +228,9 @@ public class DatabaseCommunicator {
                     String number = droom.getString("number");
                     rooms[id] = number;
                 }
-            } else
-                status = "error";
-        } catch (Exception e)
+            } else status = "error";
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -252,9 +257,9 @@ public class DatabaseCommunicator {
                     String number = droom.getString("name");
                     halls[id] = number;
                 }
-            } else
-                status = "error";
-        } catch (Exception e)
+            } else status = "error";
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -296,18 +301,16 @@ public class DatabaseCommunicator {
         params.add(new BasicNameValuePair("mother_phone", student.getMotherPhone()));
         Country nat = student.getNationalityCountry();
         int natID = 84;
-        if (nat != null)
-            natID = nat.getCountryID();
+        if (nat != null) natID = nat.getCountryID();
         params.add(new BasicNameValuePair("nationality", String.valueOf(nat)));
         params.add(new BasicNameValuePair("previous_secondary_school", student.getPreviousSecondary()));
         params.add(new BasicNameValuePair("reason_residing", student.getReasonResiding()));
         Country res = student.getResidentCountry();
         int resID = 84;
-        if (nat != null)
-            resID = res.getCountryID();
+        if (nat != null) resID = res.getCountryID();
         params.add(new BasicNameValuePair("resident_country", String.valueOf(resID)));
         params.add(new BasicNameValuePair("room", String.valueOf(indexOf(student.getRoom(), rooms))));
-        params.add(new BasicNameValuePair("tertiary_level", student.getTertiaryLevel() ? "1" : "0"));
+        params.add(new BasicNameValuePair("tertiary_level", model.TertiaryLevel.wrap(student.getTertiaryLevel())));
         params.add(new BasicNameValuePair("will_participate", (student.getWillParticipate()) ? "1" : "0"));
         params.add(new BasicNameValuePair("participation_level", String.valueOf(student.getParticpationLevel())));
         params.add(new BasicNameValuePair("email", student.getEmail()));
@@ -316,11 +319,10 @@ public class DatabaseCommunicator {
         System.out.println(jObj);
         try
         {
-            if (jObj.getInt("success") == SUCCESS)
-                return true;
-            else
-                status = "Incorrect username/password combination.";
-        } catch (Exception e)
+            if (jObj.getInt("success") == SUCCESS) return true;
+            else status = "Incorrect username/password combination.";
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -361,18 +363,16 @@ public class DatabaseCommunicator {
         params.add(new BasicNameValuePair("mother_phone", student.getMotherPhone()));
         Country nat = student.getNationalityCountry();
         int natID = 84;
-        if (nat != null)
-            natID = nat.getCountryID();
+        if (nat != null) natID = nat.getCountryID();
         params.add(new BasicNameValuePair("nationality", String.valueOf(nat)));
         params.add(new BasicNameValuePair("previous_secondary_school", student.getPreviousSecondary()));
         params.add(new BasicNameValuePair("reason_residing", student.getReasonResiding()));
         Country res = student.getResidentCountry();
         int resID = 84;
-        if (nat != null)
-            resID = res.getCountryID();
+        if (nat != null) resID = res.getCountryID();
         params.add(new BasicNameValuePair("resident_country", String.valueOf(resID)));
         params.add(new BasicNameValuePair("room", String.valueOf(indexOf(student.getRoom(), rooms))));
-        params.add(new BasicNameValuePair("tertiary_level", student.getTertiaryLevel() ? "1" : "0"));
+        params.add(new BasicNameValuePair("tertiary_level", model.TertiaryLevel.wrap(student.getTertiaryLevel())));
         params.add(new BasicNameValuePair("will_participate", (student.getWillParticipate()) ? "1" : "0"));
         params.add(new BasicNameValuePair("participation_level", String.valueOf(student.getParticpationLevel())));
         params.add(new BasicNameValuePair("email", student.getEmail()));
@@ -381,11 +381,10 @@ public class DatabaseCommunicator {
         System.out.println(jObj);
         try
         {
-            if (jObj.getInt("success") == SUCCESS)
-                return true;
-            else
-                status = jObj.getString("data");
-        } catch (Exception e)
+            if (jObj.getInt("success") == SUCCESS) return true;
+            else status = jObj.getString("data");
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -403,11 +402,10 @@ public class DatabaseCommunicator {
         System.out.println(jObj);
         try
         {
-            if (jObj.getInt("success") == SUCCESS)
-                return true;
-            else
-                status = jObj.getString("data");
-        } catch (Exception e)
+            if (jObj.getInt("success") == SUCCESS) return true;
+            else status = jObj.getString("data");
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -417,8 +415,10 @@ public class DatabaseCommunicator {
 
     public boolean uploadStudentAttachment(User currentUser, Student student, String name, int taskID)
     {
-        try {
-            HttpURLConnection httpUrlConnection = (HttpURLConnection) new URL(UPLOAD_ATTACHMENT_URL + "?sid=" + currentUser.getSID() + "&id=" + student.getIdNumber() + "&name=" + name).openConnection();
+        try
+        {
+            HttpURLConnection httpUrlConnection = (HttpURLConnection) new URL(UPLOAD_ATTACHMENT_URL + "?sid=" +
+                    currentUser.getSID() + "&id=" + student.getIdNumber() + "&name=" + name).openConnection();
             httpUrlConnection.setDoOutput(true);
 
             httpUrlConnection.setRequestMethod("GET");
@@ -427,24 +427,25 @@ public class DatabaseCommunicator {
             int totalByte = totalBytes.length;
             InputStream is = new ByteArrayInputStream(os.toByteArray());
             int byteTrasferred = 0;
-            for (int i = 0; i < totalByte; i++) {
+            for (int i = 0; i < totalByte; i++)
+            {
                 os.write(is.read());
                 byteTrasferred = i + 1;
             }
 
             os.close();
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(
-                            httpUrlConnection.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
 
             String s = null;
-            while ((s = in.readLine()) != null) {
+            while ((s = in.readLine()) != null)
+            {
                 System.out.println(s);
             }
             in.close();
             is.close();
             return true;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             return false;
@@ -454,7 +455,9 @@ public class DatabaseCommunicator {
 
     public boolean uploadStudentImage(User currentUser, Student student, int taskID)
     {
-        try {
+        try
+        {
+            System.out.println(student);
             HttpURLConnection httpUrlConnection = (HttpURLConnection) new URL(UPLOAD_STUDENT_IMAGE_URL + "?sid=" + currentUser.getSID() + "&id=" + student.getIdNumber()).openConnection();
             httpUrlConnection.setDoOutput(true);
 
@@ -465,24 +468,25 @@ public class DatabaseCommunicator {
             int totalByte = totalBytes.length;
             InputStream is = new ByteArrayInputStream(os.toByteArray());
             int byteTrasferred = 0;
-            for (int i = 0; i < totalByte; i++) {
+            for (int i = 0; i < totalByte; i++)
+            {
                 os.write(is.read());
                 byteTrasferred = i + 1;
             }
 
             os.close();
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(
-                            httpUrlConnection.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
 
             String s = null;
-            while ((s = in.readLine()) != null) {
+            while ((s = in.readLine()) != null)
+            {
                 System.out.println(s);
             }
             in.close();
             is.close();
             return true;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             return false;
@@ -500,11 +504,10 @@ public class DatabaseCommunicator {
         System.out.println(jObj);
         try
         {
-            if (jObj.getInt("success") == SUCCESS)
-                return true;
-            else
-                status = jObj.getString("data");
-        } catch (Exception e)
+            if (jObj.getInt("success") == SUCCESS) return true;
+            else status = jObj.getString("data");
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -523,11 +526,10 @@ public class DatabaseCommunicator {
         System.out.println(jObj);
         try
         {
-            if (jObj.getInt("success") == SUCCESS)
-                return true;
-            else
-                status = jObj.getString("data");
-        } catch (Exception e)
+            if (jObj.getInt("success") == SUCCESS) return true;
+            else status = jObj.getString("data");
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -536,34 +538,36 @@ public class DatabaseCommunicator {
     }
 
     private File getStudentAttachment(User currentUser, String studentID, String fileName, int taskID)
+    {
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("sid", currentUser.getSID()));
+        params.add(new BasicNameValuePair("id", studentID));
+        params.add(new BasicNameValuePair("name", fileName));
+        JSONObject jObj = jParser.makeHttpRequest(GET_ATTACHMENT_URL, "POST", params);
+        System.out.println(jObj);
+        try
         {
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
-            params.add(new BasicNameValuePair("sid", currentUser.getSID()));
-            params.add(new BasicNameValuePair("id", studentID));
-            params.add(new BasicNameValuePair("name", fileName));
-            JSONObject jObj = jParser.makeHttpRequest(GET_ATTACHMENT_URL, "POST", params);
-            System.out.println(jObj);
-            try
+            if (jObj.getInt("success") == SUCCESS)
             {
-                if (jObj.getInt("success") == SUCCESS)
+                JSONArray bytes = jObj.getJSONArray("data");
+                byte[] fileBytes = new byte[bytes.length()];
+                for (int i = 0; i < bytes.length(); ++i)
                 {
-                    JSONArray bytes = jObj.getJSONArray("data");
-                    byte[] fileBytes = new byte[bytes.length()];
-                    for (int i = 0; i < bytes.length(); ++i) {
-                        fileBytes[i] = (byte) bytes.getInt(i);
-                    }
-//                    File file = new File();
-//                    FileOutputStream fos = new FileOutputStream(file);
-//                    fos.write(fileBytes);
+                    fileBytes[i] = (byte) bytes.getInt(i);
+                }
+                //                    File file = new File();
+                //                    FileOutputStream fos = new FileOutputStream(file);
+                //                    fos.write(fileBytes);
                 return null;
-                } else
-                    status = "error";
-            } catch (Exception e) {
-                e.printStackTrace();
-                status = "Error, could not connect to server.";
-            }
-            return null;
+            } else status = "error";
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            status = "Error, could not connect to server.";
+        }
+        return null;
+    }
 
 
     public Student[] getNewStudents(User currentUser, int taskID)
@@ -579,8 +583,7 @@ public class DatabaseCommunicator {
         {
             if (jObj.getInt("success") == SUCCESS)
             {
-                if (jObj.getInt("flag") == 1)
-                    return null;
+                if (jObj.getInt("flag") == 1) return null;
                 JSONArray students = jObj.getJSONArray("data").getJSONArray(0);
                 returnArray = new Student[students.length()];
                 for (int i = 0; i < students.length(); ++i)
@@ -588,7 +591,7 @@ public class DatabaseCommunicator {
                     JSONObject student = students.getJSONObject(i);
                     boolean academicStatus = student.getInt("academic_status") == 1;
                     String achievements = student.getString("achievements");
-                    String behaviour_history = student.getString("achievements");
+                    String behaviour_history = student.getString("behaviour_history");
                     int block = student.getInt("block");
                     String cellPhone = student.getString("cell_phone");
                     String familyHistory = student.getString("family_history");
@@ -619,7 +622,7 @@ public class DatabaseCommunicator {
                     String reasonResiding = student.getString("reason_residing");
                     int residentCountry = student.getInt("resident_country");
                     int room = student.getInt("room");
-                    boolean tertiaryLevel = student.getInt("tertiary_level") == 1;
+                    String tertiaryLevel = student.getString("tertiary_level");
                     boolean willParticipate = student.getInt("will_participate") == 1;
                     String email = student.getString("email");
                     String attachedWrapped = student.getString("attached_documents");
@@ -628,18 +631,18 @@ public class DatabaseCommunicator {
                     for (String name : attachedNames)
                         attachedDocuments.add(getStudentAttachment(currentUser, idNumber, name, taskID));
 
-                    returnArray[i] = new Student(academicStatus, willParticipate, achievements, behaviour_history, familyHistory, hallHistory, communityGroup, coCurricular,
-                            cellPhone, day_joined, dob, getBlockFromID(block), getFacultyFromID(faculty), fatherFirstName, fatherLastName, fatherPhone, firstName, homeAddress1,
-                            homeAddress2, homeCity, homeProvince, idNumber, lastName, middleName, motherFirstName, motherLastName, motherPhone, previousSecondary, reasonResiding,
-                            getRoomFromID(room), tertiaryLevel, email, getCountryFromID(nationality), participationLevel, picture, getCountryFromID(residentCountry), attachedDocuments);
+                    returnArray[i] = new Student(academicStatus, willParticipate, achievements, behaviour_history, familyHistory, hallHistory, communityGroup, coCurricular, cellPhone, day_joined,
+                            dob, getBlockFromID(block), getFacultyFromID(faculty), fatherFirstName, fatherLastName, fatherPhone, firstName, homeAddress1, homeAddress2, homeCity, homeProvince,
+                            idNumber, lastName, middleName, motherFirstName, motherLastName, motherPhone, previousSecondary, reasonResiding, getRoomFromID(room), tertiaryLevel, email,
+                            getCountryFromID(nationality), participationLevel, picture, getCountryFromID(residentCountry), attachedDocuments);
 
                 }
                 studentVersion = jObj.getInt("sversion");
                 status = "Successful";
                 return returnArray;
-            } else
-                status = jObj.getString("data");
-        } catch (Exception e)
+            } else status = jObj.getString("data");
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
             status = "Error, could not connect to server.";
@@ -648,27 +651,27 @@ public class DatabaseCommunicator {
     }
 
 
-    public static String getBlockFromID(int ID)
+    public String getBlockFromID(int ID)
     {
-        return ((blocks.length > ID && ID != -1) ? blocks[ID] : null);
+        return ((blocks.length > ID && ID != -1) ? blocks[ID] : "");
     }
 
-    public static String getFacultyFromID(int ID)
+    public String getFacultyFromID(int ID)
     {
-        return ((faculties.length > ID && ID != -1) ? faculties[ID] : null);
+        return ((faculties.length > ID && ID != -1) ? faculties[ID] : "");
     }
 
-    public static Country getCountryFromID(int ID)
+    public Country getCountryFromID(int ID)
     {
         return ((countries.size() > ID -1 && ID-1 != -1) ? countries.get(ID-1) : null);
     }
 
-    public static String getRoomFromID(int ID)
+    public String getRoomFromID(int ID)
     {
         return ((rooms.length > ID) && ID != -1 ? rooms[ID] : "");
     }
 
-    public static String getHallFromID(int ID)
+    public String getHallFromID(int ID)
     {
         return ((halls.length > ID && ID != -1) ? halls[ID] : "");
     }
@@ -677,6 +680,7 @@ public class DatabaseCommunicator {
     {
         return statusId;
     }
+
     public String getStatus()
     {
         return status;
@@ -684,30 +688,33 @@ public class DatabaseCommunicator {
 
     private int indexOf(String s, String[] array1)
     {
-        if (s != null && array1 != null)
-            for (int i = 0; i < array1.length; ++i)
-                if (array1[i].equals(s))
-                    return i;
+        if (s != null && array1 != null) for (int i = 0; i < array1.length; ++i)
+            if (array1[i].equals(s)) return i;
         return -1;
     }
 
-    public static ArrayList<Country> getCountries() {
+    public ArrayList<Country> getCountries()
+    {
         return countries;
     }
 
-    public static String[] getRooms() {
+    public String[] getRooms()
+    {
         return rooms;
     }
 
-    public static String[] getFaculties() {
+    public String[] getFaculties()
+    {
         return faculties;
     }
 
-    public static String[] getBlocks() {
+    public String[] getBlocks()
+    {
         return blocks;
     }
 
-    public static String[] getHalls() {
+    public String[] getHalls()
+    {
         return halls;
     }
 }

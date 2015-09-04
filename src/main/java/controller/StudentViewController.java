@@ -44,7 +44,8 @@ import java.util.Objects;
 /**
  * Student View Controller
  **/
-public class StudentViewController extends TitledPane {
+public class StudentViewController extends TitledPane
+{
     public TitledPane mainTitledPane;
     public ImageView avatarImageView;
     public Button addEditPhotoBtn;
@@ -160,32 +161,40 @@ public class StudentViewController extends TitledPane {
     ObservableList<Achievement> achievements = FXCollections.<Achievement>observableArrayList();
     ObservableList<CoCurricular> coCurriculars = FXCollections.<CoCurricular>observableArrayList();
 
-    public StudentViewController(Student student, Operation operation, MainController mainController) {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
-                "/fxml/StudentView.fxml"));
-//        if (operation == Operation.VIEW) {
-//            fxmlLoader = new FXMLLoader(getClass().getResource(
-//                    "/fxml/StudentViewReadOnly.fxml"));
-//        }
+    private Image studentImage;
+
+    public StudentViewController(Student student, Operation operation, MainController mainController)
+    {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/StudentView.fxml"));
+        //        if (operation == Operation.VIEW) {
+        //            fxmlLoader = new FXMLLoader(getClass().getResource(
+        //                    "/fxml/StudentViewReadOnly.fxml"));
+        //        }
         this.mainController = mainController;
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
-        try {
+        try
+        {
             fxmlLoader.load();
-        } catch (IOException exception) {
+        }
+        catch (IOException exception)
+        {
             throw new RuntimeException(exception);
         }
 
         mainTitledPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
-            if (oldScene == null && newScene != null) {
+            if (oldScene == null && newScene != null)
+            {
                 // scene is set for the first time. Now its the time to listen stage changes.
                 newScene.windowProperty().addListener((observableWindow, oldWindow, newWindow) -> {
-                    if (oldWindow == null && newWindow != null) {
+                    if (oldWindow == null && newWindow != null)
+                    {
                         this.stage = ((Stage) newWindow);
                         // stage is set. now is the right time to do whatever we need to the stage in the controller.
                         ((Stage) newWindow).maximizedProperty().addListener((a, b, c) -> {
-                            if (c) {
+                            if (c)
+                            {
                                 // TODO: Something needs to be done when maximized
                             }
                         });
@@ -196,79 +205,92 @@ public class StudentViewController extends TitledPane {
         });
 
 
-        if (operation == Operation.NEW && student == null) {
+        if (operation == Operation.NEW && student == null)
+        {
             setStudent(new Student());
         }
-        if (operation.equals(Operation.EDIT) && student != null) {
+        if (operation.equals(Operation.EDIT) && student != null)
+        {
             cleanAttachToStudent(student);
             dirtyAttachToStudent(student);
         }
         setOperation(operation);
         this.databaseCommunicator = AuthController.databaseCommunicator;
         this.user = AuthController.user;
-        setStudent(student);
-
         // TODO: Keep this for later
         // Keep date current
-//        ScheduledService<Void> updatedDate = new ScheduledService<Void>() {
-//            @Override
-//            protected Task<Void> createTask() {
-//                return new Task<Void>() {
-//                    @Override
-//                    protected Void call() throws Exception {
-//                        current_date = DateUtil.getJamaicaDateTime().toLocalDate();
-//                        return null;
-//                    }
-//                };
-//            }
-//        };
-//        updatedDate.setPeriod(Duration.seconds(5));
-//        updatedDate.start();
+        //        ScheduledService<Void> updatedDate = new ScheduledService<Void>() {
+        //            @Override
+        //            protected Task<Void> createTask() {
+        //                return new Task<Void>() {
+        //                    @Override
+        //                    protected Void call() throws Exception {
+        //                        current_date = DateUtil.getJamaicaDateTime().toLocalDate();
+        //                        return null;
+        //                    }
+        //                };
+        //            }
+        //        };
+        //        updatedDate.setPeriod(Duration.seconds(5));
+        //        updatedDate.start();
 
         idInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.matches("\\d*")) {
+            if (newValue.matches("\\d*"))
+            {
                 byte[] bytes = newValue.getBytes();
-            } else {
+            } else
+            {
                 idInput.setText(oldValue);
             }
         });
 
         cellPhoneInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.matches("\\d*")) {
+            if (newValue.matches("\\d*"))
+            {
                 byte[] bytes = newValue.getBytes();
-            } else {
+            } else
+            {
                 cellPhoneInput.setText(oldValue);
             }
         });
 
         padrePhoneNumberInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.matches("\\d*")) {
+            if (newValue.matches("\\d*"))
+            {
                 byte[] bytes = newValue.getBytes();
-            } else {
+            } else
+            {
                 padrePhoneNumberInput.setText(oldValue);
             }
         });
 
         madrePhoneNumberInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.matches("\\d*")) {
+            if (newValue.matches("\\d*"))
+            {
                 byte[] bytes = newValue.getBytes();
-            } else {
+            } else
+            {
                 madrePhoneNumberInput.setText(oldValue);
             }
         });
 
         // Set converters
-        countryChoiceBox.setConverter(new StringConverter<Country>() {
+        countryChoiceBox.setConverter(new StringConverter<Country>()
+        {
             @Override
-            public String toString(Country object) {
+            public String toString(Country object)
+            {
                 return object.getCountry();
             }
 
             @Override
-            public Country fromString(String string) {
+            public Country fromString(String string)
+            {
                 Country thisCountry = null;
-                for (Country country : DatabaseCommunicator.getCountries()) {
-                    if (country.getCountry().equals(string)) {
+                for (Country country : databaseCommunicator.getCountries())
+                {
+                    if (country.getCountry().equals(string))
+                    {
                         thisCountry = new Country(country.getCountryID(), country.getCountry(), country.getNationality());
                         break;
                     }
@@ -277,137 +299,170 @@ public class StudentViewController extends TitledPane {
             }
         });
 
-        dobDatePicker.setConverter(new StringConverter<LocalDate>() {
+        dobDatePicker.setConverter(new StringConverter<LocalDate>()
+        {
             @Override
-            public String toString(LocalDate object) {
+            public String toString(LocalDate object)
+            {
                 return object.format(formatter);
             }
 
             @Override
-            public LocalDate fromString(String string) {
+            public LocalDate fromString(String string)
+            {
                 return LocalDate.parse(string, formatter);
             }
         });
 
-        dateJoinedDatePicker.setConverter(new StringConverter<LocalDate>() {
+        dateJoinedDatePicker.setConverter(new StringConverter<LocalDate>()
+        {
             @Override
-            public String toString(LocalDate object) {
+            public String toString(LocalDate object)
+            {
                 return object.format(formatter);
             }
 
             @Override
-            public LocalDate fromString(String string) {
+            public LocalDate fromString(String string)
+            {
                 return LocalDate.parse(string, formatter);
             }
         });
 
-        hallHistoryPeriodFrom.setConverter(new StringConverter<LocalDate>() {
+        hallHistoryPeriodFrom.setConverter(new StringConverter<LocalDate>()
+        {
             @Override
-            public String toString(LocalDate object) {
+            public String toString(LocalDate object)
+            {
                 return object.format(formatter);
             }
 
             @Override
-            public LocalDate fromString(String string) {
+            public LocalDate fromString(String string)
+            {
                 return LocalDate.parse(string, formatter);
             }
         });
 
-        hallHistoryPeriodTo.setConverter(new StringConverter<LocalDate>() {
+        hallHistoryPeriodTo.setConverter(new StringConverter<LocalDate>()
+        {
             @Override
-            public String toString(LocalDate object) {
+            public String toString(LocalDate object)
+            {
                 return object.format(formatter);
             }
 
             @Override
-            public LocalDate fromString(String string) {
+            public LocalDate fromString(String string)
+            {
                 return LocalDate.parse(string, formatter);
             }
         });
 
-        famHistoryFromDatePicker.setConverter(new StringConverter<LocalDate>() {
+        famHistoryFromDatePicker.setConverter(new StringConverter<LocalDate>()
+        {
             @Override
-            public String toString(LocalDate object) {
+            public String toString(LocalDate object)
+            {
                 return object.format(formatter);
             }
 
             @Override
-            public LocalDate fromString(String string) {
+            public LocalDate fromString(String string)
+            {
                 return LocalDate.parse(string, formatter);
             }
         });
 
-        famHistoryToDatePicker.setConverter(new StringConverter<LocalDate>() {
+        famHistoryToDatePicker.setConverter(new StringConverter<LocalDate>()
+        {
             @Override
-            public String toString(LocalDate object) {
+            public String toString(LocalDate object)
+            {
                 return object.format(formatter);
             }
 
             @Override
-            public LocalDate fromString(String string) {
+            public LocalDate fromString(String string)
+            {
                 return LocalDate.parse(string, formatter);
             }
         });
 
-        bevHistoryDatePicker.setConverter(new StringConverter<LocalDate>() {
+        bevHistoryDatePicker.setConverter(new StringConverter<LocalDate>()
+        {
             @Override
-            public String toString(LocalDate object) {
+            public String toString(LocalDate object)
+            {
                 return object.format(formatter);
             }
 
             @Override
-            public LocalDate fromString(String string) {
+            public LocalDate fromString(String string)
+            {
                 return LocalDate.parse(string, formatter);
             }
         });
 
         setGradYears();
-        facultyChoiceBox.setItems(FXCollections.observableArrayList(DatabaseCommunicator.getFaculties()));
+        facultyChoiceBox.setItems(FXCollections.observableArrayList(databaseCommunicator.getFaculties()));
         academicStatusChoiceBox.setItems(FXCollections.observableArrayList(AcademicStatus.labels()));
         achievementAreaComboBox.setItems(FXCollections.observableArrayList(AchievementArea.labels()));
-        blockChoiceBox.setItems(FXCollections.observableArrayList(Block.labels()));
-        famHistoryBlockChoiceBox.setItems(FXCollections.observableArrayList(Block.labels()));
-        bevHistoryHallChoiceBox.setItems(FXCollections.observableArrayList(DatabaseCommunicator.getHalls()));
-        hallHistoryHallChoiceBox.setItems(FXCollections.observableArrayList(DatabaseCommunicator.getHalls()));
+        blockChoiceBox.setItems(FXCollections.observableArrayList(databaseCommunicator.getBlocks()));
+        famHistoryBlockChoiceBox.setItems(FXCollections.observableArrayList(databaseCommunicator.getBlocks()));
+        bevHistoryHallChoiceBox.setItems(FXCollections.observableArrayList(databaseCommunicator.getHalls()));
+        hallHistoryHallChoiceBox.setItems(FXCollections.observableArrayList(databaseCommunicator.getHalls()));
         coCurricularTypeChoiceBox.setItems(FXCollections.observableArrayList(CoCurActivityType.labels()));
-        countryChoiceBox.setItems(FXCollections.observableArrayList(DatabaseCommunicator.getCountries()));
-        roomNumberChoiceBox.setItems(FXCollections.observableArrayList(DatabaseCommunicator.getRooms()));
+        countryChoiceBox.setItems(FXCollections.observableArrayList(databaseCommunicator.getCountries()));
+        roomNumberChoiceBox.setItems(FXCollections.observableArrayList(databaseCommunicator.getRooms()));
         bevHistoryInfracComboBox.setItems(FXCollections.observableArrayList(Infraction.labels()));
         famHistoryRelationshipComboBox.setItems(FXCollections.observableArrayList(Relationship.labels()));
         tertiaryLvlComboBox.setItems(FXCollections.observableArrayList(TertiaryLevel.labels()));
         willParticipateChoiceBox.setItems(FXCollections.observableArrayList(Decision.labels()));
 
-        facultyChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        facultyChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
+        {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (student != null) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+            {
+                if (student != null)
+                {
                     student.setFaculty(newValue);
                 }
             }
         });
 
-        tertiaryLvlComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        tertiaryLvlComboBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
+        {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (student != null) {
-//                    student.setTertiaryLevel(!Objects.equals(newValue, "None"));
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+            {
+                if (student != null)
+                {
+                    //                    student.setTertiaryLevel(!Objects.equals(newValue, "None"));
                 }
             }
         });
 
-        blockChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        blockChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
+        {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (student != null) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+            {
+                if (student != null)
+                {
                     student.setBlock(newValue);
                 }
             }
         });
 
-        roomNumberChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        roomNumberChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
+        {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (student != null) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+            {
+                if (student != null)
+                {
                     student.setRoom(newValue);
                 }
             }
@@ -415,38 +470,50 @@ public class StudentViewController extends TitledPane {
 
         countryChoiceBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             nationalityField.setText(newValue.getNationality());
-            if (student != null) {
+            if (student != null)
+            {
                 student.setResidentCountry(newValue);
-                student.setNationalityCountry(DatabaseCommunicator.getCountryFromID(this.countryChoiceBox.getValue().getCountryID()));
+                student.setNationalityCountry(databaseCommunicator.getCountryFromID(this.countryChoiceBox.getValue().getCountryID()));
             }
         });
 
-        academicStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        academicStatusChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
+        {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (student != null) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+            {
+                if (student != null)
+                {
                     student.setAcademicStatus(newValue.equals("Full time"));
                 }
             }
         });
 
-        willParticipateChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        willParticipateChoiceBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>()
+        {
             @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (student != null) {
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue)
+            {
+                if (student != null)
+                {
                     student.setWillParticipate(newValue.equals("Yes"));
                 }
             }
         });
 
 
-        dobDatePicker.valueProperty().addListener(new ChangeListener<LocalDate>() {
+        dobDatePicker.valueProperty().addListener(new ChangeListener<LocalDate>()
+        {
             @Override
-            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue) {
+            public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue)
+            {
                 LocalDate end = LocalDate.now();
-                try {
+                try
+                {
                     end = DateUtil.getJamaicaDateTime().toLocalDate();
-                } catch (IOException e) {
+                }
+                catch (IOException e)
+                {
                     e.printStackTrace();
                 }
                 // Days
@@ -456,30 +523,36 @@ public class StudentViewController extends TitledPane {
 
 
         familyHistoryCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
+            if (newValue)
+            {
                 famHistoryFormGridPane.setDisable(false);
                 familyHistoryTableView.setDisable(false);
-            } else {
+            } else
+            {
                 famHistoryFormGridPane.setDisable(true);
                 familyHistoryTableView.setDisable(true);
             }
         });
 
         hallHistoryCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
+            if (newValue)
+            {
                 hallHistoryFormGridPane.setDisable(false);
                 hallHistoryTableView.setDisable(false);
-            } else {
+            } else
+            {
                 hallHistoryFormGridPane.setDisable(true);
                 hallHistoryTableView.setDisable(true);
             }
         });
 
         bevHistoryCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue) {
+            if (newValue)
+            {
                 bevHistoryFormGridPane.setDisable(false);
                 bevHistoryTableView.setDisable(false);
-            } else {
+            } else
+            {
                 bevHistoryFormGridPane.setDisable(true);
                 bevHistoryTableView.setDisable(true);
             }
@@ -494,14 +567,19 @@ public class StudentViewController extends TitledPane {
         coCurricularTableView.setItems(coCurriculars);
 
         // Display user-friendly attachment info
-        attachmentsListView.setCellFactory(new Callback<ListView<File>, ListCell<File>>() {
+        attachmentsListView.setCellFactory(new Callback<ListView<File>, ListCell<File>>()
+        {
             @Override
-            public ListCell<File> call(ListView<File> param) {
-                return new ListCell<File>() {
+            public ListCell<File> call(ListView<File> param)
+            {
+                return new ListCell<File>()
+                {
                     @Override
-                    public void updateItem(File item, boolean empty) {
+                    public void updateItem(File item, boolean empty)
+                    {
                         super.updateItem(item, empty);
-                        if (item != null) {
+                        if (item != null)
+                        {
                             setText(item.getName());
                         }
                     }
@@ -509,20 +587,20 @@ public class StudentViewController extends TitledPane {
             }
         }); // setCellFactory
 
-        this.getChildren().stream()
-                .filter(node -> node instanceof DatePicker)
-                .forEach(node -> ((DatePicker) node)
-                        .setConverter(new StringConverter<LocalDate>() {
-                            @Override
-                            public String toString(LocalDate object) {
-                                return object.format(formatter);
-                            }
+        this.getChildren().stream().filter(node -> node instanceof DatePicker).forEach(node -> ((DatePicker) node).setConverter(new StringConverter<LocalDate>()
+        {
+            @Override
+            public String toString(LocalDate object)
+            {
+                return object.format(formatter);
+            }
 
-                            @Override
-                            public LocalDate fromString(String string) {
-                                return LocalDate.parse(string, formatter);
-                            }
-                        }));
+            @Override
+            public LocalDate fromString(String string)
+            {
+                return LocalDate.parse(string, formatter);
+            }
+        }));
     }
 
     /**
@@ -531,36 +609,42 @@ public class StudentViewController extends TitledPane {
      * @param title   Title of notification
      * @param message Message of notification
      */
-    private static void notifier(String title, String message) {
-        Platform.runLater(() -> Notifications.create()
-                        .title(title)
-                        .text(message)
-                        .hideAfter(new Duration(2000))
-                        .showInformation()
-        );
+    private static void notifier(String title, String message)
+    {
+        Platform.runLater(() -> Notifications.create().title(title).text(message).hideAfter(new Duration(2000)).showInformation());
     }
 
-    private void setGradYears() {
-        Task<String[]> reasonableYears = new Task<String[]>() {
+    private void setGradYears()
+    {
+        Task<String[]> reasonableYears = new Task<String[]>()
+        {
             @Override
-            protected String[] call() throws Exception {
+            protected String[] call() throws Exception
+            {
                 String[] years = new String[100];
                 int thisYear;
-                try {
+                try
+                {
                     thisYear = DateUtil.getJamaicaDateTime().getYear();
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     thisYear = 2020;
                 }
-                for (int i = 0; i <= 99; i++) {
+                for (int i = 0; i <= 99; i++)
+                {
                     years[i] = String.valueOf(thisYear - i);
                 }
                 return years;
             }
         };
-        reasonableYears.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+        reasonableYears.setOnSucceeded(new EventHandler<WorkerStateEvent>()
+        {
             @Override
-            public void handle(WorkerStateEvent event) {
-                if (reasonableYears.getValue().length != 0) {
+            public void handle(WorkerStateEvent event)
+            {
+                if (reasonableYears.getValue().length != 0)
+                {
                     tertiaryYrofGradChoiceBox.setItems(FXCollections.observableArrayList(reasonableYears.getValue()));
                 }
             }
@@ -568,25 +652,30 @@ public class StudentViewController extends TitledPane {
         new Thread(reasonableYears).start();
     }
 
-    public Student getStudent() {
+    public Student getStudent()
+    {
         return student;
     }
 
-    public StudentViewController setStudent(Student student) {
+    public StudentViewController setStudent(Student student)
+    {
         this.student = student;
         return this;
     }
 
-    public Operation getOperation() {
+    public Operation getOperation()
+    {
         return operation;
     }
 
-    public StudentViewController setOperation(Operation operation) {
+    public StudentViewController setOperation(Operation operation)
+    {
         this.operation = operation;
         return this;
     }
 
-    public void cleanAttachToStudent(Student student) {
+    public void cleanAttachToStudent(Student student)
+    {
         this.idInput.textProperty().bindBidirectional(student.idNumberProperty());
         this.firstNameInput.textProperty().bindBidirectional(student.firstNameProperty());
         this.middleNameInput.textProperty().bindBidirectional(student.middleNameProperty());
@@ -606,7 +695,8 @@ public class StudentViewController extends TitledPane {
         this.reasonResidingTextArea.textProperty().bindBidirectional(student.reasonResidingProperty());
     }
 
-    public void dirtyAttachToStudent(Student student) {
+    public void dirtyAttachToStudent(Student student)
+    {
         familyHistories.setAll(student.getFamilyHistories());
         hallHistories.setAll(student.getHallHistories());
         communityGroups.setAll(student.getCommunityGroups());
@@ -623,12 +713,12 @@ public class StudentViewController extends TitledPane {
         secondarySchoolInput.setText(student.getPreviousSecondary());
         willParticipateChoiceBox.getSelectionModel().select(student.getWillParticipate() ? "Yes" : "No");
         countryChoiceBox.getSelectionModel().select(student.getResidentCountry());
-//        nationalityField.setText(student.getNationalityCountry().getNationality());
+        //        nationalityField.setText(student.getNationalityCountry().getNationality());
         // TODO: Tertiary level ComboBox needs logic
     }
 
-    public void grabStudent() {
-        student = new Student();
+    public void grabStudent()
+    {
         student.setAcademicStatus(this.academicStatusChoiceBox.getSelectionModel().getSelectedItem().equals(AcademicStatus.FULLTIME.getLabel()));
         student.setIdNumber(this.idInput.getText());
         student.setFirstName(this.firstNameInput.getText());
@@ -648,10 +738,8 @@ public class StudentViewController extends TitledPane {
         student.setBlock(this.blockChoiceBox.getSelectionModel().getSelectedItem());
         student.setFaculty(this.facultyChoiceBox.getSelectionModel().getSelectedItem());
         student.setRoom(this.roomNumberChoiceBox.getSelectionModel().getSelectedItem());
-        if (this.dobDatePicker.getValue() != null)
-            student.setDob(this.dobDatePicker.getValue().format(formatter));
-        if (this.dateJoinedDatePicker.getValue() != null)
-            student.setDayJoined(this.dateJoinedDatePicker.getValue().format(formatter));
+        if (this.dobDatePicker.getValue() != null) student.setDob(this.dobDatePicker.getValue().format(formatter));
+        if (this.dateJoinedDatePicker.getValue() != null) student.setDayJoined(this.dateJoinedDatePicker.getValue().format(formatter));
         // TODO: Add code to set Tertiary meta info
         student.setWillParticipate(this.willParticipateChoiceBox.getValue().equals(Decision.YES.getLabel()));
         student.setHomeProvince(this.stateProvinceInput.getText());
@@ -660,105 +748,95 @@ public class StudentViewController extends TitledPane {
     }
 
     @FXML
-    public void photoEventHandler(ActionEvent event) {
+    public void photoEventHandler(ActionEvent event)
+    {
         Object eventSource = event.getSource();
-        if (Objects.deepEquals(eventSource, addEditPhotoBtn)) {
+        if (Objects.deepEquals(eventSource, addEditPhotoBtn))
+        {
             Platform.runLater(() -> {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Upload Image");
-                FileChooser.ExtensionFilter jpgFilter =
-                        new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
-                FileChooser.ExtensionFilter pngFilter =
-                        new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
-                FileChooser.ExtensionFilter bmpFilter =
-                        new FileChooser.ExtensionFilter("BMP files (*.bmp)", "*.bmp");
+                FileChooser.ExtensionFilter jpgFilter = new FileChooser.ExtensionFilter("JPG files (*.jpg)", "*.jpg");
+                FileChooser.ExtensionFilter pngFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
+                FileChooser.ExtensionFilter bmpFilter = new FileChooser.ExtensionFilter("BMP files (*.bmp)", "*.bmp");
                 fileChooser.getExtensionFilters().addAll(jpgFilter, pngFilter, bmpFilter);
                 File file = fileChooser.showOpenDialog(null);
-                if (file.exists() && ((file.length() / 1024) / 1024) < 10) {
-                    Task<Boolean> uploadTask = new Task<Boolean>() {
-                        @Override
-                        protected Boolean call() throws Exception {
-                            return databaseCommunicator.uploadStudentImage(user, student, 1);
-                        }
-                    };
-                    uploadTask.setOnSucceeded(event1 -> {
-                        if (uploadTask.getValue()) {
-                            BufferedImage bufferedImage = null;
-                            try {
-                                bufferedImage = ImageIO.read(file);
-                                Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-                                avatarImageView.setImage(image);
-                                student.setImage(image);
-                                student.setPicture(uploadTask.getValue());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            CustomControlLauncher.notifier("Error", "There was an problem uploading photo. Please try again.", NotifierType.ERROR);
-                        }
-                    });
-                    new Thread(uploadTask).start();
-                } else {
-                    CustomControlLauncher.notifier("Error", "Photo should be 10 MB or less in size.", NotifierType.ERROR);
-                }
+                if (file.exists() && ((file.length() / 1024) / 1024) < 10)
+                {
+
+                    BufferedImage bufferedImage = null;
+                    try
+                    {
+                        bufferedImage = ImageIO.read(file);
+                        Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+                        student.setImage(image);
+                        avatarImageView.setImage(image);
+                        student.setPicture(true);
+                    }
+                    catch (IOException e)
+                    {
+                        CustomControlLauncher.notifier("Error", "There was an problem loading photo. Please try again.", NotifierType.ERROR);
+                        e.printStackTrace();
+                    }
+                } else CustomControlLauncher.notifier("Error", "Photo should be 10 MB or less in size.", NotifierType.ERROR);
+
             });
+
         }
-        if (Objects.deepEquals(eventSource, removePhotoBtn)) {
-            Platform.runLater(() -> {
-                Task<Boolean> deleteImageTask = new Task<Boolean>() {
-                    @Override
-                    protected Boolean call() throws Exception {
-                        return databaseCommunicator.deleteSudentImage(user, student, 1);
-                    }
-                };
-                deleteImageTask.setOnSucceeded(event1 -> {
-                    if (deleteImageTask.getValue()) {
-                        try {
-                            avatarImageView.setImage(SwingFXUtils.toFXImage(ImageIO.read(new File("resources/img/xlarge.jpg")), null));
-                            student.setImage(null);
-                            student.setPicture(deleteImageTask.getValue());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                new Thread(deleteImageTask).start();
-            });
+        if (Objects.deepEquals(eventSource, removePhotoBtn))
+        {
+          try
+          {
+              avatarImageView.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/xlarge.jpg")), null));
+              student.setImage(null);
+              student.setPicture(false);
+          }catch(Exception e)
+          {
+              e.printStackTrace();
+              CustomControlLauncher.notifier("Error","Problem removing image, please try again.",NotifierType.ERROR);
+          }
         }
     }
 
-    public void attachmentEventHandler(ActionEvent event) {
+    public void attachmentEventHandler(ActionEvent event)
+    {
         Object eventSource = event.getSource();
-        if (Objects.deepEquals(eventSource, uploadAttachBtn)) {
+        if (Objects.deepEquals(eventSource, uploadAttachBtn))
+        {
             Platform.runLater(() -> {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Upload Attachment");
                 File file = fileChooser.showOpenDialog(null);
                 student.getAttachedDocuments().add(file);
-                Task<Boolean> uploadTask = new Task<Boolean>() {
+                Task<Boolean> uploadTask = new Task<Boolean>()
+                {
                     @Override
-                    protected Boolean call() throws Exception {
+                    protected Boolean call() throws Exception
+                    {
                         return databaseCommunicator.uploadStudentAttachment(user, student, file.getName(), 1);
                     }
                 };
                 uploadTask.setOnSucceeded(event1 -> {
-                    if (uploadTask.getValue()) {
+                    if (uploadTask.getValue())
+                    {
                         attachments.add(file);
                         student.setAttachedDocuments(attachments);
                     }
                 });
                 new Thread(uploadTask).start();
             });
-        } else {
+        } else
+        {
             Platform.runLater(() -> {
-                Task<Boolean> removeAttachmentTask = new Task<Boolean>() {
+                Task<Boolean> removeAttachmentTask = new Task<Boolean>()
+                {
                     @Override
-                    protected Boolean call() throws Exception {
+                    protected Boolean call() throws Exception
+                    {
                         return databaseCommunicator.deleteSudentAttachment(user, student, attachmentsListView.getSelectionModel().getSelectedItem().getName(), 1);
                     }
                 };
-                removeAttachmentTask.setOnSucceeded(event1 ->
-                {
+                removeAttachmentTask.setOnSucceeded(event1 -> {
                     attachments.remove(attachmentsListView.getSelectionModel().getSelectedItem());
                     student.setAttachedDocuments(attachments);
                 });
@@ -767,24 +845,32 @@ public class StudentViewController extends TitledPane {
         }
     }
 
-    public boolean isFieldsFilled(Pane pane) {
-        for (Node node : pane.getChildren()) {
-            if (node instanceof PasswordField && ((PasswordField) node).getText().isEmpty()) {
+    public boolean isFieldsFilled(Pane pane)
+    {
+        for (Node node : pane.getChildren())
+        {
+            if (node instanceof PasswordField && ((PasswordField) node).getText().isEmpty())
+            {
                 return false;
             }
-            if (node instanceof TextField && ((TextField) node).getText().isEmpty()) {
+            if (node instanceof TextField && ((TextField) node).getText().isEmpty())
+            {
                 return false;
             }
-            if (node instanceof TextArea && ((TextArea) node).getText().isEmpty()) {
+            if (node instanceof TextArea && ((TextArea) node).getText().isEmpty())
+            {
                 return false;
             }
-            if (node instanceof DatePicker && ((DatePicker) node).getEditor().getText().isEmpty()) {
+            if (node instanceof DatePicker && ((DatePicker) node).getEditor().getText().isEmpty())
+            {
                 return false;
             }
-            if (node instanceof ComboBox && ((ComboBox) node).getSelectionModel().getSelectedIndex() == -1) {
+            if (node instanceof ComboBox && ((ComboBox) node).getSelectionModel().getSelectedIndex() == -1)
+            {
                 return false;
             }
-            if (node instanceof ChoiceBox && ((ChoiceBox) node).getSelectionModel().getSelectedIndex() == -1) {
+            if (node instanceof ChoiceBox && ((ChoiceBox) node).getSelectionModel().getSelectedIndex() == -1)
+            {
                 return false;
             }
         }
@@ -792,12 +878,15 @@ public class StudentViewController extends TitledPane {
     }
 
     @FXML
-    public void famHistoryHandler(ActionEvent event) {
+    public void famHistoryHandler(ActionEvent event)
+    {
         Object eventSource = event.getSource();
-        if (Objects.deepEquals(eventSource, famHistorySaveBtn)) {
+        if (Objects.deepEquals(eventSource, famHistorySaveBtn))
+        {
             FamilyHistory famHis = new FamilyHistory();
             Platform.runLater(() -> {
-                try {
+                try
+                {
                     famHis.setFrom(famHistoryFromDatePicker.getValue().format(formatter));
                     famHis.setTo(famHistoryToDatePicker.getValue().format(formatter));
                     famHis.setBlock(famHistoryBlockChoiceBox.getSelectionModel().selectedItemProperty().getValue());
@@ -805,20 +894,26 @@ public class StudentViewController extends TitledPane {
                     familyHistories.add(famHis);
                     student.setFamilyHistories(familyHistories);
                     famHistoryClearDeleteSplitMenuBtn.fire();
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     ex.printStackTrace();
                 }
             });
         }
-        if (Objects.deepEquals(eventSource, famHistoryClearDeleteSplitMenuBtn)) {
-            new FormEditizer(famHistoryFormGridPane, FormEditizer.Action.CLEAR)
-                    .datePickers().choiceBoxes().comboBoxes();
+        if (Objects.deepEquals(eventSource, famHistoryClearDeleteSplitMenuBtn))
+        {
+            new FormEditizer(famHistoryFormGridPane, FormEditizer.Action.CLEAR).datePickers().choiceBoxes().comboBoxes();
         }
-        if (Objects.deepEquals(eventSource, famHistoryDeleteMenuItem)) {
+        if (Objects.deepEquals(eventSource, famHistoryDeleteMenuItem))
+        {
             Platform.runLater(() -> {
-                try {
+                try
+                {
                     familyHistories.remove(familyHistoryTableView.getSelectionModel().getSelectedItem());
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     ex.printStackTrace();
                 }
             });
@@ -827,36 +922,45 @@ public class StudentViewController extends TitledPane {
     }
 
     @FXML
-    public void commGroupHandler(ActionEvent event) {
+    public void commGroupHandler(ActionEvent event)
+    {
         Object eventSource = event.getSource();
-        if (Objects.deepEquals(eventSource, commGroupSaveBtn)) {
+        if (Objects.deepEquals(eventSource, commGroupSaveBtn))
+        {
             CommunityGroup communityGroup = new CommunityGroup();
             Platform.runLater(() -> {
-                try {
+                try
+                {
                     communityGroup.setGroup(commGroupNameComboBox.getEditor().getText());
                     communityGroup.setProject(commGroupProjectInput.getText());
                     communityGroup.setResponsibility(commGroupResponsibilityTextArea.getText());
                     communityGroups.add(communityGroup);
                     student.setCommunityGroups(communityGroups);
                     commGroupClearDeleteSplitMenuBtn.fire();
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     ex.printStackTrace();
                 }
             });
         }
-        if (Objects.deepEquals(eventSource, commGroupClearDeleteSplitMenuBtn)) {
+        if (Objects.deepEquals(eventSource, commGroupClearDeleteSplitMenuBtn))
+        {
             Platform.runLater(() -> {
-                new FormEditizer(commGroupFormGridPane, FormEditizer.Action.CLEAR)
-                        .textFields().textAreas();
+                new FormEditizer(commGroupFormGridPane, FormEditizer.Action.CLEAR).textFields().textAreas();
                 commGroupNameComboBox.getEditor().clear();
                 commGroupNameComboBox.getSelectionModel().clearSelection();
             });
         }
-        if (Objects.deepEquals(eventSource, commGroupDeleteMenuItem)) {
+        if (Objects.deepEquals(eventSource, commGroupDeleteMenuItem))
+        {
             Platform.runLater(() -> {
-                try {
+                try
+                {
                     communityGroups.remove(commGroupTableView.getSelectionModel().getSelectedItem());
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     ex.printStackTrace();
                 }
             });
@@ -866,36 +970,39 @@ public class StudentViewController extends TitledPane {
 
     @FXML
     // TODO - Drop this for right now. Come back to it later
-    public void studentLookup(ActionEvent event) {
+    public void studentLookup(ActionEvent event)
+    {
         Object eventSource = event.getSource();
     }
 
     @FXML
-    public void hallHistoryHandler(ActionEvent event) {
+    public void hallHistoryHandler(ActionEvent event)
+    {
         Object eventSource = event.getSource();
-        if (Objects.deepEquals(eventSource, hallHistorySaveBtn)) {
+        if (Objects.deepEquals(eventSource, hallHistorySaveBtn))
+        {
             HallHistory hallHistory = new HallHistory();
             Platform.runLater(() -> {
-                hallHistory.setHall(hallHistoryHallChoiceBox.getItems()
-                        .get(hallHistoryHallChoiceBox.getSelectionModel().getSelectedIndex()));
-                hallHistory.setPeriod(new Period(
-                                hallHistoryPeriodFrom.getValue().getYear(),
-                                hallHistoryPeriodTo.getValue().getYear(), 1, 3)
-                );
+                hallHistory.setHall(hallHistoryHallChoiceBox.getItems().get(hallHistoryHallChoiceBox.getSelectionModel().getSelectedIndex()));
+                hallHistory.setPeriod(new Period(hallHistoryPeriodFrom.getValue().getYear(), hallHistoryPeriodTo.getValue().getYear(), 1, 3));
                 hallHistories.add(hallHistory);
                 student.setHallHistories(hallHistories);
                 hallHistoryClearDeleteSplitMenuBtn.fire();
             });
         }
-        if (Objects.deepEquals(eventSource, hallHistoryClearDeleteSplitMenuBtn)) {
-            Platform.runLater(() -> new FormEditizer(hallHistoryFormGridPane, FormEditizer.Action.CLEAR)
-                    .choiceBoxes().datePickers());
+        if (Objects.deepEquals(eventSource, hallHistoryClearDeleteSplitMenuBtn))
+        {
+            Platform.runLater(() -> new FormEditizer(hallHistoryFormGridPane, FormEditizer.Action.CLEAR).choiceBoxes().datePickers());
         }
-        if (Objects.deepEquals(eventSource, hallHistoryDeleteMenuItem)) {
+        if (Objects.deepEquals(eventSource, hallHistoryDeleteMenuItem))
+        {
             Platform.runLater(() -> {
-                try {
+                try
+                {
                     hallHistories.remove(hallHistoryTableView.getSelectionModel().getSelectedItem());
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     ex.printStackTrace();
                 }
             });
@@ -904,28 +1011,33 @@ public class StudentViewController extends TitledPane {
     }
 
     @FXML
-    public void bevHistoryHandler(ActionEvent event) {
+    public void bevHistoryHandler(ActionEvent event)
+    {
         Object eventSource = event.getSource();
-        if (Objects.deepEquals(eventSource, bevHistorySaveBtn)) {
+        if (Objects.deepEquals(eventSource, bevHistorySaveBtn))
+        {
             BehaviourHistory behaviourHistory = new BehaviourHistory();
             Platform.runLater(() -> {
-                behaviourHistory.setHall(bevHistoryHallChoiceBox.getItems()
-                        .get(bevHistoryHallChoiceBox.getSelectionModel().getSelectedIndex()));
+                behaviourHistory.setHall(bevHistoryHallChoiceBox.getItems().get(bevHistoryHallChoiceBox.getSelectionModel().getSelectedIndex()));
                 behaviourHistory.setInfraction(bevHistoryInfracComboBox.getEditor().getText());
                 behaviourHistories.add(behaviourHistory);
                 student.setBehaviourHistories(behaviourHistories);
                 bevHistoryClearDeleteBtn.fire();
             });
         }
-        if (Objects.deepEquals(eventSource, bevHistoryClearDeleteBtn)) {
-            Platform.runLater(() -> new FormEditizer(hallHistoryFormGridPane, FormEditizer.Action.CLEAR)
-                    .comboBoxes().choiceBoxes().textAreas().datePickers());
+        if (Objects.deepEquals(eventSource, bevHistoryClearDeleteBtn))
+        {
+            Platform.runLater(() -> new FormEditizer(hallHistoryFormGridPane, FormEditizer.Action.CLEAR).comboBoxes().choiceBoxes().textAreas().datePickers());
         }
-        if (Objects.deepEquals(eventSource, bevHistoryDeleteMenuItem)) {
+        if (Objects.deepEquals(eventSource, bevHistoryDeleteMenuItem))
+        {
             Platform.runLater(() -> {
-                try {
+                try
+                {
                     behaviourHistories.remove(bevHistoryTableView.getSelectionModel().getSelectedItem());
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     ex.printStackTrace();
                 }
             });
@@ -933,9 +1045,11 @@ public class StudentViewController extends TitledPane {
     }
 
     @FXML
-    public void achievementHandler(ActionEvent event) {
+    public void achievementHandler(ActionEvent event)
+    {
         Object eventSource = event.getSource();
-        if (Objects.deepEquals(eventSource, achievementSaveBtn)) {
+        if (Objects.deepEquals(eventSource, achievementSaveBtn))
+        {
             Achievement achievement = new Achievement();
             Platform.runLater(() -> {
                 achievement.setAchievement(achievementNameInput.getText());
@@ -945,15 +1059,19 @@ public class StudentViewController extends TitledPane {
                 achievementClearDeleteSplitMenuBtn.fire();
             });
         }
-        if (Objects.deepEquals(eventSource, achievementClearDeleteSplitMenuBtn)) {
-            Platform.runLater(() -> new FormEditizer(achievementFormGrid, FormEditizer.Action.CLEAR)
-                    .textFields().comboBoxes());
+        if (Objects.deepEquals(eventSource, achievementClearDeleteSplitMenuBtn))
+        {
+            Platform.runLater(() -> new FormEditizer(achievementFormGrid, FormEditizer.Action.CLEAR).textFields().comboBoxes());
         }
-        if (Objects.deepEquals(eventSource, achievementDeleteMenuItem)) {
+        if (Objects.deepEquals(eventSource, achievementDeleteMenuItem))
+        {
             Platform.runLater(() -> {
-                try {
+                try
+                {
                     achievements.remove(achievementsTable.getSelectionModel().getSelectedItem());
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     ex.printStackTrace();
                 }
             });
@@ -961,9 +1079,11 @@ public class StudentViewController extends TitledPane {
     }
 
     @FXML
-    public void coCurricularHandler(ActionEvent event) {
+    public void coCurricularHandler(ActionEvent event)
+    {
         Object eventSource = event.getSource();
-        if (Objects.deepEquals(eventSource, coCurricularSaveBtn)) {
+        if (Objects.deepEquals(eventSource, coCurricularSaveBtn))
+        {
             CoCurricular coCurricular = new CoCurricular();
             Platform.runLater(() -> {
                 coCurricular.setActivity(coCurricularActivityInput.getText());
@@ -973,15 +1093,19 @@ public class StudentViewController extends TitledPane {
                 coCurricularClearDeleteBtn.fire();
             });
         }
-        if (Objects.deepEquals(eventSource, coCurricularClearDeleteBtn)) {
-            Platform.runLater(() -> new FormEditizer(coCurricularFormGrid, FormEditizer.Action.CLEAR)
-                    .textFields().choiceBoxes());
+        if (Objects.deepEquals(eventSource, coCurricularClearDeleteBtn))
+        {
+            Platform.runLater(() -> new FormEditizer(coCurricularFormGrid, FormEditizer.Action.CLEAR).textFields().choiceBoxes());
         }
-        if (Objects.deepEquals(eventSource, coCurricularDeleteMenuItem)) {
+        if (Objects.deepEquals(eventSource, coCurricularDeleteMenuItem))
+        {
             Platform.runLater(() -> {
-                try {
+                try
+                {
                     coCurriculars.remove(coCurricularTableView.getSelectionModel().getSelectedItem());
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     ex.printStackTrace();
                 }
             });
@@ -989,34 +1113,39 @@ public class StudentViewController extends TitledPane {
     }
 
     @FXML
-    public void windowBtnHandler(ActionEvent event) {
+    public void windowBtnHandler(ActionEvent event)
+    {
         Object eventSource = event.getSource();
-        if (Objects.deepEquals(eventSource, studentSaveBtn)) {
+        if (Objects.deepEquals(eventSource, studentSaveBtn))
+        {
             grabStudent();
             Task<Boolean> saveSudentTask;
-            if (operation.equals(Operation.NEW))
-                saveSudentTask = new Task<Boolean>() {
-                    @Override
-                    protected Boolean call() throws Exception {
-                        return databaseCommunicator.addStudent(user, student, 1);
-                    }
-                };
-            else
-                saveSudentTask = new Task<Boolean>() {
-                    @Override
-                    protected Boolean call() throws Exception {
-                        return databaseCommunicator.editStudent(user, student, 1);
-                    }
-                };
+            if (operation.equals(Operation.NEW)) saveSudentTask = new Task<Boolean>()
+            {
+                @Override
+                protected Boolean call() throws Exception
+                {
+                    if(student.getPicture() && student.getImage() != null)
+                        if(databaseCommunicator.uploadStudentImage(user,student,1))
+                            CustomControlLauncher.notifier("Error","Error uploading student image to the database",NotifierType.ERROR);
+                    return databaseCommunicator.addStudent(user, student, 1);
+                }
+            };
+            else saveSudentTask = new Task<Boolean>()
+            {
+                @Override
+                protected Boolean call() throws Exception
+                {
+                    return databaseCommunicator.editStudent(user, student, 1);
+                }
+            };
             saveSudentTask.setOnSucceeded(event1 -> {
-                if (saveSudentTask.getValue()) {
-                    if (operation.equals(Operation.NEW))
-                        mainController.getNewStudents();
-                    else
-                        CustomControlLauncher.notifier("Success", "Student has been saved!", NotifierType.INFORATION);
+                if (saveSudentTask.getValue())
+                {
+                    if (operation.equals(Operation.NEW)) mainController.getNewStudents();
+                    else CustomControlLauncher.notifier("Success", "Student has been saved!", NotifierType.INFORATION);
 
-                } else
-                    CustomControlLauncher.notifier("Error", databaseCommunicator.getStatus(), NotifierType.ERROR);
+                } else CustomControlLauncher.notifier("Error", databaseCommunicator.getStatus(), NotifierType.ERROR);
             });
 
             new Thread(saveSudentTask).start();
@@ -1024,11 +1153,10 @@ public class StudentViewController extends TitledPane {
         }
 
 
-        if (Objects.deepEquals(eventSource, mainClearBtn)) {
+        if (Objects.deepEquals(eventSource, mainClearBtn))
+        {
             Platform.runLater(() -> {
-                new FormEditizer(mainGridPane, FormEditizer.Action.CLEAR)
-                        .choiceBoxes().comboBoxes().datePickers()
-                        .passwordFields().textAreas().textFields();
+                new FormEditizer(mainGridPane, FormEditizer.Action.CLEAR).choiceBoxes().comboBoxes().datePickers().passwordFields().textAreas().textFields();
                 removePhotoBtn.fire();
                 famHistoryClearDeleteSplitMenuBtn.fire();
                 hallHistoryClearDeleteSplitMenuBtn.fire();
@@ -1040,7 +1168,8 @@ public class StudentViewController extends TitledPane {
             });
 
         }
-        if (Objects.deepEquals(eventSource, closeBtn)) {
+        if (Objects.deepEquals(eventSource, closeBtn))
+        {
             stage.close();
         }
 
