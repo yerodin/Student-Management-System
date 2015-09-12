@@ -109,10 +109,7 @@ public class AuthController extends StackPane {
                     Platform.runLater(() -> Notifications.create()
                             .title("Error!").text("Unable to login at this time. Check your credentials and try again later")
                             .showError());
-                    if (databaseCommunicator.getStatusId() == 1)
-                        infoMessage.setText(databaseCommunicator.getStatus());
-                    else
-                        infoMessage.setText("Error: 1");
+                        infoMessage.setText(databaseCommunicator.getStatus(1));
                 }
 
             });

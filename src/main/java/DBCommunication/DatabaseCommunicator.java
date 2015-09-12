@@ -1,6 +1,5 @@
 package DBCommunication;
 
-import enums.TertiaryLevel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -13,9 +12,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +51,7 @@ public class DatabaseCommunicator
     private String[] blocks, faculties, rooms, halls;
     private ArrayList<Country> countries;
 
-    private int statusId;
-    private String status;
+    private ArrayList<NameValuePair> statuses;
 
     private int studentVersion;
 
@@ -60,11 +60,11 @@ public class DatabaseCommunicator
 
         jParser = new JSONParser();
         studentVersion = 0;
+        statuses = new ArrayList<NameValuePair>();
     }
 
     public User login(String username, String password, int taskID)
     {
-        statusId = taskID;
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("user", username));
         params.add(new BasicNameValuePair("password", password));
@@ -81,28 +81,26 @@ public class DatabaseCommunicator
                 username = user.getString("username");
                 int permission = user.getInt("permission");
                 String sid = jObj.getString("sid");
-                status = "Successful Login.";
+                setStatus(taskID, "Successful Login.");
                 User u = new User(id, firstName, lastName, username, password, permission, sid);
-                fillFaculties(u);
-                fillBlocks(u);
-                fillCountries(u);
-                fillRooms(u);
-                fillHalls(u);
+                fillFaculties(u, taskID);
+                fillBlocks(u, taskID);
+                fillCountries(u, taskID);
+                fillRooms(u, taskID);
+                fillHalls(u, taskID);
                 return u;
-            } else status = "Incorrect username/password combination.";
+            } else setStatus(taskID, "Incorrect username/password combination.");
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
-        }
-        return null;
+            setStatus(taskID, "Error, could not connect to server.");
+        } return null;
     }
 
     public boolean logout(User user, int taskID)
     {
-        statusId = taskID;
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", user.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(LOGOUT_URL, "POST", params);
         System.out.println(jObj);
@@ -111,19 +109,18 @@ public class DatabaseCommunicator
             if (jObj.getInt("success") == SUCCESS)
             {
                 return true;
-            } else status = jObj.getString("data");
+            } else setStatus(taskID, jObj.getString("data"));
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
-        }
-        return false;
+            setStatus(taskID, "Error, could not connect to server.");
+        } return false;
     }
 
-    private void fillBlocks(User currentUser) throws Exception
+    private void fillBlocks(User currentUser, int taskID) throws Exception
     {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(BLOCKS_URL, "POST", params);
         System.out.println(jObj);
@@ -141,18 +138,18 @@ public class DatabaseCommunicator
                     String alias = block.getString("block_alias");
                     blocks[id] = alias;
                 }
-            } else status = "error";
+            } else setStatus(taskID, "error");
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
+            statuses.add(new BasicNameValuePair(String.valueOf(taskID), "Error, could not connect to server."));
         }
     }
 
-    private void fillFaculties(User currentUser) throws Exception
+    private void fillFaculties(User currentUser, int taskID) throws Exception
     {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(FACULTIES_URL, "POST", params);
         System.out.println(jObj);
@@ -170,18 +167,18 @@ public class DatabaseCommunicator
                     String alias = faculty.getString("name");
                     faculties[id] = alias;
                 }
-            } else status = "error";
+            } else setStatus(taskID, "error");
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
+            statuses.add(new BasicNameValuePair(String.valueOf(taskID), "Error, could not connect to server."));
         }
     }
 
-    private void fillCountries(User currentUser) throws Exception
+    private void fillCountries(User currentUser, int taskID) throws Exception
     {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(COUNTRIES_URL, "POST", params);
         System.out.println(jObj);
@@ -199,18 +196,18 @@ public class DatabaseCommunicator
                     String nationality = dcountry.getString("nationality");
                     countries.add(new Country(id, country, nationality));
                 }
-            } else status = "error";
+            } else setStatus(taskID, "error");
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
+            setStatus(taskID,"Error, could not connect to server.");
         }
     }
 
-    private void fillRooms(User currentUser) throws Exception
+    private void fillRooms(User currentUser, int taskID) throws Exception
     {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(ROOMS_URL, "POST", params);
         System.out.println(jObj);
@@ -228,18 +225,18 @@ public class DatabaseCommunicator
                     String number = droom.getString("number");
                     rooms[id] = number;
                 }
-            } else status = "error";
+            } else setStatus(taskID, "error");
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
+            setStatus(taskID, "Error, could not connect to server.");
         }
     }
 
-    private void fillHalls(User currentUser) throws Exception
+    private void fillHalls(User currentUser, int taskID) throws Exception
     {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         JSONObject jObj = jParser.makeHttpRequest(GET_HALLS_URL, "POST", params);
         System.out.println(jObj);
@@ -257,12 +254,12 @@ public class DatabaseCommunicator
                     String number = droom.getString("name");
                     halls[id] = number;
                 }
-            } else status = "error";
+            } else setStatus(taskID, "error");
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
+            setStatus(taskID, "Error, could not connect to server.");
         }
     }
 
@@ -270,8 +267,7 @@ public class DatabaseCommunicator
     public boolean addStudent(User currentUser, Student student, int taskID)
     {
 
-        statusId = taskID;
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         params.add(new BasicNameValuePair("academic_status", student.getAcademicStatus() ? "1" : "0"));
         params.add(new BasicNameValuePair("achievements", student.wrapAchievements()));
@@ -302,7 +298,7 @@ public class DatabaseCommunicator
         Country nat = student.getNationalityCountry();
         int natID = 84;
         if (nat != null) natID = nat.getCountryID();
-        params.add(new BasicNameValuePair("nationality", String.valueOf(nat)));
+        params.add(new BasicNameValuePair("nationality", String.valueOf(natID)));
         params.add(new BasicNameValuePair("previous_secondary_school", student.getPreviousSecondary()));
         params.add(new BasicNameValuePair("reason_residing", student.getReasonResiding()));
         Country res = student.getResidentCountry();
@@ -319,21 +315,21 @@ public class DatabaseCommunicator
         System.out.println(jObj);
         try
         {
-            if (jObj.getInt("success") == SUCCESS) return true;
-            else status = "Incorrect username/password combination.";
+            if (jObj.getInt("success") == SUCCESS)
+                return true;
+            else
+                setStatus(taskID, jObj.getString("data"));
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
-        }
-        return false;
+            setStatus(taskID, "Error, could not connect to server.");
+        } return false;
     }
 
     public boolean editStudent(User currentUser, Student student, int taskID)
     {
-        statusId = taskID;
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         params.add(new BasicNameValuePair("academic_status", student.getAcademicStatus() ? "1" : "0"));
         params.add(new BasicNameValuePair("achievements", student.wrapAchievements()));
@@ -364,7 +360,7 @@ public class DatabaseCommunicator
         Country nat = student.getNationalityCountry();
         int natID = 84;
         if (nat != null) natID = nat.getCountryID();
-        params.add(new BasicNameValuePair("nationality", String.valueOf(nat)));
+        params.add(new BasicNameValuePair("nationality", String.valueOf(natID)));
         params.add(new BasicNameValuePair("previous_secondary_school", student.getPreviousSecondary()));
         params.add(new BasicNameValuePair("reason_residing", student.getReasonResiding()));
         Country res = student.getResidentCountry();
@@ -382,20 +378,18 @@ public class DatabaseCommunicator
         try
         {
             if (jObj.getInt("success") == SUCCESS) return true;
-            else status = jObj.getString("data");
+            else setStatus(taskID, jObj.getString("data"));
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
-        }
-        return false;
+            setStatus(taskID, "Error, could not connect to server.");
+        } return false;
     }
 
     public boolean deleteStudent(User currentUser, Student studentChanges, int taskID)
     {
-        statusId = taskID;
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         params.add(new BasicNameValuePair("id_number", studentChanges.getIdNumber()));
         JSONObject jObj = jParser.makeHttpRequest(DELETE_STUDENT_URL, "POST", params);
@@ -403,14 +397,13 @@ public class DatabaseCommunicator
         try
         {
             if (jObj.getInt("success") == SUCCESS) return true;
-            else status = jObj.getString("data");
+            else setStatus(taskID, jObj.getString("data"));
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
-        }
-        return false;
+            setStatus(taskID, "Error, could not connect to server.");
+        } return false;
     }
 
     public boolean uploadStudentAttachment(User currentUser, Student student, String name, int taskID)
@@ -457,7 +450,6 @@ public class DatabaseCommunicator
     {
         try
         {
-            System.out.println(student);
             HttpURLConnection httpUrlConnection = (HttpURLConnection) new URL(UPLOAD_STUDENT_IMAGE_URL + "?sid=" + currentUser.getSID() + "&id=" + student.getIdNumber()).openConnection();
             httpUrlConnection.setDoOutput(true);
 
@@ -484,19 +476,34 @@ public class DatabaseCommunicator
             }
             in.close();
             is.close();
-            return true;
+            String line;
+            StringBuilder sb = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
+            while ((line = reader.readLine()) != null)
+                sb.append(line+"\n");
+            JSONObject jObj = new JSONObject(sb.toString());
+            System.out.println(jObj);
+            try
+            {
+                if (jObj.getInt("success") == SUCCESS)
+                    return true;
+                else setStatus(taskID, jObj.getString("data"));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                setStatus(taskID, "Error: "+taskID+", could not connect to server.");
+            } return false;
         }
         catch (Exception e)
         {
             e.printStackTrace();
             return false;
-
         }
     }
 
-    public boolean deleteSudentImage(User currentUser, Student student, int taskID)
+    public boolean deleteStudentImage(User currentUser, Student student, int taskID)
     {
-        statusId = taskID;
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         params.add(new BasicNameValuePair("id", student.getIdNumber()));
@@ -505,19 +512,17 @@ public class DatabaseCommunicator
         try
         {
             if (jObj.getInt("success") == SUCCESS) return true;
-            else status = jObj.getString("data");
+            else setStatus(taskID, jObj.getString("data"));
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
-        }
-        return false;
+            setStatus(taskID, "Error, could not connect to server.");
+        } return false;
     }
 
     public boolean deleteSudentAttachment(User currentUser, Student student, String fileName, int taskID)
     {
-        statusId = taskID;
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         params.add(new BasicNameValuePair("id", student.getIdNumber()));
@@ -527,19 +532,18 @@ public class DatabaseCommunicator
         try
         {
             if (jObj.getInt("success") == SUCCESS) return true;
-            else status = jObj.getString("data");
+            else setStatus(taskID, jObj.getString("data"));
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
-        }
-        return false;
+            setStatus(taskID, "Error, could not connect to server.");
+        } return false;
     }
 
     private File getStudentAttachment(User currentUser, String studentID, String fileName, int taskID)
     {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         params.add(new BasicNameValuePair("id", studentID));
         params.add(new BasicNameValuePair("name", fileName));
@@ -559,12 +563,12 @@ public class DatabaseCommunicator
                 //                    FileOutputStream fos = new FileOutputStream(file);
                 //                    fos.write(fileBytes);
                 return null;
-            } else status = "error";
+            } else setStatus(taskID, "Error.");
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
+            setStatus(taskID, "Error, could not connect to server.");
         }
         return null;
     }
@@ -572,7 +576,6 @@ public class DatabaseCommunicator
 
     public Student[] getNewStudents(User currentUser, int taskID)
     {
-        statusId = taskID;
         List<NameValuePair> params = new ArrayList<NameValuePair>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
         params.add(new BasicNameValuePair("sversion", String.valueOf(studentVersion)));
@@ -638,17 +641,19 @@ public class DatabaseCommunicator
 
                 }
                 studentVersion = jObj.getInt("sversion");
-                status = "Successful";
+                setStatus(taskID, "Successful.");
                 return returnArray;
-            } else status = jObj.getString("data");
+            } else setStatus(taskID, jObj.getString("data"));
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            status = "Error, could not connect to server.";
+            setStatus(taskID,"Error, could not connect to server.");
         }
         return null;
     }
+
+    public LocalDate getServerDate() {return LocalDate.now();}
 
 
     public String getBlockFromID(int ID)
@@ -663,7 +668,7 @@ public class DatabaseCommunicator
 
     public Country getCountryFromID(int ID)
     {
-        return ((countries.size() > ID -1 && ID-1 != -1) ? countries.get(ID-1) : null);
+        return ((countries.size() > ID - 1 && ID - 1 != -1) ? countries.get(ID - 1) : null);
     }
 
     public String getRoomFromID(int ID)
@@ -676,14 +681,12 @@ public class DatabaseCommunicator
         return ((halls.length > ID && ID != -1) ? halls[ID] : "");
     }
 
-    public int getStatusId()
+    public String getStatus(int taskID)
     {
-        return statusId;
-    }
-
-    public String getStatus()
-    {
-        return status;
+        for (NameValuePair nameValuePair : statuses)
+            if (nameValuePair.getName().equals(String.valueOf(taskID)))
+                return nameValuePair.getValue();
+        return "Error: "+taskID;
     }
 
     private int indexOf(String s, String[] array1)
@@ -716,5 +719,17 @@ public class DatabaseCommunicator
     public String[] getHalls()
     {
         return halls;
+    }
+
+    private void setStatus(int taskID, String status)
+    {
+        for(NameValuePair nameValuePair: statuses)
+            if(nameValuePair.getName().equals(String.valueOf(taskID)))
+            {
+                statuses.remove(nameValuePair);
+                break;
+            }
+        statuses.add(new BasicNameValuePair(String.valueOf(taskID),status));
+
     }
 }

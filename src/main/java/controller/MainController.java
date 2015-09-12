@@ -203,7 +203,7 @@ public class MainController implements Initializable {
                         Platform.runLater(() -> students.remove(currentStudent.getValue()));
                         CustomControlLauncher.notifier("Success", "Student has been deleted!", NotifierType.INFORATION);
                     } else
-                        CustomControlLauncher.notifier("Error Deleting Student", databaseCommunicator.getStatus(), NotifierType.ERROR);
+                        CustomControlLauncher.notifier("Error Deleting Student", databaseCommunicator.getStatus(1), NotifierType.ERROR);
                 }
             });
 

@@ -508,15 +508,15 @@ public class StudentViewController extends TitledPane
             public void changed(ObservableValue<? extends LocalDate> observable, LocalDate oldValue, LocalDate newValue)
             {
                 LocalDate end = LocalDate.now();
-                try
-                {
-                    end = DateUtil.getJamaicaDateTime().toLocalDate();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-                // Days
+                //                try
+                //                {
+                //                    end = DateUtil.getJamaicaDateTime().toLocalDate();
+                //                }
+                //                catch (IOException e)
+                //                {
+                //                    e.printStackTrace();
+                //                }
+                //                // Days
                 presentAgeInput.setText(String.valueOf(ChronoUnit.YEARS.between(newValue, end)).concat(" year%s old".replace("%s", ((ChronoUnit.YEARS.between(newValue, end) > 1) ? "s" : ""))));
             }
         });
@@ -785,16 +785,17 @@ public class StudentViewController extends TitledPane
         }
         if (Objects.deepEquals(eventSource, removePhotoBtn))
         {
-          try
-          {
-              avatarImageView.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/xlarge.jpg")), null));
-              student.setImage(null);
-              student.setPicture(false);
-          }catch(Exception e)
-          {
-              e.printStackTrace();
-              CustomControlLauncher.notifier("Error","Problem removing image, please try again.",NotifierType.ERROR);
-          }
+            try
+            {
+                avatarImageView.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().getResourceAsStream("img/xlarge.jpg")), null));
+                student.setImage(null);
+                student.setPicture(false);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                CustomControlLauncher.notifier("Error", "Problem removing image, please try again.", NotifierType.ERROR);
+            }
         }
     }
 
@@ -1125,10 +1126,9 @@ public class StudentViewController extends TitledPane
                 @Override
                 protected Boolean call() throws Exception
                 {
-                    if(student.getPicture() && student.getImage() != null)
-                        if(databaseCommunicator.uploadStudentImage(user,student,1))
-                            CustomControlLauncher.notifier("Error","Error uploading student image to the database",NotifierType.ERROR);
-                    return databaseCommunicator.addStudent(user, student, 1);
+                    if (student.getPicture() && student.getImage() != null) if (!databaseCommunicator.uploadStudentImage(user, student, 325))
+                        CustomControlLauncher.notifier("Error", "Error uploading student image to the database: " + databaseCommunicator.getStatus(325), NotifierType.ERROR);
+                    return databaseCommunicator.addStudent(user, student, 512);
                 }
             };
             else saveSudentTask = new Task<Boolean>()
@@ -1142,10 +1142,19 @@ public class StudentViewController extends TitledPane
             saveSudentTask.setOnSucceeded(event1 -> {
                 if (saveSudentTask.getValue())
                 {
-                    if (operation.equals(Operation.NEW)) mainController.getNewStudents();
-                    else CustomControlLauncher.notifier("Success", "Student has been saved!", NotifierType.INFORATION);
+                    if (operation.equals(Operation.NEW))
+                        mainController.getNewStudents();
+                        CustomControlLauncher.notifier("Success", "Student has been saved!", NotifierType.INFORATION);
+                } else CustomControlLauncher.notifier("Error", databaseCommunicator.getStatus(512), NotifierType.ERROR);
+            });
 
-                } else CustomControlLauncher.notifier("Error", databaseCommunicator.getStatus(), NotifierType.ERROR);
+            saveSudentTask.setOnFailed(new EventHandler<WorkerStateEvent>()
+            {
+                @Override
+                public void handle(WorkerStateEvent event)
+                {
+                    CustomControlLauncher.notifier("Error", databaseCommunicator.getStatus(512), NotifierType.ERROR);
+                }
             });
 
             new Thread(saveSudentTask).start();
