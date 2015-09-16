@@ -1,6 +1,5 @@
 package controller;
 
-import DBCommunication.DatabaseCommunicator;
 import enums.NotifierType;
 import enums.Operation;
 import javafx.application.Platform;
@@ -12,9 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -24,18 +21,17 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import model.Student;
-import model.User;
 import utility.CustomControlLauncher;
 
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
     final Text[] tablePlaceholders = {
-            new Text("Start by creating a student with the Add Student button to the right."),
+            new Text("Start by adding a student with the Add Student button to the right."),
             new Text("No results found.")};
     public VBox mainVBox;
     @FXML
@@ -44,11 +40,10 @@ public class MainController implements Initializable {
     TableView<Student> studentTableView;
     @FXML
     Button addStudentBtn, editStudentBtn, viewStudentBtn, deleteStudentBtn;
-    private ObservableList<Student> students = FXCollections.<Student>observableArrayList();
+    protected static ObservableList<Student> students = FXCollections.<Student>observableArrayList();
     ObjectProperty<Student> currentStudent = new SimpleObjectProperty<>();
     ObservableList<ObjectProperty<Student>> selectedStudents;
-    private User user;
-    private DatabaseCommunicator databaseCommunicator;
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     /**
      * Called to initialize a controller after its root element has been
@@ -61,8 +56,6 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         AuthController.sMSSessioncount++;
-        user = AuthController.user;
-        databaseCommunicator = AuthController.databaseCommunicator;
         getNewStudents();
         Platform.runLater(() -> {
             addStudentBtn.requestFocus();
@@ -80,20 +73,20 @@ public class MainController implements Initializable {
                                 // TODO: Something needs to be done when maximized
                             }
                         });
-                        newWindow.setOnCloseRequest(new EventHandler<WindowEvent>() {
-                            @Override
-                            public void handle(WindowEvent event) {
-                                event.consume();
-                                AuthController.sMSSessioncount--;
-                                ((Stage) newWindow).close();
-                            }
+                        newWindow.setOnCloseRequest(event -> {
+                            event.consume();
+                            AuthController.sMSSessioncount--;
+                            ((Stage) newWindow).close();
                         });
                     }
                 });
             }
         });
 
-        // Listen for table selection and update CurrentStudent
+        // TODO: Enable multi-selection of list items
+//        studentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        // Listen for table selection and update UI
         studentTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
         {
             if (newValue != null) {
@@ -103,41 +96,53 @@ public class MainController implements Initializable {
                     deleteStudentBtn.setDisable(false);
                     this.currentStudent.setValue(newValue);
                 });
+            } else {
+                this.currentStudent.setValue(null);
             }
         });
 
+        // Listen for student list and update UI
         students.addListener((ListChangeListener<Student>) c -> {
-            if (students.isEmpty() || students.size() == 0)
-            {
+            if (students.isEmpty() || students.size() == 0) {
+                currentStudent.setValue(null);
                 studentTableView.setPlaceholder(tablePlaceholders[0]);
+            }
+        });
+
+        // Listen currently selected student and update UI
+        currentStudent.addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                Platform.runLater(() -> {
+                    editStudentBtn.setDisable(true);
+                    viewStudentBtn.setDisable(true);
+                    deleteStudentBtn.setDisable(true);
+                });
             }
         });
     }
 
-    public void getNewStudents()
-    {
-        Task<Student[]> newStudentsTask = new Task<Student[]>()
-        {
+    public void getNewStudents() {
+        Task<Student[]> newStudentsTask = new Task<Student[]>() {
             @Override
-            protected Student[] call() throws Exception
-            {
-                return databaseCommunicator.getNewStudents(user, 0);
+            protected Student[] call() throws Exception {
+                return AuthController.databaseCommunicator.getNewStudents(AuthController.user, 0);
             }
         };
         newStudentsTask.setOnSucceeded(event -> {
             Student[] stds = newStudentsTask.getValue();
-            if (stds != null)
-            {
+            if (stds != null) {
                 ObservableList<Student> studentList = FXCollections.observableArrayList(stds);
-                FilteredList<Student> studentFilteredList = new FilteredList<>(studentList, student -> !students.contains(student));
+                FilteredList<Student> studentFilteredList = new FilteredList<>(
+                        studentList, student -> !students.contains(student)
+                );
                 students.addAll(studentFilteredList);
                 Platform.runLater(() -> studentTableView.setItems(students));
-            } else
-            {
+            } else {
                 CustomControlLauncher.notifier("Error", "There was a problem fetching students from database.", NotifierType.ERROR);
             }
         });
         new Thread(newStudentsTask).start();
+        students.addAll(generateFakeStudents());
     }
 
 
@@ -151,7 +156,7 @@ public class MainController implements Initializable {
         );
     }
 
-    public void launchStudentViewWindow(Student student, Operation operation) {
+    public static void launchStudentViewerWindow(Student student, Operation operation) {
         // Determine title
         String[] titles = {"Add ", "Edit ", "View ", " Student"};
         StringBuilder title = new StringBuilder();
@@ -163,7 +168,6 @@ public class MainController implements Initializable {
                 title.insert(0, titles[1] + titles[3]);
                 break;
             case VIEW:
-
                 title.insert(0, titles[2] + titles[3]);
                 break;
             default:
@@ -171,42 +175,49 @@ public class MainController implements Initializable {
         }
 
         // Launch Student Viewer with given Student and operation
-        Platform.runLater(() -> {
-            StudentViewController studentViewController = new StudentViewController(student, operation,this);
-            CustomControlLauncher.create()
-                    .setTitle(title.toString())
-                    .setScene(new Scene(studentViewController, 1024, 640))
-                    .setResizable(false).launch();
-        });
+        if (operation != Operation.VIEW) {
+            Platform.runLater(() -> {
+                StudentAddEditController studentAddEditController = new StudentAddEditController(student, operation);
+                CustomControlLauncher.create()
+                        .setTitle(title.toString())
+                        .setScene(new Scene(studentAddEditController, 1024, 640))
+                        .setResizable(false).launch();
+            });
+        } else {
+            Platform.runLater(() -> {
+                StudentViewController studentViewController = new StudentViewController(Integer.valueOf(student.getIdNumber()));
+                CustomControlLauncher.create()
+                        .setTitle(title.toString())
+                        .setScene(new Scene(studentViewController, 1024, 640))
+                        .setResizable(false).launch();
+            });
+        }
     }
 
     public void optionsHandler(ActionEvent event) {
         Object eventSource = event.getSource();
-
         if (Objects.deepEquals(eventSource, addStudentBtn)) {
-            Platform.runLater(() -> launchStudentViewWindow(null, Operation.NEW));
+            Platform.runLater(() -> launchStudentViewerWindow(null, Operation.NEW));
         } else if (Objects.deepEquals(eventSource, editStudentBtn)) {
-            Platform.runLater(() -> launchStudentViewWindow(currentStudent.getValue(), Operation.EDIT));
+            Platform.runLater(() -> launchStudentViewerWindow(currentStudent.getValue(), Operation.EDIT));
         } else if (Objects.deepEquals(eventSource, viewStudentBtn)) {
-            Platform.runLater(() -> launchStudentViewWindow(currentStudent.getValue(), Operation.VIEW));
+            Platform.runLater(() -> launchStudentViewerWindow(currentStudent.getValue(), Operation.VIEW));
         } else if (Objects.deepEquals(eventSource, deleteStudentBtn)) {
+            // TODO: Dialog to confirm exit needs implementation
             Task<Boolean> deleteTask = new Task<Boolean>() {
                 @Override
                 protected Boolean call() throws Exception {
-                    return databaseCommunicator.deleteStudent(user, currentStudent.getValue(), 1);
+                    return AuthController.databaseCommunicator.deleteStudent(AuthController.user, currentStudent.getValue(), 1);
                 }
             };
-            deleteTask.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-                @Override
-                public void handle(WorkerStateEvent event) {
-                    if (deleteTask.getValue()) {
-                        Platform.runLater(() -> students.remove(currentStudent.getValue()));
-                        CustomControlLauncher.notifier("Success", "Student has been deleted!", NotifierType.INFORATION);
-                    } else
-                        CustomControlLauncher.notifier("Error Deleting Student", databaseCommunicator.getStatus(1), NotifierType.ERROR);
-                }
-            });
+            deleteTask.setOnSucceeded(event1 -> {
+                if (deleteTask.getValue()) {
 
+                    Platform.runLater(() -> students.remove(currentStudent.getValue()));
+                    CustomControlLauncher.notifier("Success", currentStudent.getValue().getFirstName().concat(" has been deleted!"), NotifierType.INFORATION);
+                } else
+                    CustomControlLauncher.notifier("Error", currentStudent.getValue().getFirstName().concat(" has not been deleted!"), NotifierType.ERROR);
+            });
             new Thread(deleteTask).start();
         }
     }
@@ -282,7 +293,7 @@ public class MainController implements Initializable {
             });
         });
 
-        //        studentTableView.setPlaceholder(tablePlaceholders[0]);
+//        studentTableView.setPlaceholder(tablePlaceholders[0]);
 
         // 3. Wrap the FilteredList in a SortedList.
         SortedList<Student> sortedData = new SortedList<>(filteredData);

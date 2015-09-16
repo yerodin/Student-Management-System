@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<fx:root fx:id="mainTitledPane" animated="false" collapsible="false" minWidth="-Infinity" prefHeight="2500.0"
+         prefWidth="1024.0" stylesheets="@../css/style.css" type="TitledPane" xmlns="http://javafx.com/javafx/8.0.40"
+         xmlns:fx="http://javafx.com/fxml/1">
+    <content>
+        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="1800.0" prefWidth="1024.0">
+            <items>
+                <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" minHeight="-Infinity"
+                            minWidth="-Infinity" prefHeight="480.0" prefWidth="1022.0">
+                    <content>
+                        <GridPane fx:id="mainGridPane" hgap="15.0" maxHeight="-Infinity" maxWidth="-Infinity"
+                                  minHeight="-Infinity" minWidth="-Infinity" prefHeight="1800.0" prefWidth="1024.0"
+                                  vgap="30.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="100.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints maxHeight="160.0" minHeight="100.0" prefHeight="158.0"
+                                                valignment="CENTER" vgrow="ALWAYS"/>
+                                <RowConstraints maxHeight="23.0" minHeight="9.0" prefHeight="11.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="24.0" minHeight="12.0" prefHeight="24.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="51.0" minHeight="10.0" prefHeight="33.0" valignment="BOTTOM"
+                                                vgrow="ALWAYS"/>
+                                <RowConstraints maxHeight="189.0" minHeight="143.0" prefHeight="161.0"
+                                                vgrow="SOMETIMES"/>
+                                <RowConstraints maxHeight="45.0" minHeight="0.0" prefHeight="45.0" valignment="BOTTOM"
+                                                vgrow="ALWAYS"/>
+                                <RowConstraints maxHeight="210.0" minHeight="158.0" prefHeight="161.0"
+                                                vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="0.0" prefHeight="30.0" valignment="BOTTOM" vgrow="ALWAYS"/>
+                                <RowConstraints minHeight="200.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                <RowConstraints minHeight="200.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                            </rowConstraints>
+                            <children>
+                                <Label text="First Name:" GridPane.rowIndex="2"/>
+                                <Label text="Middle Name:" GridPane.rowIndex="3"/>
+                                <Label text="Last Name:" GridPane.rowIndex="4"/>
+                                <Label text="DOB:" GridPane.rowIndex="5"/>
+                                <Label text="Cell Phone #:" GridPane.rowIndex="6"/>
+                                <Label text="Email:" GridPane.rowIndex="7"/>
+                                <Label text="Father's First Name:" GridPane.rowIndex="8"/>
+                                <Label text="Father's Last Name:" GridPane.rowIndex="9"/>
+                                <Label text="Father's  Phone Number::" GridPane.rowIndex="10"/>
+                                <Label text="Mother's First Name:" GridPane.rowIndex="11"/>
+                                <Label text="Mother's Last Name:" GridPane.rowIndex="12"/>
+                                <Label text="Mother's Phone Number:" GridPane.rowIndex="13"/>
+                                <Label text="Faculty:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                                <Label text="Block:" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+                                <Label text="Room:" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+                                <Label text="Age at present:" GridPane.columnIndex="2" GridPane.rowIndex="5"/>
+                                <Label text="Address 1:" GridPane.columnIndex="2" GridPane.rowIndex="7"/>
+                                <Label text="Address 2:" GridPane.columnIndex="2" GridPane.rowIndex="8"/>
+                                <Label text="City:" GridPane.columnIndex="2" GridPane.rowIndex="9"/>
+                                <Label text="State/Province:" GridPane.columnIndex="2" GridPane.rowIndex="10"/>
+                                <Label text="Country:" GridPane.columnIndex="2" GridPane.rowIndex="11"/>
+                                <Label text="Nationality:" GridPane.columnIndex="2" GridPane.rowIndex="12"/>
+                                <Label text="Participation in hall projects:" GridPane.columnIndex="2"
+                                       GridPane.rowIndex="13"/>
+                                <Label text="ID Number:" GridPane.rowIndex="1"/>
+                                <Label text="Current Academic Status:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                                <StackPane fx:id="avatarStackPane" GridPane.halignment="CENTER"
+                                           GridPane.valignment="CENTER">
+                                    <children>
+                                        <ImageView fx:id="avatarImageView" fitHeight="150.0" fitWidth="150.0"
+                                                   pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../img/xlarge.jpg"/>
+                                            </image>
+                                        </ImageView>
+                                    </children>
+                                </StackPane>
+                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0"
+                                      GridPane.columnIndex="1">
+                                    <children>
+                                        <Button fx:id="addEditPhotoBtn" defaultButton="true" mnemonicParsing="false"
+                                                onAction="#photoEventHandler" prefHeight="40.0" prefWidth="200.0"
+                                                text="Upload Photo"/>
+                                        <Button fx:id="removePhotoBtn" mnemonicParsing="false"
+                                                onAction="#photoEventHandler" prefHeight="40.0" prefWidth="200.0"
+                                                text="Remove Photo"/>
+                                    </children>
+                                </VBox>
+                                <Label text="Tertiary Level:" GridPane.columnIndex="2" GridPane.rowIndex="16"/>
+                                <Label text="Family History:" GridPane.rowIndex="14"/>
+                                <TableView fx:id="familyHistoryTableView" disable="true" prefHeight="200.0"
+                                           prefWidth="200.0" GridPane.rowIndex="15">
+                                    <columns>
+                                        <TableColumn prefWidth="75.0" text="From">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="from"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="To">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="to"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="Block">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="block"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="Relationship">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="relationship"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                    </columns>
+                                </TableView>
+                                <GridPane fx:id="famHistoryFormGridPane" disable="true" GridPane.columnIndex="1"
+                                          GridPane.rowIndex="15">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="From:"/>
+                                        <Label text="To:" GridPane.rowIndex="1"/>
+
+                                        <Label text="Block:" GridPane.rowIndex="2"/>
+                                        <Label text="Relationship:" GridPane.rowIndex="3"/>
+                                        <SplitMenuButton fx:id="famHistoryClearDeleteSplitMenuBtn" maxHeight="-Infinity"
+                                                         maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                                                         mnemonicParsing="false" onAction="#famHistoryHandler"
+                                                         prefHeight="30.0" prefWidth="80.0" text="Clear"
+                                                         GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                                                         GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                                            <items>
+                                                <MenuItem fx:id="famHistoryDeleteMenuItem" mnemonicParsing="false"
+                                                          onAction="#famHistoryHandler" text="Delete"/>
+                                            </items>
+                                        </SplitMenuButton>
+                                        <Button fx:id="famHistorySaveBtn" defaultButton="true" maxHeight="-Infinity"
+                                                maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                                                mnemonicParsing="false" onAction="#famHistoryHandler" prefHeight="30.0"
+                                                prefWidth="80.0" text="Save" GridPane.halignment="CENTER"
+                                                GridPane.rowIndex="4" GridPane.valignment="CENTER"/>
+                                        <DatePicker fx:id="famHistoryFromDatePicker" GridPane.columnIndex="1"/>
+                                        <DatePicker fx:id="famHistoryToDatePicker" GridPane.columnIndex="1"
+                                                    GridPane.rowIndex="1"/>
+                                        <ChoiceBox fx:id="famHistoryBlockChoiceBox" prefWidth="150.0"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                        <ComboBox fx:id="famHistoryRelationshipComboBox" editable="true"
+                                                  prefWidth="150.0" promptText="Brother" GridPane.columnIndex="1"
+                                                  GridPane.rowIndex="3"/>
+                                    </children>
+                                    <GridPane.margin>
+                                        <Insets left="5.0"/>
+                                    </GridPane.margin>
+                                </GridPane>
+                                <TextField fx:id="idInput" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                <TextField fx:id="firstNameInput" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                <TextField fx:id="middleNameInput" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                                <TextField fx:id="lastNameInput" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                                <TextField fx:id="cellPhoneInput" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+                                <TextField fx:id="emailInput" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+                                <TextField fx:id="presentAgeInput" editable="false" GridPane.columnIndex="3"
+                                           GridPane.rowIndex="5"/>
+                                <TextField fx:id="address1Input" GridPane.columnIndex="3" GridPane.rowIndex="7"/>
+                                <TextField fx:id="address2Input" GridPane.columnIndex="3" GridPane.rowIndex="8"/>
+                                <TextField fx:id="cityInput" GridPane.columnIndex="3" GridPane.rowIndex="9"/>
+                                <TextField fx:id="stateProvinceInput" GridPane.columnIndex="3" GridPane.rowIndex="10"/>
+                                <ChoiceBox fx:id="countryChoiceBox" prefHeight="26.0" prefWidth="233.0"
+                                           GridPane.columnIndex="3" GridPane.rowIndex="11"/>
+                                <ChoiceBox fx:id="willParticipateChoiceBox" prefHeight="26.0" prefWidth="233.0"
+                                           GridPane.columnIndex="3" GridPane.rowIndex="13"/>
+                                <TextField fx:id="padreFirstNameInput" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+                                <TextField fx:id="padreLastNameInput" GridPane.columnIndex="1" GridPane.rowIndex="9"/>
+                                <TextField fx:id="padrePhoneNumberInput" GridPane.columnIndex="1"
+                                           GridPane.rowIndex="10"/>
+                                <TextField fx:id="madreFirstNameInput" GridPane.columnIndex="1" GridPane.rowIndex="11"/>
+                                <TextField fx:id="madreLastNameInput" GridPane.columnIndex="1" GridPane.rowIndex="12"/>
+                                <TextField fx:id="madrePhoneNumberInput" GridPane.columnIndex="1"
+                                           GridPane.rowIndex="13"/>
+                                <ChoiceBox fx:id="roomNumberChoiceBox" prefHeight="26.0" prefWidth="233.0"
+                                           GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+                                <ChoiceBox fx:id="blockChoiceBox" prefHeight="26.0" prefWidth="233.0"
+                                           GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+                                <ChoiceBox fx:id="academicStatusChoiceBox" prefHeight="26.0" prefWidth="233.0"
+                                           GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                                <ChoiceBox fx:id="facultyChoiceBox" prefHeight="26.0" prefWidth="233.0"
+                                           GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                                <Label text="Secondary School:" GridPane.columnIndex="2" GridPane.rowIndex="14"/>
+                                <DatePicker fx:id="dobDatePicker" maxHeight="-Infinity" maxWidth="-Infinity"
+                                            prefHeight="26.0" prefWidth="234.0" GridPane.columnIndex="1"
+                                            GridPane.rowIndex="5"/>
+                                <GridPane fx:id="tertiaryLvlLabelsGridPane" GridPane.columnIndex="2"
+                                          GridPane.rowIndex="17">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Name of Institution:"/>
+                                        <Label text="Year of Graduation:" GridPane.rowIndex="1"/>
+                                        <Label text="Level of Involvement:" GridPane.rowIndex="2"/>
+                                    </children>
+                                </GridPane>
+                                <GridPane fx:id="tertiaryLvlFieldsGridPane" GridPane.columnIndex="3"
+                                          GridPane.rowIndex="17">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <TextField fx:id="tertiaryInstNameInput"/>
+                                        <TextField fx:id="tertiaryLvlOfInvolvementInput" GridPane.rowIndex="2"/>
+                                        <ChoiceBox fx:id="tertiaryYrofGradChoiceBox" prefHeight="26.0" prefWidth="249.0"
+                                                   GridPane.rowIndex="1"/>
+                                    </children>
+                                </GridPane>
+                                <Label text="Hall History:" GridPane.rowIndex="18"/>
+                                <TableView fx:id="hallHistoryTableView" disable="true" prefHeight="200.0"
+                                           prefWidth="200.0" GridPane.rowIndex="19">
+                                    <columns>
+                                        <TableColumn prefWidth="75.0" text="Hall">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="hall"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="Period">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="period"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                    </columnResizePolicy>
+                                </TableView>
+                                <GridPane fx:id="hallHistoryFormGridPane" disable="true" GridPane.columnIndex="1"
+                                          GridPane.rowIndex="19">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.0" minWidth="10.0"
+                                                           prefWidth="106.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0"
+                                                           prefWidth="115.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Hall:"/>
+                                        <Label text="Period:" GridPane.rowIndex="1"/>
+                                        <Button fx:id="hallHistorySaveBtn" alignment="CENTER" contentDisplay="CENTER"
+                                                defaultButton="true" mnemonicParsing="false"
+                                                onAction="#hallHistoryHandler" prefHeight="26.0" prefWidth="100.0"
+                                                text="Save" GridPane.halignment="CENTER" GridPane.rowIndex="2"
+                                                GridPane.valignment="CENTER"/>
+                                        <SplitMenuButton fx:id="hallHistoryClearDeleteSplitMenuBtn" alignment="CENTER"
+                                                         mnemonicParsing="false" onAction="#hallHistoryHandler"
+                                                         prefHeight="26.0" prefWidth="105.0" text="Clear"
+                                                         GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                                                         GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                            <items>
+                                                <MenuItem fx:id="hallHistoryDeleteMenuItem" mnemonicParsing="false"
+                                                          text="Delete"/>
+                                            </items>
+                                        </SplitMenuButton>
+                                        <ChoiceBox fx:id="hallHistoryHallChoiceBox" prefWidth="150.0"
+                                                   GridPane.columnIndex="1"/>
+                                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1"
+                                              GridPane.rowIndex="1">
+                                            <children>
+                                                <Label text="From:"/>
+                                                <DatePicker fx:id="hallHistoryPeriodFrom"/>
+                                                <Label text="To:"/>
+                                                <DatePicker fx:id="hallHistoryPeriodTo"/>
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </GridPane>
+                                <Label text="Behaviour History:" GridPane.columnIndex="2" GridPane.rowIndex="18"/>
+                                <CheckBox fx:id="hallHistoryCheckBox" mnemonicParsing="false"
+                                          onAction="#hallHistoryHandler" GridPane.columnIndex="1"
+                                          GridPane.rowIndex="18"/>
+                                <CheckBox fx:id="familyHistoryCheckBox" mnemonicParsing="false"
+                                          onAction="#famHistoryHandler" GridPane.columnIndex="1"
+                                          GridPane.rowIndex="14"/>
+                                <CheckBox fx:id="bevHistoryCheckBox" mnemonicParsing="false" GridPane.columnIndex="3"
+                                          GridPane.rowIndex="18"/>
+                                <TableView fx:id="bevHistoryTableView" disable="true" prefHeight="200.0"
+                                           prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="19">
+                                    <columns>
+                                        <TableColumn prefWidth="75.0" text="Hall">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="hall"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="88.0" text="Infraction">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="infraction"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="62.0" text="Reason">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="reason"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="Date">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="date"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                    </columns>
+                                </TableView>
+                                <GridPane fx:id="bevHistoryFormGridPane" disable="true" GridPane.columnIndex="3"
+                                          GridPane.rowIndex="19">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Hall"/>
+                                        <Label text="Infraction:" GridPane.rowIndex="1"/>
+                                        <Label text="Date:" GridPane.rowIndex="3"/>
+                                        <Label text="Reason:" GridPane.rowIndex="2"/>
+                                        <ChoiceBox fx:id="bevHistoryHallChoiceBox" prefWidth="150.0"
+                                                   GridPane.columnIndex="1"/>
+                                        <ComboBox fx:id="bevHistoryInfracComboBox" editable="true" prefWidth="150.0"
+                                                  promptText="Expulsion" GridPane.columnIndex="1"
+                                                  GridPane.rowIndex="1"/>
+                                        <TextArea fx:id="bevHistoryReasonTextArea" prefHeight="200.0" prefWidth="200.0"
+                                                  wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                        <DatePicker fx:id="bevHistoryDatePicker" GridPane.columnIndex="1"
+                                                    GridPane.rowIndex="3"/>
+                                        <Button fx:id="bevHistorySaveBtn" alignment="CENTER" defaultButton="true"
+                                                mnemonicParsing="false" onAction="#bevHistoryHandler" prefHeight="26.0"
+                                                prefWidth="104.0" text="Save" GridPane.halignment="CENTER"
+                                                GridPane.rowIndex="4" GridPane.valignment="CENTER"/>
+                                        <SplitMenuButton fx:id="bevHistoryClearDeleteBtn" alignment="CENTER"
+                                                         mnemonicParsing="false" onAction="#bevHistoryHandler"
+                                                         prefHeight="26.0" prefWidth="103.0" text="Clear"
+                                                         GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                                                         GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                                            <items>
+                                                <MenuItem fx:id="bevHistoryDeleteMenuItem" mnemonicParsing="false"
+                                                          text="Delete"/>
+                                            </items>
+                                        </SplitMenuButton>
+                                    </children>
+                                </GridPane>
+                                <TextField fx:id="secondarySchoolInput" promptText="Munro College"
+                                           GridPane.columnIndex="3" GridPane.rowIndex="14"/>
+                                <TableView fx:id="achievementsTable" prefHeight="200.0" prefWidth="200.0"
+                                           GridPane.columnIndex="2" GridPane.rowIndex="15">
+                                    <columns>
+                                        <TableColumn prefWidth="75.0" text="Achievement">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="achievement"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="Area">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="area"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                    </columns>
+                                    <columnResizePolicy>
+                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                    </columnResizePolicy>
+                                </TableView>
+                                <GridPane fx:id="achievementFormGrid" GridPane.columnIndex="3" GridPane.rowIndex="15">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0"
+                                                           prefWidth="96.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0"
+                                                           prefWidth="136.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Achievement:"/>
+                                        <Label text="Area:" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="achievementNameInput" promptText="Top Performer - IT"
+                                                   GridPane.columnIndex="1"/>
+                                        <ComboBox fx:id="achievementAreaComboBox" editable="true" prefWidth="150.0"
+                                                  promptText="Academics" GridPane.columnIndex="1"
+                                                  GridPane.rowIndex="1"/>
+                                        <Button fx:id="achievementSaveBtn" alignment="CENTER" defaultButton="true"
+                                                mnemonicParsing="false" onAction="#achievementHandler" prefHeight="29.0"
+                                                prefWidth="83.0" text="Save" GridPane.halignment="CENTER"
+                                                GridPane.rowIndex="2" GridPane.valignment="CENTER"/>
+                                        <SplitMenuButton fx:id="achievementClearDeleteSplitMenuBtn" alignment="CENTER"
+                                                         contentDisplay="CENTER" mnemonicParsing="false"
+                                                         onAction="#achievementHandler" prefHeight="26.0"
+                                                         prefWidth="104.0" text="Clear" GridPane.columnIndex="1"
+                                                         GridPane.halignment="CENTER" GridPane.rowIndex="2"
+                                                         GridPane.valignment="CENTER">
+                                            <items>
+                                                <MenuItem fx:id="achievementDeleteMenuItem" mnemonicParsing="false"
+                                                          text="Delete"/>
+                                            </items>
+                                        </SplitMenuButton>
+                                    </children>
+                                </GridPane>
+                                <Label text="Community Group:" GridPane.rowIndex="16"/>
+                                <ComboBox fx:id="commGroupNameComboBox" editable="true" prefHeight="26.0"
+                                          prefWidth="234.0" promptText="None" GridPane.columnIndex="1"
+                                          GridPane.rowIndex="16"/>
+                                <TableView fx:id="commGroupTableView" prefHeight="200.0" prefWidth="200.0"
+                                           GridPane.rowIndex="17">
+                                    <columns>
+                                        <TableColumn prefWidth="75.0" text="Group">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="group"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="Project">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="project"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn prefWidth="75.0" text="Responsibility">
+                                            <cellValueFactory>
+                                                <PropertyValueFactory property="responsibility"/>
+                                            </cellValueFactory>
+                                        </TableColumn>
+                                    </columns>
+                                </TableView>
+                                <GridPane fx:id="commGroupFormGridPane" alignment="CENTER" GridPane.columnIndex="1"
+                                          GridPane.rowIndex="17">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Project:"/>
+                                        <Label text="Responsibility:" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="commGroupProjectInput" GridPane.columnIndex="1"/>
+                                        <TextArea fx:id="commGroupResponsibilityTextArea" prefHeight="200.0"
+                                                  prefWidth="200.0" wrapText="true" GridPane.columnIndex="1"
+                                                  GridPane.halignment="CENTER" GridPane.rowIndex="1"
+                                                  GridPane.valignment="CENTER"/>
+                                        <Button fx:id="commGroupSaveBtn" alignment="CENTER" contentDisplay="CENTER"
+                                                defaultButton="true" maxHeight="-Infinity" maxWidth="-Infinity"
+                                                minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                                                nodeOrientation="LEFT_TO_RIGHT" onAction="#commGroupHandler"
+                                                prefHeight="30.0" prefWidth="80.0" text="Save" textAlignment="CENTER"
+                                                GridPane.halignment="CENTER" GridPane.rowIndex="2"
+                                                GridPane.valignment="CENTER"/>
+                                        <SplitMenuButton fx:id="commGroupClearDeleteSplitMenuBtn" alignment="CENTER"
+                                                         contentDisplay="CENTER" maxHeight="-Infinity"
+                                                         maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                                                         mnemonicParsing="false" onAction="#commGroupHandler"
+                                                         prefHeight="30.0" prefWidth="80.0" text="Clear"
+                                                         GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                                                         GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                            <items>
+                                                <MenuItem fx:id="commGroupDeleteMenuItem" mnemonicParsing="false"
+                                                          onAction="#commGroupHandler" text="Delete"/>
+                                            </items>
+                                        </SplitMenuButton>
+                                    </children>
+                                </GridPane>
+                                <GridPane GridPane.rowIndex="20">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Reason for wishful residence:" GridPane.valignment="TOP">
+                                            <GridPane.margin>
+                                                <Insets/>
+                                            </GridPane.margin>
+                                        </Label>
+                                    </children>
+                                </GridPane>
+                                <GridPane GridPane.columnIndex="2" GridPane.rowIndex="20">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints maxHeight="96.0" minHeight="10.0" prefHeight="23.0"
+                                                        vgrow="SOMETIMES"/>
+                                        <RowConstraints maxHeight="189.0" minHeight="10.0" prefHeight="180.0"
+                                                        vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Co-curricular Activities:" GridPane.valignment="TOP"/>
+                                        <TableView fx:id="coCurricularTableView" prefHeight="200.0" prefWidth="200.0"
+                                                   GridPane.rowIndex="1">
+                                            <columns>
+                                                <TableColumn prefWidth="75.0" text="Activity">
+                                                    <cellValueFactory>
+                                                        <PropertyValueFactory property="activity"/>
+                                                    </cellValueFactory>
+                                                </TableColumn>
+                                                <TableColumn prefWidth="75.0" text="Type">
+                                                    <cellValueFactory>
+                                                        <PropertyValueFactory property="type"/>
+                                                    </cellValueFactory>
+                                                </TableColumn>
+                                            </columns>
+                                            <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                                            </columnResizePolicy>
+                                        </TableView>
+                                    </children>
+                                </GridPane>
+                                <TextArea fx:id="reasonResidingTextArea" prefHeight="156.0" prefWidth="232.0"
+                                          wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="20"/>
+                                <GridPane fx:id="coCurricularFormGrid" GridPane.columnIndex="3" GridPane.rowIndex="20">
+                                    <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Activity:"/>
+                                        <Label text="Type:" GridPane.rowIndex="1"/>
+                                        <Button fx:id="coCurricularSaveBtn" defaultButton="true" mnemonicParsing="false"
+                                                onAction="#coCurricularHandler" prefHeight="26.0" prefWidth="107.0"
+                                                text="Save" GridPane.halignment="CENTER" GridPane.rowIndex="2"
+                                                GridPane.valignment="CENTER"/>
+                                        <SplitMenuButton fx:id="coCurricularClearDeleteBtn" alignment="CENTER"
+                                                         mnemonicParsing="false" onAction="#coCurricularHandler"
+                                                         prefHeight="26.0" prefWidth="109.0" text="Clear"
+                                                         GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                                                         GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                                            <items>
+                                                <MenuItem fx:id="coCurricularDeleteMenuItem" mnemonicParsing="false"
+                                                          onAction="#coCurricularHandler" text="Delete"/>
+                                            </items>
+                                        </SplitMenuButton>
+                                        <ChoiceBox fx:id="coCurricularTypeChoiceBox" prefWidth="150.0"
+                                                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="coCurricularActivityInput" GridPane.columnIndex="1"/>
+                                    </children>
+                                </GridPane>
+                                <ComboBox fx:id="tertiaryLvlComboBox" editable="true" prefHeight="26.0"
+                                          prefWidth="257.0" promptText="Diploma" GridPane.columnIndex="3"
+                                          GridPane.rowIndex="16"/>
+                                <TextField fx:id="nationalityField" editable="false" GridPane.columnIndex="3"
+                                           GridPane.rowIndex="12"/>
+                                <Label text="Date Joined:" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
+                                <DatePicker fx:id="dateJoinedDatePicker" prefHeight="32.0" prefWidth="245.0"
+                                            GridPane.columnIndex="3" GridPane.rowIndex="6"/>
+                                <TitledPane animated="false" collapsible="false" text="Attachments (0)"
+                                            GridPane.columnIndex="2">
+                                    <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                            <children>
+                                                <ListView fx:id="attachmentsListView" layoutX="12.4" layoutY="11.4"
+                                                          prefHeight="122.0" prefWidth="230.0"
+                                                          AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="2.0"
+                                                          AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="1.0"/>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                                <VBox alignment="CENTER" layoutX="274.0" layoutY="15.0" prefHeight="200.0"
+                                      prefWidth="100.0" spacing="20.0" GridPane.columnIndex="3">
+                                    <children>
+                                        <Button fx:id="uploadAttachBtn" defaultButton="true" mnemonicParsing="false"
+                                                onAction="#attachmentEventHandler" prefHeight="40.0" prefWidth="200.0"
+                                                text="Upload Attachment"/>
+                                        <Button fx:id="removeAttachmentBtn" mnemonicParsing="false"
+                                                onAction="#attachmentEventHandler" prefHeight="40.0" prefWidth="200.0"
+                                                text="Remove Attachment"/>
+                                    </children>
+                                </VBox>
+                            </children>
+                            <padding>
+                                <Insets bottom="5.0" left="15.0" right="30.0" top="5.0"/>
+                            </padding>
+                        </GridPane>
+                    </content>
+                </ScrollPane>
+                <StackPane maxHeight="-Infinity" prefHeight="50.0" prefWidth="1022.0">
+                    <children>
+                        <HBox fx:id="addStudentHBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                              minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="1022.0"
+                              spacing="40.0">
+                            <children>
+                                <Button fx:id="studentSaveBtn" alignment="CENTER" defaultButton="true"
+                                        maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false"
+                                        onAction="#windowBtnHandler" prefHeight="40.0" prefWidth="155.0"
+                                        text="Save Student" HBox.hgrow="ALWAYS"/>
+                                <Button fx:id="mainClearBtn" mnemonicParsing="false" onAction="#windowBtnHandler"
+                                        prefHeight="40.0" prefWidth="155.0" text="Clear"/>
+                                <Button fx:id="windowCloseBtn" alignment="CENTER" maxHeight="-Infinity"
+                                        maxWidth="-Infinity" mnemonicParsing="false" onAction="#windowBtnHandler"
+                                        prefHeight="40.0" prefWidth="155.0" text="Close"/>
+                            </children>
+                        </HBox>
+                        <HBox fx:id="editStudentHBox" alignment="CENTER" layoutX="10.0" layoutY="10.0"
+                              maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                              prefHeight="50.0" prefWidth="1022.0" spacing="40.0">
+                            <children>
+                                <Button fx:id="studentSaveBtn1" alignment="CENTER" defaultButton="true"
+                                        maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false"
+                                        onAction="#windowBtnHandler" prefHeight="40.0" prefWidth="155.0"
+                                        text="Save Student" HBox.hgrow="ALWAYS"/>
+                                <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                                        minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="155.0"
+                                        text="Delete Student"/>
+                                <Button fx:id="mainClearBtn1" mnemonicParsing="false" onAction="#windowBtnHandler"
+                                        prefHeight="40.0" prefWidth="155.0" text="Clear"/>
+                                <Button fx:id="windowCloseBtn1" alignment="CENTER" maxHeight="-Infinity"
+                                        maxWidth="-Infinity" mnemonicParsing="false" onAction="#windowBtnHandler"
+                                        prefHeight="40.0" prefWidth="155.0" text="Close"/>
+                            </children>
+                        </HBox>
+                    </children>
+                </StackPane>
+            </items>
+        </SplitPane>
+    </content>
+</fx:root>
