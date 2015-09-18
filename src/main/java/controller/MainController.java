@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -83,8 +84,7 @@ public class MainController implements Initializable {
             }
         });
 
-        // TODO: Enable multi-selection of list items
-//        studentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        studentTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         // Listen for table selection and update UI
         studentTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) ->
@@ -203,22 +203,24 @@ public class MainController implements Initializable {
         } else if (Objects.deepEquals(eventSource, viewStudentBtn)) {
             Platform.runLater(() -> launchStudentViewerWindow(currentStudent.getValue(), Operation.VIEW));
         } else if (Objects.deepEquals(eventSource, deleteStudentBtn)) {
-            // TODO: Dialog to confirm exit needs implementation
-            Task<Boolean> deleteTask = new Task<Boolean>() {
-                @Override
-                protected Boolean call() throws Exception {
-                    return AuthController.databaseCommunicator.deleteStudent(AuthController.user, currentStudent.getValue(), 1);
-                }
-            };
-            deleteTask.setOnSucceeded(event1 -> {
-                if (deleteTask.getValue()) {
+            // Grab user selections and delete each asynchronously
+            studentTableView.getSelectionModel().getSelectedItems().stream().filter(student -> student != null).forEach(student -> {
+                Task<Boolean> deleteTask = new Task<Boolean>() {
+                    @Override
+                    protected Boolean call() throws Exception {
+                        return AuthController.databaseCommunicator.deleteStudent(AuthController.user, student, 1);
+                    }
+                };
+                deleteTask.setOnSucceeded(event1 -> {
+                    if (deleteTask.getValue()) {
 
-                    Platform.runLater(() -> students.remove(currentStudent.getValue()));
-                    CustomControlLauncher.notifier("Success", currentStudent.getValue().getFirstName().concat(" has been deleted!"), NotifierType.INFORATION);
-                } else
-                    CustomControlLauncher.notifier("Error", currentStudent.getValue().getFirstName().concat(" has not been deleted!"), NotifierType.ERROR);
+                        Platform.runLater(() -> students.remove(student));
+                        CustomControlLauncher.notifier("Success", student.getFirstName().concat(" has been deleted!"), NotifierType.INFORATION);
+                    } else
+                        CustomControlLauncher.notifier("Error", student.getFirstName().concat(" has not been deleted!"), NotifierType.ERROR);
+                });
+                new Thread(deleteTask).start();
             });
-            new Thread(deleteTask).start();
         }
     }
 
