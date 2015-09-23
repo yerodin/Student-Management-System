@@ -406,7 +406,7 @@ public class DatabaseCommunicator
         } return false;
     }
 
-    public boolean uploadStudentAttachment(User currentUser, Student student, String name, int taskID)
+    public boolean uploadStudentAttachments(User currentUser, Student student, String name, int taskID)
     {
         try
         {
@@ -417,32 +417,34 @@ public class DatabaseCommunicator
             httpUrlConnection.setRequestMethod("GET");
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             byte[] totalBytes = os.toByteArray();
-            int totalByte = totalBytes.length;
-            InputStream is = new ByteArrayInputStream(os.toByteArray());
-            int byteTrasferred = 0;
-            for (int i = 0; i < totalByte; i++)
-            {
-                os.write(is.read());
-                byteTrasferred = i + 1;
-            }
-
+            httpUrlConnection.getOutputStream().write(totalBytes);
+            if(httpUrlConnection.getResponseCode() != 200)
+                return false;
+            StringBuilder sb = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null)
+                sb.append(line);
             os.close();
-            BufferedReader in = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
-
-            String s = null;
-            while ((s = in.readLine()) != null)
+            System.out.println(sb.toString());
+            JSONObject jObj = new JSONObject(sb.toString());
+            System.out.println(jObj);
+            try
             {
-                System.out.println(s);
+                if (jObj.getInt("success") == SUCCESS)
+                    return true;
+                else setStatus(taskID, jObj.getString("data"));
             }
-            in.close();
-            is.close();
-            return true;
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                setStatus(taskID, "Error: "+taskID+", could not connect to server.");
+            } return false;
         }
         catch (Exception e)
         {
             e.printStackTrace();
             return false;
-
         }
     }
 
@@ -457,30 +459,16 @@ public class DatabaseCommunicator
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             ImageIO.write(SwingFXUtils.fromFXImage(student.getImage(), null), "png", os);
             byte[] totalBytes = os.toByteArray();
-            int totalByte = totalBytes.length;
-            InputStream is = new ByteArrayInputStream(os.toByteArray());
-            int byteTrasferred = 0;
-            for (int i = 0; i < totalByte; i++)
-            {
-                os.write(is.read());
-                byteTrasferred = i + 1;
-            }
-
-            os.close();
-            BufferedReader in = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
-
-            String s = null;
-            while ((s = in.readLine()) != null)
-            {
-                System.out.println(s);
-            }
-            in.close();
-            is.close();
-            String line;
+            httpUrlConnection.getOutputStream().write(totalBytes);
+            if(httpUrlConnection.getResponseCode() != 200)
+                return false;
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
+            String line;
             while ((line = reader.readLine()) != null)
-                sb.append(line+"\n");
+                sb.append(line);
+            os.close();
+            System.out.println(sb.toString());
             JSONObject jObj = new JSONObject(sb.toString());
             System.out.println(jObj);
             try

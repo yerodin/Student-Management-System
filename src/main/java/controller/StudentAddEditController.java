@@ -658,7 +658,7 @@ public class StudentAddEditController extends TitledPane {
                         new FileChooser.ExtensionFilter("BMP files (*.bmp)", "*.bmp");
                 fileChooser.getExtensionFilters().addAll(jpgFilter, pngFilter, bmpFilter);
                 File file = fileChooser.showOpenDialog(null);
-                if (file.exists() && ((file.length() / 1024) / 1024) < 10) {
+                if (file != null && file.exists() && ((file.length() / 1024) / 1024) < 10) {
                     Task<Boolean> uploadTask = new Task<Boolean>() {
                         @Override
                         protected Boolean call() throws Exception {
@@ -682,7 +682,7 @@ public class StudentAddEditController extends TitledPane {
                         }
                     });
                     new Thread(uploadTask).start();
-                } else {
+                } else  {
                     CustomControlLauncher.notifier("Error", "Photo should be 10 MB or less in size.", NotifierType.ERROR);
                 }
             });
