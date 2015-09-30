@@ -406,12 +406,12 @@ public class DatabaseCommunicator
         } return false;
     }
 
-    public boolean uploadStudentAttachments(User currentUser, Student student, String name, int taskID)
+    private boolean uploadStudentAttachment(User currentUser,Student student, File attachment,int taskID)
     {
         try
         {
             HttpURLConnection httpUrlConnection = (HttpURLConnection) new URL(UPLOAD_ATTACHMENT_URL + "?sid=" +
-                    currentUser.getSID() + "&id=" + student.getIdNumber() + "&name=" + name).openConnection();
+                    currentUser.getSID() + "&id=" + student.getIdNumber() + "&name=" + attachment.getName()).openConnection();
             httpUrlConnection.setDoOutput(true);
 
             httpUrlConnection.setRequestMethod("GET");
@@ -446,6 +446,16 @@ public class DatabaseCommunicator
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean uploadStudentAttachments(User currentUser, Student student, int taskID)
+    {
+        boolean error = false;
+        for(File file:student.getAttachedDocuments())
+            if(!uploadStudentAttachment(currentUser,student,file,taskID))
+                error = true;
+        return error;
+
     }
 
     public boolean uploadStudentImage(User currentUser, Student student, int taskID)
