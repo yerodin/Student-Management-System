@@ -27,8 +27,8 @@ public class DatabaseCommunicator
 {
     public final static int SUCCESS = 1;
     public final static int FAILURE = 0;
-    final private String SERVER_IP = "localhost";
-    final private String LOGIN_URL = "http://" + SERVER_IP + "//sms//dataprovider//login.php";
+    final private String SERVER_IP = "chancellorhall.org";
+    final private String LOGIN_URL = "http://" + SERVER_IP + "/sms/dataprovider/login.php";
     final private String BLOCKS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_blocks.php";
     final private String FACULTIES_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_faculties.php";
     final private String ROOMS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_rooms.php";
@@ -57,7 +57,7 @@ public class DatabaseCommunicator
 
     public DatabaseCommunicator()
     {
-
+        System.setProperty("java.net.useSystemProxies", "true");
         jParser = new JSONParser();
         studentVersion = 0;
         statuses = new ArrayList<NameValuePair>();
@@ -500,6 +500,7 @@ public class DatabaseCommunicator
         }
     }
 
+
     public boolean deleteStudentImage(User currentUser, Student student, int taskID)
     {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -650,9 +651,6 @@ public class DatabaseCommunicator
         }
         return null;
     }
-
-    public LocalDate getServerDate() {return LocalDate.now();}
-
 
     public String getBlockFromID(int ID)
     {

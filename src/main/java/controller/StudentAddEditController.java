@@ -716,21 +716,21 @@ public class StudentAddEditController extends TitledPane {
         if (Objects.deepEquals(eventSource, uploadAttachBtn)) {
             Platform.runLater(() -> {
                 FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Upload Attachment");
+                fileChooser.setTitle("Attach Attachment");
                 File file = fileChooser.showOpenDialog(null);
-                Task<Boolean> uploadTask = new Task<Boolean>() {
-                    @Override
-                    protected Boolean call() throws Exception {
-                        return AuthController.databaseCommunicator.uploadStudentAttachment(AuthController.user, student, file.getName(), 1);
-                    }
-                };
-                uploadTask.setOnSucceeded(event1 -> {
-                    if (uploadTask.getValue()) {
-                        attachments.add(file);
-                        student.setAttachedDocuments(attachments);
-                    }
-                });
-                new Thread(uploadTask).start();
+                student.getAttachedDocuments().add(file);
+                //                Task<Boolean> uploadTask = new Task<Boolean>() {
+//                    @Override
+//                    protected Boolean call() throws Exception {
+//                    }
+//                };
+//                uploadTask.setOnSucceeded(event1 -> {
+//                    if (uploadTask.getValue()) {
+//                        attachments.add(file);
+//                        student.setAttachedDocuments(attachments);
+//                    }
+//                });
+//                new Thread(uploadTask).start();
             });
         } else {
             Platform.runLater(() -> {

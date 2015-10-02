@@ -20,6 +20,11 @@ public class Test001
     private User currentUser;
     Student currentStudent;
 
+    public static void main(String[] args)
+    {
+        new Test001();
+    }
+
     public Test001()
     {
         databaseCommunicator = new DatabaseCommunicator();
@@ -34,20 +39,12 @@ public class Test001
     public void testLogin()
     {
         System.out.println("Testing Login..");
-        Task<Boolean> dbTask = new Task<Boolean>()
-        {
-            @Override
-            protected Boolean call() throws Exception
-            {
-                currentUser = databaseCommunicator.login("asap", "password", 123);
-                return currentUser != null;
-            }
-        };
-        dbTask.setOnSucceeded(event -> {
-            if (!dbTask.getValue()) System.out.println("Login Failed" + databaseCommunicator.getStatus(123));
-            else System.out.println("Login Successful" + databaseCommunicator.getStatus(123));
-        });
-        new Thread(dbTask).start();
+
+        currentUser = databaseCommunicator.login("smsadmin", "passworD", 123);
+            if (currentUser == null)
+                System.out.println("Login Failed" + databaseCommunicator.getStatus(123));
+            else
+                System.out.println("Login Successful" + databaseCommunicator.getStatus(123));
     }
 
     public void testImageUpload()

@@ -12,10 +12,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        new Test001();
-//        CustomControlLauncher.create()
-//                .setTitle("SMS - Login")
-//                .setScene(new Scene(new AuthController(), 400, 380))
-//                .setResizable(false).launch();
+        CustomControlLauncher.create()
+                .setTitle("SMS - Login")
+                .setScene(new Scene(new AuthController(), 400, 380))
+                .setResizable(false).launch();
     }
 }
