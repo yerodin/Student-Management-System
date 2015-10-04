@@ -1,3 +1,5 @@
+package java;
+
 import DBCommunication.DatabaseCommunicator;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;

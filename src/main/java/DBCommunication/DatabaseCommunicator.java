@@ -60,12 +60,12 @@ public class DatabaseCommunicator
         System.setProperty("java.net.useSystemProxies", "true");
         jParser = new JSONParser();
         studentVersion = 0;
-        statuses = new ArrayList<NameValuePair>();
+        statuses = new ArrayList<>();
     }
 
     public User login(String username, String password, int taskID)
     {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("user", username));
         params.add(new BasicNameValuePair("password", password));
         JSONObject jObj = jParser.makeHttpRequest(LOGIN_URL, "POST", params);
