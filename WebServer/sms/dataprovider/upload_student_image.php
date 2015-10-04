@@ -36,5 +36,6 @@ else
 		$response['data'] = "sid";
 	}
 
-  
+  echo json_encode($response);
+  die();
 ?>

@@ -209,7 +209,7 @@ if(isset($_POST['sid']))
 		{
 			
 			require_once 'db_config.php';
-			$db = new PDO("mysql:dbname=test_sms;host=localhost", DB_USER, DB_PASSWORD);
+			$db = new PDO("mysql:dbname=".DB_NAME.";host=".DB_SERVER, DB_USER, DB_PASSWORD);
 
 			$stmt = $db->prepare('INSERT INTO test_stdns(academic_status,achievements,behaviour_history, block, cell_phone,family_history,community_group,co_curricular,'.'
 			day_joined,dob,faculty,father_first_name,father_last_name,father_phone,first_name,hall_history,home_address1,home_address2,home_city,home_province,id_number,last_name,middle_name,mother_first_name,mother_last_name,'.

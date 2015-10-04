@@ -9,7 +9,7 @@ if(isset($_POST['sid']))
 		if(isset($_POST['sversion']))
 			{
 				require_once 'db_config.php';
-				$db = new PDO("mysql:dbname=test_sms;host=localhost", DB_USER, DB_PASSWORD);
+				$db = new PDO("mysql:dbname=".DB_NAME.";host=".DB_SERVER, DB_USER, DB_PASSWORD);
 				
 				$stmt = $db->prepare("SELECT id_changed FROM student_version WHERE :sversion < version");
 				$stmt->bindValue(":sversion",$_POST['sversion'],PDO::PARAM_INT);

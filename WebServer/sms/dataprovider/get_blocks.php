@@ -8,7 +8,7 @@ if(isset($_POST['sid']))
 	{
 		
 		require_once 'db_config.php';
-		$db = new PDO("mysql:dbname=test_sms;host=localhost", DB_USER, DB_PASSWORD);
+		$db = new PDO("mysql:dbname=".DB_NAME.";host=".DB_SERVER, DB_USER, DB_PASSWORD);
 		$statement = $db->prepare("SELECT block_id,block_alias FROM blocks WHERE 1");
 		$statement->execute();
 		$rows = $statement->fetchAll(PDO::FETCH_ASSOC);

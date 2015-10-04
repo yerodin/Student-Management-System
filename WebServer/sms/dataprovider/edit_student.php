@@ -207,7 +207,7 @@ if(isset($_POST['sid']))
 		if($error == false)
 		{
 			require_once 'db_config.php';
-			$db = new PDO("mysql:dbname=test_sms;host=localhost", DB_USER, DB_PASSWORD);
+			$db = new PDO("mysql:dbname=".DB_NAME.";host=".DB_SERVER, DB_USER, DB_PASSWORD);
 
 			$stmt = $db->prepare('UPDATE test_stdns set academic_status=:x1,achievements =:x2,behaviour_history=:x3, block=:x4, cell_phone=:x5,family_history=:x6,community_group=:x7,co_curricular=:x8,'.'
 			day_joined=:x9,dob=:x10,faculty=:x11,father_first_name=:x12,father_last_name=:x13,father_phone=:x14,first_name=:x15,hall_history=:x16,home_address1=:x17,home_address2=:x18,home_city=:x19,home_province=:x20, last_name=:x22,middle_name=:x23,mother_first_name=:x24,mother_last_name=:x25,'.

@@ -10,7 +10,7 @@ if(isset($_POST['sid']))
 		if(isset($_POST['id']) &&  isset($_POST['status']))
 		{
 			require_once 'db_config.php';
-			$db = new PDO("mysql:dbname=test_sms;host=localhost", DB_USER, DB_PASSWORD);
+			$db = new PDO("mysql:dbname=".DB_NAME.";host=".DB_SERVER, DB_USER, DB_PASSWORD);
 
 			$stmt = $db->prepare('UPDATE users set status= :status where id = :id');
 			$stmt->bindValue(":x2",$_POST['achievements'],PDO::PARAM_STR);
