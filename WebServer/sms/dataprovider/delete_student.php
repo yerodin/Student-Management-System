@@ -11,7 +11,7 @@ if(isset($_POST['sid']))
 		{
 			
 			require_once 'db_config.php';
-			$db = new PDO("mysql:dbname=test_sms;host=localhost", DB_USER, DB_PASSWORD);
+			$db = new PDO("mysql:dbname=" . DB_NAME . ";host=" . DB_SERVER, DB_USER, DB_PASSWORD);
 
 			$stmt = $db->prepare('delete from test_stdns where id_number=:id_number');
 

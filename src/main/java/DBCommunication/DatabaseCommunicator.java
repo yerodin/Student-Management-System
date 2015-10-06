@@ -59,15 +59,15 @@ public class DatabaseCommunicator
 
     public DatabaseCommunicator()
     {
-
+        System.setProperty("java.net.useSystemProxies", "true");
         jParser = new JSONParser();
         studentVersion = 0;
-        statuses = new ArrayList<NameValuePair>();
+        statuses = new ArrayList<>();
     }
 
     public User login(String username, String password, int taskID)
     {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("user", username));
         params.add(new BasicNameValuePair("password", password));
         JSONObject jObj = jParser.makeHttpRequest(LOGIN_URL, "POST", params);
@@ -502,6 +502,7 @@ public class DatabaseCommunicator
         }
     }
 
+
     public boolean deleteStudentImage(User currentUser, Student student, int taskID)
     {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -652,9 +653,6 @@ public class DatabaseCommunicator
         }
         return null;
     }
-
-    public LocalDate getServerDate() {return LocalDate.now();}
-
 
     public String getBlockFromID(int ID)
     {

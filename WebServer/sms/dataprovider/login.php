@@ -7,7 +7,7 @@ if(isset($_POST['user']) && isset($_POST['password']))
 	$username = $_POST['user'];
 	$password = sha1($username.$_POST['password']);
 	require_once 'db_config.php';
-	$db = new PDO("mysql:dbname=test_sms;host=localhost", DB_USER, DB_PASSWORD);
+	$db = new PDO("mysql:dbname=" . DB_NAME . ";host=" . DB_SERVER, DB_USER, DB_PASSWORD);
 	$statement = $db->prepare("SELECT * FROM users WHERE username =:uname and password =:pw");
 	$statement->bindValue(":uname",$username,PDO::PARAM_STR);
 	$statement->bindValue(":pw",$password,PDO::PARAM_STR);
