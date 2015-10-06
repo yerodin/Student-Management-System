@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.*?>
 
 <fx:root fx:id="mainTitledPane" animated="false" collapsible="false" minWidth="-Infinity" prefHeight="2500.0"
-         prefWidth="1024.0" stylesheets="@../css/style.css" type="TitledPane" xmlns="http://javafx.com/javafx/8.0.40"
+         prefWidth="1024.0" type="TitledPane" xmlns="http://javafx.com/javafx/8.0.40"
          xmlns:fx="http://javafx.com/fxml/1">
     <content>
         <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="1800.0" prefWidth="1024.0">
@@ -78,7 +78,7 @@
                                 <Label text="Address 2:" GridPane.columnIndex="2" GridPane.rowIndex="8"/>
                                 <Label text="City:" GridPane.columnIndex="2" GridPane.rowIndex="9"/>
                                 <Label text="State/Province:" GridPane.columnIndex="2" GridPane.rowIndex="10"/>
-                                <Label text="Country:" GridPane.columnIndex="2" GridPane.rowIndex="11"/>
+                                <Label text="Resident Country:" GridPane.columnIndex="2" GridPane.rowIndex="11"/>
                                 <Label text="Nationality:" GridPane.columnIndex="2" GridPane.rowIndex="12"/>
                                 <Label text="Participation in hall projects:" GridPane.columnIndex="2"
                                        GridPane.rowIndex="13"/>
@@ -595,8 +595,6 @@
                                 <ComboBox fx:id="tertiaryLvlComboBox" editable="true" prefHeight="26.0"
                                           prefWidth="257.0" promptText="Diploma" GridPane.columnIndex="3"
                                           GridPane.rowIndex="16"/>
-                                <TextField fx:id="nationalityField" editable="false" GridPane.columnIndex="3"
-                                           GridPane.rowIndex="12"/>
                                 <Label text="Date Joined:" GridPane.columnIndex="2" GridPane.rowIndex="6"/>
                                 <DatePicker fx:id="dateJoinedDatePicker" prefHeight="32.0" prefWidth="245.0"
                                             GridPane.columnIndex="3" GridPane.rowIndex="6"/>
@@ -624,6 +622,8 @@
                                                 text="Remove Attachment"/>
                                     </children>
                                 </VBox>
+                                <ChoiceBox fx:id="nationalityChoiceBox" prefHeight="26.0" prefWidth="233.0"
+                                           GridPane.columnIndex="3" GridPane.rowIndex="12"/>
                             </children>
                             <padding>
                                 <Insets bottom="5.0" left="15.0" right="30.0" top="5.0"/>
@@ -644,24 +644,6 @@
                                 <Button fx:id="mainClearBtn" mnemonicParsing="false" onAction="#windowBtnHandler"
                                         prefHeight="40.0" prefWidth="155.0" text="Clear"/>
                                 <Button fx:id="windowCloseBtn" alignment="CENTER" maxHeight="-Infinity"
-                                        maxWidth="-Infinity" mnemonicParsing="false" onAction="#windowBtnHandler"
-                                        prefHeight="40.0" prefWidth="155.0" text="Close"/>
-                            </children>
-                        </HBox>
-                        <HBox fx:id="editStudentHBox" alignment="CENTER" layoutX="10.0" layoutY="10.0"
-                              maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                              prefHeight="50.0" prefWidth="1022.0" spacing="40.0">
-                            <children>
-                                <Button fx:id="studentSaveBtn1" alignment="CENTER" defaultButton="true"
-                                        maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false"
-                                        onAction="#windowBtnHandler" prefHeight="40.0" prefWidth="155.0"
-                                        text="Save Student" HBox.hgrow="ALWAYS"/>
-                                <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                                        minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="155.0"
-                                        text="Delete Student"/>
-                                <Button fx:id="mainClearBtn1" mnemonicParsing="false" onAction="#windowBtnHandler"
-                                        prefHeight="40.0" prefWidth="155.0" text="Clear"/>
-                                <Button fx:id="windowCloseBtn1" alignment="CENTER" maxHeight="-Infinity"
                                         maxWidth="-Infinity" mnemonicParsing="false" onAction="#windowBtnHandler"
                                         prefHeight="40.0" prefWidth="155.0" text="Close"/>
                             </children>

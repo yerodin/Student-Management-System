@@ -4,7 +4,7 @@ package enums;
  * *
  **/
 public enum Operation {
-    NEW,
+    ADD,
     EDIT,
     VIEW
 }

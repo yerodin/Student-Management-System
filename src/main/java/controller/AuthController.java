@@ -85,16 +85,22 @@ public class AuthController extends StackPane {
     }
 
     public void loadApp(ActionEvent event) {
+        progressBar.setProgress(25.0);
+        loginBtn.setDisable(true);
         if (isFeldsFilled()) {
+            progressBar.setProgress(35.0);
             Task<User> task = new Task<User>() {
                 @Override
                 protected User call() throws Exception {
+                    progressBar.setProgress(50.0);
                     return databaseCommunicator.login(usernameField.getText(), passwordField.getText(), 1);
                 }
             };
             task.setOnSucceeded(event1 -> {
+                progressBar.setProgress(75.0);
                 user = task.getValue();
                 if (user != null) {
+                    progressBar.setProgress(95.0);
                     Platform.runLater(() -> {
                         loggedInAs.setText("\t".concat(user.getUsername())
                                 .concat("\n").concat("(".concat(user.getFirstName())
@@ -104,8 +110,12 @@ public class AuthController extends StackPane {
                         afterLoginPane.setVisible(true);
                         beforeLoginPane.setVisible(false);
                         afterLoginPane.requestFocus();
+                        progressBar.setProgress(0.0);
+                        loginBtn.setDisable(false);
                     });
                 } else {
+                    loginBtn.setDisable(false);
+                    progressBar.setProgress(0.0);
                     Platform.runLater(() -> Notifications.create()
                             .title("Error!").text("Unable to login at this time. Check your credentials and try again later")
                             .showError());
@@ -118,6 +128,8 @@ public class AuthController extends StackPane {
 //        Stage thisStage = (Stage) closeBtn.getScene().getWindow();
 //        thisStage.close();
         } else {
+            loginBtn.setDisable(false);
+            progressBar.setProgress(0.0);
             Platform.runLater(() -> Notifications.create()
                     .title("Error!").text("Please check to ensure all fields are filled in correctly.")
                     .showError());

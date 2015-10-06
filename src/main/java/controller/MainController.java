@@ -142,18 +142,6 @@ public class MainController implements Initializable {
             }
         });
         new Thread(newStudentsTask).start();
-        students.addAll(generateFakeStudents());
-    }
-
-
-    private ObservableList<Student> generateFakeStudents() {
-        return FXCollections.observableArrayList(
-                new Student("827632829", "Damion", "Marlon", "Richardson", "Excellence", "12", "Science & Technology"),
-                new Student("236251971", "Ramone", "Davere", "Wright", "Aye", "8", "Law"),
-                new Student("131273681", "Richard", "Ben", "Hickler", "Runci", "11", "Social Sciences"),
-                new Student("974535780", "Easton", "Hamesh", "Ricketts", "Che", "3", "Humanities & Education"),
-                new Student("688325630", "John", "Wilder", "Scott", "Dynamite", "19", "Medical Sciences")
-        );
     }
 
     public static void launchStudentViewerWindow(Student student, Operation operation) {
@@ -161,7 +149,7 @@ public class MainController implements Initializable {
         String[] titles = {"Add ", "Edit ", "View ", " Student"};
         StringBuilder title = new StringBuilder();
         switch (operation) {
-            case NEW:
+            case ADD:
                 title.insert(0, titles[0] + titles[3]);
                 break;
             case EDIT:
@@ -173,23 +161,26 @@ public class MainController implements Initializable {
             default:
                 title.insert(0, "Student Viewer");
         }
-
+        CustomControlLauncher launcher = CustomControlLauncher.create()
+                .setTitle(title.toString())
+                .setResizable(false);
+        final int w = 1024, h = 640;
         // Launch Student Viewer with given Student and operation
         if (operation != Operation.VIEW) {
             Platform.runLater(() -> {
-                StudentAddEditController studentAddEditController = new StudentAddEditController(student, operation);
-                CustomControlLauncher.create()
-                        .setTitle(title.toString())
-                        .setScene(new Scene(studentAddEditController, 1024, 640))
-                        .setResizable(false).launch();
+                StudentAddEditController studentAddEditController =
+                        new StudentAddEditController(student, operation)
+                                .setStage(launcher.getStage());
+                launcher.setScene(new Scene(studentAddEditController, w, h))
+                        .launch();
             });
         } else {
             Platform.runLater(() -> {
-                StudentViewController studentViewController = new StudentViewController(Integer.valueOf(student.getIdNumber()));
-                CustomControlLauncher.create()
-                        .setTitle(title.toString())
-                        .setScene(new Scene(studentViewController, 1024, 640))
-                        .setResizable(false).launch();
+                StudentViewController studentViewController =
+                        new StudentViewController(student)
+                                .setStage(launcher.getStage());
+                launcher.setScene(new Scene(studentViewController, w, h))
+                        .launch();
             });
         }
     }
@@ -197,7 +188,7 @@ public class MainController implements Initializable {
     public void optionsHandler(ActionEvent event) {
         Object eventSource = event.getSource();
         if (Objects.deepEquals(eventSource, addStudentBtn)) {
-            Platform.runLater(() -> launchStudentViewerWindow(null, Operation.NEW));
+            Platform.runLater(() -> launchStudentViewerWindow(null, Operation.ADD));
         } else if (Objects.deepEquals(eventSource, editStudentBtn)) {
             Platform.runLater(() -> launchStudentViewerWindow(currentStudent.getValue(), Operation.EDIT));
         } else if (Objects.deepEquals(eventSource, viewStudentBtn)) {

@@ -1,7 +1,5 @@
 import DBCommunication.DatabaseCommunicator;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import model.Student;
 import model.User;

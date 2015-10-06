@@ -1,58 +1,65 @@
-/*#main-menu-bar {*/
-/*-fx-background-color: gainsboro;*/
-/*-fx-font-weight: bold;*/
-/*}*/
+/************************************************************************
+* Theme: Wrao v1.0                                                      *
+* Author: Alex Stewart (contact[at]alexstew.com)                        *
+* Colors: Base=#D9DAD7 Bleed=#C24D2C Accent0=#3E4A61 Accent1=#1A2639    *
+* Colors[Source]: http://colorhunt.co/#d9dad7c24d2c3e4a611a2639         *
+************************************************************************/
+.root {
+    -wrao-dark: rgb(47.0, 52.0, 57.0);
+    -wrao-base: #D9DAD7;
+    -wrao-red: #C24D2C;
+    -wrao-accent0: #1A2639;
+    -wrao-accent1: #3E4A61;
+    -wrao-accent2: rgb(0.0, 184.0, 222.0);
 
-/*.sectionlabel {*/
-/*-fx-font-size: 16;*/
-/*-fx-font-weight: bold;*/
-/*-fx-background-color: gainsboro;*/
-/*-fx-background-radius: 3px;*/
-/*}*/
+    -fx-text-fill: -fx-text-base-color;
+    -fx-background-color: -wrao-dark;
 
-/*.button {*/
-/*-fx-text-fill: #ffffff;*/
-/*-fx-background-color: derive(blue, 100%);*/
-/*-fx-border-width: 30%;*/
-/*-fx-border-color: #000000;*/
-/*}*/
+    /*default font */
+    -fx-font-family: 'Helvetica Neue';
+    -fx-font-size: 25.0px;
+    -fx-font-weight: 600;
+    -fx-disabled-opacity: 0.6;
+}
 
-/*.button:hover {*/
-/*-fx-text-fill: #ffffff;*/
-/*-fx-background-color: derive(blue, 50%);*/
-/*}*/
+.background {
+    -fx-fill: #D9DAD7;
+}
 
-/*.button:pressed {*/
-/*-fx-text-fill: #ffffff;*/
-/*-fx-background-color: derive(blue, 75%);*/
-/*}*/
+#main-menu-bar {
+    -fx-background-color: #3E4A61;
+    -fx-font-weight: bold;
+}
 
-/*.button .text {*/
-/*-fx-font-weight: bold;*/
-/*}*/
+.text {
+    -fx-font-weight: 600;
+    -fx-font-smoothing-type: lcd;
+}
 
-/*.text-field .text {*/
-/*-fx-text-fill: derive(blue, 1%);*/
-/*-fx-font-weight: bold;*/
-/*}*/
+.label {
+    -fx-font-smoothing-type: lcd;
+    -fx-font-size: 14;
+    -fx-text-fill: #1A2639;
+    -fx-font-weight: 600;
+}
 
-/*.priorityLow {*/
-/*-fx-control-inner-background: palegreen;*/
-/*-fx-accent: derive(-fx-control-inner-background, -40%);*/
-/*-fx-cell-hover-color: derive(-fx-control-inner-background, -20%);*/
-/*}*/
+.priorityLow {
+    -fx-control-inner-background: palegreen;
+    -fx-accent: derive(-fx-control-inner-background, -40%);
+    -fx-cell-hover-color: derive(-fx-control-inner-background, -20%);
+}
 
-/*.priorityMedium {*/
-/*-fx-control-inner-background: skyblue;*/
-/*-fx-accent: derive(-fx-control-inner-background, -40%);*/
-/*-fx-cell-hover-color: derive(-fx-control-inner-background, -20%);*/
-/*}*/
+.priorityMedium {
+    -fx-control-inner-background: skyblue;
+    -fx-accent: derive(-fx-control-inner-background, -40%);
+    -fx-cell-hover-color: derive(-fx-control-inner-background, -20%);
+}
 
-/*.priorityHigh {*/
-/*-fx-control-inner-background: palevioletred;*/
-/*-fx-accent: derive(-fx-control-inner-background, -40%);*/
-/*-fx-cell-hover-color: derive(-fx-control-inner-background, -20%);*/
-/*}*/
+.priorityHigh {
+    -fx-control-inner-background: palevioletred;
+    -fx-accent: derive(-fx-control-inner-background, -40%);
+    -fx-cell-hover-color: derive(-fx-control-inner-background, -20%);
+}
 
 .background {
     -fx-background-color: white;
@@ -76,6 +83,77 @@
 
 }
 
+
+/*******************************************************************************
+ *                                                                             *
+ * TextField & TextArea                                                        *
+ *                                                                             *
+ ******************************************************************************/
+
+.text-area, .text-field {
+    -fx-background-color: white;
+    -fx-background-insets: 0.0;
+    -fx-background-radius: 2.0;
+    -fx-padding: 0.5em;
+    -fx-border-width: 0.0;
+    -fx-prompt-text-fill: derive(-wrao-dark, 50.0%);
+    -fx-highlight-fill: rgb(94.0, 203.0, 234.0);
+}
+
+.text-area .text, .text-field > * > .text {
+    -fx-effect: null;
+    -fx-fill: -wrao-dark;
+}
+
+.text-area {
+    -fx-padding: 0.15em;
+}
+
+.text-area .content {
+    -fx-padding: 0.7em;
+    -fx-border-width: 0.0;
+    -fx-background-color: transparent;
+}
+
+.text-area:focused .content {
+    -fx-background-color: transparent;
+}
+
+.text-area:focused, .text-field:focused {
+    -fx-background-color: -wrao-blue, derive(rgb(94.0, 203.0, 234.0), 80.0%);
+    -fx-background-insets: 0.0, 0.2em;
+    -fx-background-radius: 2.0;
+}
+
+.scroll-bar:vertical > .track-background,
+.scroll-bar:horizontal > .track-background {
+    -fx-background-color: derive(rgb(94.0, 203.0, 234.0), 50.0%);
+    -fx-background-insets: 0.0;
+}
+
+.scroll-bar:vertical > .thumb,
+.scroll-bar:horizontal > .thumb {
+    -fx-background-color: -wrao-blue;
+    -fx-background-insets: 0.0;
+    -fx-background-radius: 0.0;
+}
+
+.scroll-bar > .increment-button,
+.scroll-bar > .decrement-button,
+.scroll-bar:hover > .increment-button,
+.scroll-bar:hover > .decrement-button {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar > .increment-button > .increment-arrow,
+.scroll-bar > .decrement-button > .decrement-arrow {
+    -fx-background-color: white;
+}
+
+.scroll-bar > .track-background {
+    -fx-background-color: transparent;
+}
+
 /*******************************************************************************
  *                                                                             *
  * Push Button                                                                 *
@@ -86,25 +164,24 @@
     -fx-padding: 5 22 5 22;
     -fx-border-style: null;
     -fx-background-radius: 0;
-
-    -fx-background-color: #cccccc;
-
+    -fx-background-color: #1A2639;
     -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 11pt;
-    -fx-text-fill: black;
+    -fx-text-fill: #C24D2C;
 }
 
 .button:hover {
-    -fx-background-color: #d8d8d8;
+    -fx-background-color: #3E4A61;
+    -fx-text-fill: #C24D2C;
 }
 
-.button:pressed, .button:default:hover:pressed {
-    -fx-background-color: black;
-    -fx-text-fill: white;
+.button:pressed {
+    -fx-background-color: #C24D2C;
+    -fx-text-fill: #1A2639;
 }
 
 .button:focused {
-    -fx-border-color: black;
+    -fx-border-color: #1A2639;
     -fx-border-width: 1;
     -fx-border-style: segments(1, 1);
     -fx-background-insets: 0 0 0 0, 0, 1, 2;
@@ -117,12 +194,13 @@
 }
 
 .button:default {
-    -fx-background-color: #008287;
-    -fx-text-fill: #ffffff;
+    -fx-background-color: #C24D2C;
+    -fx-text-fill: #1A2639;
 }
 
 .button:default:hover {
-    -fx-background-color: #219297;
+    -fx-background-color: #C24A0A;
+    -fx-text-fill: #3E4A61;
 }
 
 /*******************************************************************************
@@ -340,7 +418,7 @@
     -fx-background-insets: 0;
     -fx-background-radius: 0 0 0 0;
     -fx-padding: 0.333333em 0.666667em 0.333333em 0.666667em;
-    -fx-effect: dropshadow( one-pass-box , #808080 , 5, 0.0 , 0 , 0 );
+    -fx-effect: dropshadow(one-pass-box, #808080, 5, 0.0, 0, 0);
     -fx-font-family: "Segoe UI Semilight", "Segoe UI Light", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-text-fill: #949494;
 }

@@ -12,8 +12,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
@@ -27,7 +29,7 @@ public class DatabaseCommunicator
 {
     public final static int SUCCESS = 1;
     public final static int FAILURE = 0;
-    final private String SERVER_IP = "localhost";
+    final private String SERVER_IP = "chancellorhall.org";
     final private String LOGIN_URL = "http://" + SERVER_IP + "//sms//dataprovider//login.php";
     final private String BLOCKS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_blocks.php";
     final private String FACULTIES_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_faculties.php";

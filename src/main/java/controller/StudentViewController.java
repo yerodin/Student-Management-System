@@ -97,10 +97,10 @@ public class StudentViewController extends TitledPane {
     public TextField bevHistoryDateInput;
     public TextField bevHistoryInfractionInput;
     public TextField yearOfGradInput;
-    private Integer sid;
     private Stage stage;
+    private Student student;
 
-    public StudentViewController(Integer sid) {
+    public StudentViewController(Student student) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(
                 "/fxml/StudentView.fxml"));
         fxmlLoader.setRoot(this);
@@ -112,25 +112,9 @@ public class StudentViewController extends TitledPane {
             throw new RuntimeException(exception);
         }
 
-        this.sid = sid;
+        this.student = student;
 
-        showStudent();
-
-        mainGridPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
-            if (oldScene == null && newScene != null) {
-                // scene is set for the first time. Now its the time to listen stage changes.
-                newScene.windowProperty().addListener((observableWindow, oldWindow, newWindow) -> {
-                    if (oldWindow == null && newWindow != null) {
-                        // stage is set. now is the right time to do whatever we need to the stage in the controller.
-                        this.stage = ((Stage) newWindow);
-                        newWindow.setOnCloseRequest(event -> {
-                            event.consume();
-                            ((Stage) newWindow).close();
-                        });
-                    }
-                });
-            }
-        });
+        showStudent(this.student);
 
         familyHistoryTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             famHistoryBlockInput.setText(newValue.getBlock().get());
@@ -152,14 +136,12 @@ public class StudentViewController extends TitledPane {
         });
     }
 
-    public Student findStudentById(Integer sid) {
-        return MainController.students
-                .stream().filter(student -> Objects.equals(Integer.valueOf(student.getIdNumber()), sid))
-                .findFirst().get();
+    protected StudentViewController setStage(Stage stage) {
+        this.stage = stage;
+        return this;
     }
 
-    public void showStudent() {
-        Student student = findStudentById(sid);
+    public void showStudent(Student student) {
         if (student.getPicture()) {
             avatarImageView.setImage(student.getImage());
         }
@@ -254,13 +236,18 @@ public class StudentViewController extends TitledPane {
         }
     }
 
+    public void closeWindow() {
+        Platform.runLater(this.stage::close);
+    }
+
     public void windowBtnHandler(ActionEvent event) {
         Object eventSource = event.getSource();
         if (Objects.deepEquals(eventSource, studentEditBtn)) {
-            Platform.runLater(() -> MainController.launchStudentViewerWindow(findStudentById(sid), Operation.EDIT));
+            Platform.runLater(() -> MainController.launchStudentViewerWindow(this.student, Operation.EDIT));
+            closeWindow();
         } else {
-            //TODO: Implement logic to properly close the window
-            Platform.runLater(this.stage::close);
+            //TODO: Implement logic to properly close the window -- PRIORITY: HIGH
+            closeWindow();
         }
     }
 }

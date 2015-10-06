@@ -12,12 +12,10 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -139,9 +137,11 @@ public class StudentAddEditController extends TitledPane {
     public Button uploadAttachBtn;
     public Button removeAttachmentBtn;
     public ListView<File> attachmentsListView;
+    public ChoiceBox<Country> nationalityChoiceBox;
     protected Student student = new Student();
     protected Operation operation;
     private Stage stage;
+    private boolean imageSet, imageRemove;
     ObservableList<File> attachments = FXCollections.observableArrayList();
 
     ObservableList<FamilyHistory> familyHistories = FXCollections.<FamilyHistory>observableArrayList();
@@ -163,26 +163,8 @@ public class StudentAddEditController extends TitledPane {
             throw new RuntimeException(exception);
         }
 
-        mainTitledPane.sceneProperty().addListener((observableScene, oldScene, newScene) -> {
-            if (oldScene == null && newScene != null) {
-                // scene is set for the first time. Now its the time to listen stage changes.
-                newScene.windowProperty().addListener((observableWindow, oldWindow, newWindow) -> {
-                    if (oldWindow == null && newWindow != null) {
-                        this.stage = ((Stage) newWindow);
-                        // stage is set. now is the right time to do whatever we need to the stage in the controller.
-                        ((Stage) newWindow).maximizedProperty().addListener((a, b, c) -> {
-                            if (c) {
-                                // TODO: Something needs to be done when maximized
-                            }
-                        });
-                        newWindow.setOnCloseRequest(event -> ((Stage) newWindow).close());
-                    }
-                });
-            }
-        });
 
-
-        if (operation == Operation.NEW && student == null) {
+        if (operation == Operation.ADD && student == null) {
             setStudent(new Student());
         }
         if (operation.equals(Operation.EDIT) && student != null) {
@@ -258,6 +240,18 @@ public class StudentAddEditController extends TitledPane {
                     }
                 }
                 return thisCountry;
+            }
+        });
+
+        nationalityChoiceBox.setConverter(new StringConverter<Country>() {
+            @Override
+            public String toString(Country object) {
+                return object.getNationality();
+            }
+
+            @Override
+            public Country fromString(String string) {
+                return nationalityChoiceBox.getItems().get(nationalityChoiceBox.getSelectionModel().getSelectedIndex());
             }
         });
 
@@ -401,7 +395,6 @@ public class StudentAddEditController extends TitledPane {
             nationalityField.setText(newValue.getNationality());
             if (student != null) {
                 student.setResidentCountry(newValue);
-                student.setNationalityCountry(AuthController.databaseCommunicator.getCountryFromID(this.countryChoiceBox.getValue().getCountryID()));
             }
         });
 
@@ -509,6 +502,11 @@ public class StudentAddEditController extends TitledPane {
                         }));
     }
 
+    protected StudentAddEditController setStage(Stage stage) {
+        this.stage = stage;
+        return this;
+    }
+
     /**
      * Notifier to pleasantly update User
      *
@@ -607,13 +605,13 @@ public class StudentAddEditController extends TitledPane {
             dateJoinedDatePicker.setValue(LocalDate.parse(student.getDayJoined(), MainController.formatter));
         } catch (NullPointerException np) {
         }
-//        nationalityField.setText(student.getNationalityCountry().getNationality());
         // TODO: Tertiary level ComboBox needs logic
     }
 
     public void grabStudent() {
         student = new Student();
-        student.setAcademicStatus(this.academicStatusChoiceBox.getSelectionModel().getSelectedItem().equals(AcademicStatus.FULLTIME.getLabel()));
+        student.setAcademicStatus(this.academicStatusChoiceBox.getSelectionModel()
+                .getSelectedItem().equals(AcademicStatus.FULLTIME.getLabel()));
         student.setIdNumber(this.idInput.getText());
         student.setFirstName(this.firstNameInput.getText());
         student.setMiddleName(this.middleNameInput.getText());
@@ -629,6 +627,8 @@ public class StudentAddEditController extends TitledPane {
         student.setHomeAddress1(this.address1Input.getText());
         student.setHomeAddress2(this.address2Input.getText());
         student.setHomeCity(this.cityInput.getText());
+        student.setNationalityCountry(this.nationalityChoiceBox.getSelectionModel().getSelectedItem());
+        student.setResidentCountry(this.countryChoiceBox.getSelectionModel().getSelectedItem());
         student.setBlock(this.blockChoiceBox.getSelectionModel().getSelectedItem());
         student.setFaculty(this.facultyChoiceBox.getSelectionModel().getSelectedItem());
         student.setRoom(this.roomNumberChoiceBox.getSelectionModel().getSelectedItem());
@@ -636,11 +636,23 @@ public class StudentAddEditController extends TitledPane {
             student.setDob(this.dobDatePicker.getValue().format(MainController.formatter));
         if (this.dateJoinedDatePicker.getValue() != null)
             student.setDayJoined(this.dateJoinedDatePicker.getValue().format(MainController.formatter));
-        // TODO: Add code to set Tertiary meta info
+        model.TertiaryLevel tertiaryLevel = new model.TertiaryLevel(
+                this.tertiaryLvlComboBox.getValue(),
+                this.tertiaryInstNameInput.getText(),
+                this.tertiaryYrofGradChoiceBox.getValue(),
+                this.tertiaryLvlOfInvolvementInput.getText()
+        );
+        student.setTertiaryLevel(tertiaryLevel);
         student.setWillParticipate(this.willParticipateChoiceBox.getValue().equals(Decision.YES.getLabel()));
         student.setHomeProvince(this.stateProvinceInput.getText());
         student.setReasonResiding(this.reasonResidingTextArea.getText());
         student.setParticpationLevel(0);
+        student.setCoCurriculars(coCurriculars);
+        student.setAchievements(achievements);
+        student.setCommunityGroups(communityGroups);
+        student.setFamilyHistories(familyHistories);
+        student.setHallHistories(hallHistories);
+        student.setAttachedDocuments(attachments);
     }
 
     @FXML
@@ -659,57 +671,34 @@ public class StudentAddEditController extends TitledPane {
                 fileChooser.getExtensionFilters().addAll(jpgFilter, pngFilter, bmpFilter);
                 File file = fileChooser.showOpenDialog(null);
                 if (file != null && file.exists() && ((file.length() / 1024) / 1024) < 10) {
-                    Task<Boolean> uploadTask = new Task<Boolean>() {
-                        @Override
-                        protected Boolean call() throws Exception {
-                            return AuthController.databaseCommunicator.uploadStudentImage(AuthController.user, student, 1);
-                        }
-                    };
-                    uploadTask.setOnSucceeded(event1 -> {
-                        if (uploadTask.getValue()) {
-                            BufferedImage bufferedImage = null;
-                            try {
-                                bufferedImage = ImageIO.read(file);
-                                Image image = SwingFXUtils.toFXImage(bufferedImage, null);
-                                avatarImageView.setImage(image);
-                                student.setImage(image);
-                                student.setPicture(uploadTask.getValue());
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            CustomControlLauncher.notifier("Error", "There was an problem uploading photo. Please try again.", NotifierType.ERROR);
-                        }
-                    });
-                    new Thread(uploadTask).start();
-                } else  {
+                    BufferedImage bufferedImage = null;
+                    try {
+                        bufferedImage = ImageIO.read(file);
+                        Image image = SwingFXUtils.toFXImage(bufferedImage, null);
+                        avatarImageView.setImage(image);
+                        imageSet = true;
+                        imageRemove = false;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
                     CustomControlLauncher.notifier("Error", "Photo should be 10 MB or less in size.", NotifierType.ERROR);
                 }
             });
         }
         if (Objects.deepEquals(eventSource, removePhotoBtn)) {
             Platform.runLater(() -> {
-                Task<Boolean> deleteImageTask = new Task<Boolean>() {
-                    @Override
-                    protected Boolean call() throws Exception {
-                        return AuthController.databaseCommunicator.deleteStudentImage(AuthController.user, student, 1);
-                    }
-                };
-                deleteImageTask.setOnSucceeded(event1 -> {
-                    if (deleteImageTask.getValue()) {
-                        try {
-                            avatarImageView.setImage(SwingFXUtils.toFXImage(ImageIO.read(new File("resources/img/xlarge.jpg")), null));
-                            student.setImage(null);
-                            student.setPicture(deleteImageTask.getValue());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                new Thread(deleteImageTask).start();
+                try {
+                    avatarImageView.setImage(SwingFXUtils.toFXImage(ImageIO.read(new File("resources/img/xlarge.jpg")), null));
+                    imageSet = false;
+                    imageRemove = true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             });
         }
     }
+
 
     public void attachmentEventHandler(ActionEvent event) {
         Object eventSource = event.getSource();
@@ -718,60 +707,13 @@ public class StudentAddEditController extends TitledPane {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Upload Attachment");
                 File file = fileChooser.showOpenDialog(null);
-                Task<Boolean> uploadTask = new Task<Boolean>() {
-                    @Override
-                    protected Boolean call() throws Exception {
-                        return AuthController.databaseCommunicator.uploadStudentAttachment(AuthController.user, student, file.getName(), 1);
-                    }
-                };
-                uploadTask.setOnSucceeded(event1 -> {
-                    if (uploadTask.getValue()) {
-                        attachments.add(file);
-                        student.setAttachedDocuments(attachments);
-                    }
-                });
-                new Thread(uploadTask).start();
+                attachments.add(file);
             });
         } else {
             Platform.runLater(() -> {
-                Task<Boolean> removeAttachmentTask = new Task<Boolean>() {
-                    @Override
-                    protected Boolean call() throws Exception {
-                        return AuthController.databaseCommunicator.deleteSudentAttachment(AuthController.user, student, attachmentsListView.getSelectionModel().getSelectedItem().getName(), 1);
-                    }
-                };
-                removeAttachmentTask.setOnSucceeded(event1 ->
-                {
-                    attachments.remove(attachmentsListView.getSelectionModel().getSelectedItem());
-                    student.setAttachedDocuments(attachments);
-                });
-                new Thread(removeAttachmentTask).start();
+                attachments.remove(attachmentsListView.getSelectionModel().getSelectedItem());
             });
         }
-    }
-
-    public boolean isFieldsFilled(Pane pane) {
-        for (Node node : pane.getChildren()) {
-            if (node instanceof PasswordField && ((PasswordField) node).getText().isEmpty()) {
-                return false;
-            }
-            if (node instanceof TextField && ((TextField) node).getText().isEmpty()) {
-                return false;
-            }
-            if (node instanceof TextArea && ((TextArea) node).getText().isEmpty()) {
-                return false;
-            }
-            if (node instanceof DatePicker && ((DatePicker) node).getEditor().getText().isEmpty()) {
-                return false;
-            }
-            if (node instanceof ComboBox && ((ComboBox) node).getSelectionModel().getSelectedIndex() == -1) {
-                return false;
-            }
-            if (node instanceof ChoiceBox && ((ChoiceBox) node).getSelectionModel().getSelectedIndex() == -1) {
-                return false;
-            }
-        }
-        return true;
     }
 
     @FXML
@@ -786,7 +728,6 @@ public class StudentAddEditController extends TitledPane {
                     famHis.setBlock(famHistoryBlockChoiceBox.getSelectionModel().selectedItemProperty().getValue());
                     famHis.setRelationship(famHistoryRelationshipComboBox.getEditor().getText());
                     familyHistories.add(famHis);
-                    student.setFamilyHistories(familyHistories);
                     famHistoryClearDeleteSplitMenuBtn.fire();
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -820,7 +761,6 @@ public class StudentAddEditController extends TitledPane {
                     communityGroup.setProject(commGroupProjectInput.getText());
                     communityGroup.setResponsibility(commGroupResponsibilityTextArea.getText());
                     communityGroups.add(communityGroup);
-                    student.setCommunityGroups(communityGroups);
                     commGroupClearDeleteSplitMenuBtn.fire();
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -866,7 +806,6 @@ public class StudentAddEditController extends TitledPane {
                                 hallHistoryPeriodTo.getValue().getYear(), 1, 3)
                 );
                 hallHistories.add(hallHistory);
-                student.setHallHistories(hallHistories);
                 hallHistoryClearDeleteSplitMenuBtn.fire();
             });
         }
@@ -896,7 +835,6 @@ public class StudentAddEditController extends TitledPane {
                         .get(bevHistoryHallChoiceBox.getSelectionModel().getSelectedIndex()));
                 behaviourHistory.setInfraction(bevHistoryInfracComboBox.getEditor().getText());
                 behaviourHistories.add(behaviourHistory);
-                student.setBehaviourHistories(behaviourHistories);
                 bevHistoryClearDeleteBtn.fire();
             });
         }
@@ -924,7 +862,6 @@ public class StudentAddEditController extends TitledPane {
                 achievement.setAchievement(achievementNameInput.getText());
                 achievement.setArea(achievementAreaComboBox.getSelectionModel().getSelectedItem());
                 achievements.add(achievement);
-                student.setAchievements(achievements);
                 achievementClearDeleteSplitMenuBtn.fire();
             });
         }
@@ -952,7 +889,6 @@ public class StudentAddEditController extends TitledPane {
                 coCurricular.setActivity(coCurricularActivityInput.getText());
                 coCurricular.setType(coCurricularTypeChoiceBox.getSelectionModel().getSelectedItem());
                 coCurriculars.add(coCurricular);
-                student.setCoCurriculars(coCurriculars);
                 coCurricularClearDeleteBtn.fire();
             });
         }
@@ -971,13 +907,17 @@ public class StudentAddEditController extends TitledPane {
         }
     }
 
+    public void closeWindow() {
+        Platform.runLater(this.stage::close);
+    }
+
     @FXML
     public void windowBtnHandler(ActionEvent event) {
         Object eventSource = event.getSource();
         if (Objects.deepEquals(eventSource, studentSaveBtn)) {
             grabStudent();
             Task<Boolean> saveSudentTask;
-            if (operation.equals(Operation.NEW))
+            if (operation.equals(Operation.ADD))
                 saveSudentTask = new Task<Boolean>() {
                     @Override
                     protected Boolean call() throws Exception {
@@ -993,7 +933,7 @@ public class StudentAddEditController extends TitledPane {
                 };
             saveSudentTask.setOnSucceeded(event1 -> {
                 if (saveSudentTask.getValue()) {
-                    if (operation.equals(Operation.NEW))
+                    if (operation.equals(Operation.ADD))
                         AuthController.databaseCommunicator.getNewStudents(AuthController.user, 1);
                     else
                         CustomControlLauncher.notifier("Success", "Student has been saved!", NotifierType.INFORATION);
@@ -1005,8 +945,6 @@ public class StudentAddEditController extends TitledPane {
             new Thread(saveSudentTask).start();
 
         }
-
-
         if (Objects.deepEquals(eventSource, mainClearBtn)) {
             Platform.runLater(() -> {
                 new FormEditizer(mainGridPane, FormEditizer.Action.CLEAR)
@@ -1024,7 +962,7 @@ public class StudentAddEditController extends TitledPane {
 
         }
         if (Objects.deepEquals(eventSource, closeBtn)) {
-            stage.close();
+            closeWindow();
         }
 
     }

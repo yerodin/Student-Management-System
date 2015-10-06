@@ -41,6 +41,10 @@ public class CustomControlLauncher {
         return this;
     }
 
+    public Stage getStage() {
+        return stage;
+    }
+
     public CustomControlLauncher setResizable(Boolean resizable) {
         this.stage.setResizable(resizable);
         return this;
