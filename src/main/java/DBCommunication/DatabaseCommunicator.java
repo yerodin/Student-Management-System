@@ -12,10 +12,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
+import java.awt.*;
+import java.awt.color.ColorSpace;
+import java.awt.image.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +50,7 @@ public class DatabaseCommunicator
     final private String LOGOUT_URL = "http://" + SERVER_IP + "//sms//dataprovider//logout.php";
     final private String GET_HALLS_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_halls.php";
     final private String GET_ATTACHMENT_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_student_attachment.php";
+    final private String GET_STUDENT_IMAGE_URL = "http://" + SERVER_IP + "//sms//dataprovider//get_student_image.php";
 
     private JSONParser jParser;
     private String[] blocks, faculties, rooms, halls;
@@ -83,19 +88,20 @@ public class DatabaseCommunicator
                 String sid = jObj.getString("sid");
                 setStatus(taskID, "Successful Login.");
                 User u = new User(id, firstName, lastName, username, password, permission, sid);
-                fillFaculties(u, taskID);
-                fillBlocks(u, taskID);
-                fillCountries(u, taskID);
-                fillRooms(u, taskID);
-                fillHalls(u, taskID);
-                return u;
+                if (fillFaculties(u, taskID) &&
+                        fillBlocks(u, taskID) &&
+                        fillCountries(u, taskID) &&
+                        fillRooms(u, taskID) &&
+                        fillHalls(u, taskID)) return u;
+                else return null;
             } else setStatus(taskID, "Incorrect username/password combination.");
         }
         catch (Exception e)
         {
             e.printStackTrace();
             setStatus(taskID, "Error, could not connect to server.");
-        } return null;
+        }
+        return null;
     }
 
     public boolean logout(User user, int taskID)
@@ -115,10 +121,11 @@ public class DatabaseCommunicator
         {
             e.printStackTrace();
             setStatus(taskID, "Error, could not connect to server.");
-        } return false;
+        }
+        return false;
     }
 
-    private void fillBlocks(User currentUser, int taskID) throws Exception
+    private boolean fillBlocks(User currentUser, int taskID) throws Exception
     {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
@@ -138,6 +145,7 @@ public class DatabaseCommunicator
                     String alias = block.getString("block_alias");
                     blocks[id] = alias;
                 }
+                return true;
             } else setStatus(taskID, "error");
         }
         catch (Exception e)
@@ -145,9 +153,10 @@ public class DatabaseCommunicator
             e.printStackTrace();
             statuses.add(new BasicNameValuePair(String.valueOf(taskID), "Error, could not connect to server."));
         }
+        return false;
     }
 
-    private void fillFaculties(User currentUser, int taskID) throws Exception
+    private boolean fillFaculties(User currentUser, int taskID) throws Exception
     {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
@@ -168,15 +177,17 @@ public class DatabaseCommunicator
                     faculties[id] = alias;
                 }
             } else setStatus(taskID, "error");
+            return true;
         }
         catch (Exception e)
         {
             e.printStackTrace();
             statuses.add(new BasicNameValuePair(String.valueOf(taskID), "Error, could not connect to server."));
         }
+        return false;
     }
 
-    private void fillCountries(User currentUser, int taskID) throws Exception
+    private boolean fillCountries(User currentUser, int taskID) throws Exception
     {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
@@ -197,15 +208,17 @@ public class DatabaseCommunicator
                     countries.add(new Country(id, country, nationality));
                 }
             } else setStatus(taskID, "error");
+            return true;
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            setStatus(taskID,"Error, could not connect to server.");
+            setStatus(taskID, "Error, could not connect to server.");
         }
+        return false;
     }
 
-    private void fillRooms(User currentUser, int taskID) throws Exception
+    private boolean fillRooms(User currentUser, int taskID) throws Exception
     {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
@@ -226,15 +239,17 @@ public class DatabaseCommunicator
                     rooms[id] = number;
                 }
             } else setStatus(taskID, "error");
+            return true;
         }
         catch (Exception e)
         {
             e.printStackTrace();
             setStatus(taskID, "Error, could not connect to server.");
         }
+        return false;
     }
 
-    private void fillHalls(User currentUser, int taskID) throws Exception
+    private boolean fillHalls(User currentUser, int taskID) throws Exception
     {
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sid", currentUser.getSID()));
@@ -255,12 +270,14 @@ public class DatabaseCommunicator
                     halls[id] = number;
                 }
             } else setStatus(taskID, "error");
+            return true;
         }
         catch (Exception e)
         {
             e.printStackTrace();
             setStatus(taskID, "Error, could not connect to server.");
         }
+        return false;
     }
 
 
@@ -315,16 +332,15 @@ public class DatabaseCommunicator
         System.out.println(jObj);
         try
         {
-            if (jObj.getInt("success") == SUCCESS)
-                return true;
-            else
-                setStatus(taskID, jObj.getString("data"));
+            if (jObj.getInt("success") == SUCCESS) return true;
+            else setStatus(taskID, jObj.getString("data"));
         }
         catch (Exception e)
         {
             e.printStackTrace();
             setStatus(taskID, "Error, could not connect to server.");
-        } return false;
+        }
+        return false;
     }
 
     public boolean editStudent(User currentUser, Student student, int taskID)
@@ -384,7 +400,8 @@ public class DatabaseCommunicator
         {
             e.printStackTrace();
             setStatus(taskID, "Error, could not connect to server.");
-        } return false;
+        }
+        return false;
     }
 
     public boolean deleteStudent(User currentUser, Student studentChanges, int taskID)
@@ -403,10 +420,11 @@ public class DatabaseCommunicator
         {
             e.printStackTrace();
             setStatus(taskID, "Error, could not connect to server.");
-        } return false;
+        }
+        return false;
     }
 
-    private boolean uploadStudentAttachment(User currentUser,Student student, File attachment,int taskID)
+    private boolean uploadStudentAttachment(User currentUser, Student student, File attachment, int taskID)
     {
         try
         {
@@ -418,28 +436,26 @@ public class DatabaseCommunicator
             ByteArrayOutputStream os = new ByteArrayOutputStream();
             byte[] totalBytes = os.toByteArray();
             httpUrlConnection.getOutputStream().write(totalBytes);
-            if(httpUrlConnection.getResponseCode() != 200)
-                return false;
+            if (httpUrlConnection.getResponseCode() != 200) return false;
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
             String line;
-            while ((line = reader.readLine()) != null)
-                sb.append(line);
+            while ((line = reader.readLine()) != null) sb.append(line);
             os.close();
             System.out.println(sb.toString());
             JSONObject jObj = new JSONObject(sb.toString());
             System.out.println(jObj);
             try
             {
-                if (jObj.getInt("success") == SUCCESS)
-                    return true;
+                if (jObj.getInt("success") == SUCCESS) return true;
                 else setStatus(taskID, jObj.getString("data"));
             }
             catch (Exception e)
             {
                 e.printStackTrace();
-                setStatus(taskID, "Error: "+taskID+", could not connect to server.");
-            } return false;
+                setStatus(taskID, "Error: " + taskID + ", could not connect to server.");
+            }
+            return false;
         }
         catch (Exception e)
         {
@@ -451,9 +467,8 @@ public class DatabaseCommunicator
     public boolean uploadStudentAttachments(User currentUser, Student student, int taskID)
     {
         boolean error = false;
-        for(File file:student.getAttachedDocuments())
-            if(!uploadStudentAttachment(currentUser,student,file,taskID))
-                error = true;
+        for (File file : student.getAttachedDocuments())
+            if (!uploadStudentAttachment(currentUser, student, file, taskID)) error = true;
         return error;
 
     }
@@ -470,28 +485,26 @@ public class DatabaseCommunicator
             ImageIO.write(SwingFXUtils.fromFXImage(student.getImage(), null), "png", os);
             byte[] totalBytes = os.toByteArray();
             httpUrlConnection.getOutputStream().write(totalBytes);
-            if(httpUrlConnection.getResponseCode() != 200)
-                return false;
+            if (httpUrlConnection.getResponseCode() != 200) return false;
             StringBuilder sb = new StringBuilder();
             BufferedReader reader = new BufferedReader(new InputStreamReader(httpUrlConnection.getInputStream()));
             String line;
-            while ((line = reader.readLine()) != null)
-                sb.append(line);
+            while ((line = reader.readLine()) != null) sb.append(line);
             os.close();
             System.out.println(sb.toString());
             JSONObject jObj = new JSONObject(sb.toString());
             System.out.println(jObj);
             try
             {
-                if (jObj.getInt("success") == SUCCESS)
-                    return true;
+                if (jObj.getInt("success") == SUCCESS) return true;
                 else setStatus(taskID, jObj.getString("data"));
             }
             catch (Exception e)
             {
                 e.printStackTrace();
-                setStatus(taskID, "Error: "+taskID+", could not connect to server.");
-            } return false;
+                setStatus(taskID, "Error: " + taskID + ", could not connect to server.");
+            }
+            return false;
         }
         catch (Exception e)
         {
@@ -517,7 +530,8 @@ public class DatabaseCommunicator
         {
             e.printStackTrace();
             setStatus(taskID, "Error, could not connect to server.");
-        } return false;
+        }
+        return false;
     }
 
     public boolean deleteSudentAttachment(User currentUser, Student student, String fileName, int taskID)
@@ -537,7 +551,8 @@ public class DatabaseCommunicator
         {
             e.printStackTrace();
             setStatus(taskID, "Error, could not connect to server.");
-        } return false;
+        }
+        return false;
     }
 
     private File getStudentAttachment(User currentUser, String studentID, String fileName, int taskID)
@@ -562,6 +577,34 @@ public class DatabaseCommunicator
                 //                    FileOutputStream fos = new FileOutputStream(file);
                 //                    fos.write(fileBytes);
                 return null;
+            } else setStatus(taskID, "Error.");
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            setStatus(taskID, "Error, could not connect to server.");
+        }
+        return null;
+    }
+
+    private Image getStudentImage(User currentUser, String studentID, String fileName, int taskID)
+    {
+        List<NameValuePair> params = new ArrayList<>();
+        params.add(new BasicNameValuePair("sid", currentUser.getSID()));
+        params.add(new BasicNameValuePair("id", studentID));
+        JSONObject jObj = jParser.makeHttpRequest(GET_STUDENT_IMAGE_URL, "POST", params);
+        System.out.println(jObj);
+        try
+        {
+            if (jObj.getInt("success") == SUCCESS)
+            {
+                JSONArray bytes = jObj.getJSONArray("data");
+                byte[] fileBytes = new byte[bytes.length()];
+                for (int i = 0; i < bytes.length(); ++i)
+                {
+                    fileBytes[i] = (byte) bytes.getInt(i);
+                }
+                return ImageIO.read(new ByteArrayInputStream(fileBytes));
             } else setStatus(taskID, "Error.");
         }
         catch (Exception e)
@@ -628,6 +671,7 @@ public class DatabaseCommunicator
                     boolean willParticipate = student.getInt("will_participate") == 1;
                     String email = student.getString("email");
                     String attachedWrapped = student.getString("attached_documents");
+                    String lastUpdated = student.getString("last_updated");
                     ArrayList<String> attachedNames = Student.unwrapAndGetAttachedFilesNames(attachedWrapped);
                     ObservableList<File> attachedDocuments = FXCollections.observableArrayList();
                     for (String name : attachedNames)
@@ -636,7 +680,7 @@ public class DatabaseCommunicator
                     returnArray[i] = new Student(academicStatus, willParticipate, achievements, behaviour_history, familyHistory, hallHistory, communityGroup, coCurricular, cellPhone, day_joined,
                             dob, getBlockFromID(block), getFacultyFromID(faculty), fatherFirstName, fatherLastName, fatherPhone, firstName, homeAddress1, homeAddress2, homeCity, homeProvince,
                             idNumber, lastName, middleName, motherFirstName, motherLastName, motherPhone, previousSecondary, reasonResiding, getRoomFromID(room), tertiaryLevel, email,
-                            getCountryFromID(nationality), participationLevel, picture, getCountryFromID(residentCountry), attachedDocuments);
+                            getCountryFromID(nationality), participationLevel, picture, getCountryFromID(residentCountry), attachedDocuments, Timestamp.valueOf(lastUpdated));
 
                 }
                 studentVersion = jObj.getInt("sversion");
@@ -647,7 +691,7 @@ public class DatabaseCommunicator
         catch (Exception e)
         {
             e.printStackTrace();
-            setStatus(taskID,"Error, could not connect to server.");
+            setStatus(taskID, "Error, could not connect to server.");
         }
         return null;
     }
@@ -680,9 +724,8 @@ public class DatabaseCommunicator
     public String getStatus(int taskID)
     {
         for (NameValuePair nameValuePair : statuses)
-            if (nameValuePair.getName().equals(String.valueOf(taskID)))
-                return nameValuePair.getValue();
-        return "Error: "+taskID;
+            if (nameValuePair.getName().equals(String.valueOf(taskID))) return nameValuePair.getValue();
+        return "Error: " + taskID;
     }
 
     private int indexOf(String s, String[] array1)
@@ -719,13 +762,13 @@ public class DatabaseCommunicator
 
     private void setStatus(int taskID, String status)
     {
-        for(NameValuePair nameValuePair: statuses)
-            if(nameValuePair.getName().equals(String.valueOf(taskID)))
+        for (NameValuePair nameValuePair : statuses)
+            if (nameValuePair.getName().equals(String.valueOf(taskID)))
             {
                 statuses.remove(nameValuePair);
                 break;
             }
-        statuses.add(new BasicNameValuePair(String.valueOf(taskID),status));
+        statuses.add(new BasicNameValuePair(String.valueOf(taskID), status));
 
     }
 }

@@ -50,7 +50,7 @@ public class SMSRedirectStrategy extends DefaultRedirectStrategy
         else
          {
             int status = response.getStatusLine().getStatusCode();
-            return (HttpUriRequest)(status == 307? RequestBuilder.copy(request).setUri(uri).build():new HttpGet(uri));
+            return status == 307? RequestBuilder.copy(request).setUri(uri).build():new HttpGet(uri);
         }
     }
 }
