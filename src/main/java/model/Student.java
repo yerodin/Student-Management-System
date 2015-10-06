@@ -10,6 +10,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 
 import java.io.File;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 /**
@@ -62,6 +65,7 @@ public class Student {
     private Image image;
     private Country nationalityCountry, residentCountry;
     private TertiaryLevel tertiaryLevel;
+    private Timestamp lastUpdated;
 
     public Student(boolean academicStatus, boolean willParticipate, String achievements, String behaviourHistories,
                    String familyHistories, String hallHistories, String communityGroups, String coCurriculars,
@@ -70,7 +74,7 @@ public class Student {
                    String homeCity, String homeProvince, String idNumber, String lastName, String middleName,
                    String motherFirstName, String motherLastName, String motherPhone, String previousSecondary,
                    String reasonResiding, String room, String tertiaryLevel, String email, Country nationalityCountry,
-                   int participationLevel, boolean picture, Country residentCountry, ObservableList<File> attachedDocuments)
+                   int participationLevel, boolean picture, Country residentCountry, ObservableList<File> attachedDocuments,Timestamp lastUpdated)
     {
         this();
         setAcademicStatus(academicStatus);
@@ -110,6 +114,7 @@ public class Student {
         setPicture(picture);
         setResidentCountry(residentCountry);
         setAttachedDocuments(attachedDocuments);
+        this.lastUpdated = lastUpdated;
     }
 
     public Student() {
@@ -739,5 +744,9 @@ public class Student {
                 ", nationalityCountry=" + nationalityCountry +
                 ", residentCountry=" + residentCountry +
                 '}';
+    }
+    public Timestamp getLastUpdated()
+    {
+        return lastUpdated;
     }
 }
