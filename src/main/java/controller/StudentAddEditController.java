@@ -653,7 +653,6 @@ public class StudentAddEditController extends TitledPane {
         student.setFamilyHistories(familyHistories);
         student.setHallHistories(hallHistories);
         student.setAttachedDocuments(attachments);
-        student.setReasonResiding(this.reasonResidingTextArea.getText());
     }
 
     @FXML
@@ -706,7 +705,7 @@ public class StudentAddEditController extends TitledPane {
         if (Objects.deepEquals(eventSource, uploadAttachBtn)) {
             Platform.runLater(() -> {
                 FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Attach Attachment");
+                fileChooser.setTitle("Upload Attachment");
                 File file = fileChooser.showOpenDialog(null);
                 attachments.add(file);
             });
